@@ -4,6 +4,7 @@ import Router from 'next/router';
 import { useEffect } from "react";
 import { AppProps } from 'next/app';
 import { useRouter } from "next/router";
+import { Session } from "next-auth";
 import { SessionProvider } from 'next-auth/react'
 import { useState } from 'react';
 import { MantineProvider, ColorSchemeProvider, ColorScheme, Loader } from '@mantine/core';
@@ -12,7 +13,7 @@ import { useLocalStorage } from '@mantine/hooks';
 import Layout from '../components/Layout';
 import Script from 'next/script';
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps }: AppProps<{ session: Session }>) => {
   // pre-loader
   const [loading, setLoading] = useState(false);
   Router.events.on('routeChangeStart', () => setLoading(true));
