@@ -150,7 +150,7 @@ const User: NextPage<IProps> = ({ avatar, name, email, job }: IProps) => {
               <Tabs.Panel value="wishlist" pt="xs">
                 <Grid>
                   {data.map((gift, index) => (
-                    <Grid.Col xs={6} sm={6} md={4}>
+                    <Grid.Col xs={6} sm={6} md={4} key={index}>
                       <CardGift
                         title={'Choppie Stickies'}
                         image={'https://firebasestorage.googleapis.com/v0/b/onlywish-9d17b.appspot.com/o/items%2F590bf649-f3ee-41e6-a6ef-e76fba225b48?alt=media&token=4fad8c05-54b3-465f-8022-dff06acecd01'}
