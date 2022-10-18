@@ -7,11 +7,26 @@ import { useRouter } from "next/router";
 import { Session } from "next-auth";
 import { SessionProvider } from 'next-auth/react'
 import { useState } from 'react';
-import { MantineProvider, ColorSchemeProvider, ColorScheme, Loader } from '@mantine/core';
+import { MantineProvider, ColorSchemeProvider, ColorScheme, Loader, MantineTheme, MantineThemeOverride, Center } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 
 import Layout from '../components/Layout';
 import Script from 'next/script';
+
+export const appTheme: MantineThemeOverride = {
+  primaryColor: 'grape',
+  colorScheme: 'light',
+  defaultRadius: 'md',
+  components: {
+    ActionIcon: {
+      styles: {
+        root: {
+          color: 'violet',
+        },
+      },
+    }
+  }
+};
 
 const App = ({ Component, pageProps }: AppProps<{ session: Session }>) => {
   // pre-loader
@@ -21,12 +36,13 @@ const App = ({ Component, pageProps }: AppProps<{ session: Session }>) => {
 
   // mantine theme
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-    key: 'mantine-color-scheme',
+    key: 'mantine-app-theme',
     defaultValue: 'light',
     getInitialValueInEffect: true,
   });
   const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+    setColorScheme(value || (appTheme.colorScheme === 'dark' ? 'light' : 'dark'));
+  appTheme.colorScheme = colorScheme;
 
   return (
     <>
@@ -34,25 +50,25 @@ const App = ({ Component, pageProps }: AppProps<{ session: Session }>) => {
         <SessionProvider session={pageProps.session}>
           <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
             <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-              <div className="h-screen w-screen flex justify-center items-center">
-                <Loader color="violet" variant="bars" />
-              </div>
+              <Center sx={{ height: '100vh' }}>
+                <Loader color="pink" variant="bars" />
+              </Center>
             </MantineProvider>
           </ColorSchemeProvider>
         </SessionProvider>
-
       )
         : (
           <SessionProvider session={pageProps.session}>
             <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-              <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+              <MantineProvider theme={appTheme} withGlobalStyles withNormalizeCSS>
                 <Layout>
                   <Component {...pageProps} />
                 </Layout>
               </MantineProvider>
             </ColorSchemeProvider>
           </SessionProvider>
-        )}
+        )
+      }
 
       {/* <SessionProvider session={pageProps.session}>
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>

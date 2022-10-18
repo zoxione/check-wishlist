@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import React, { FunctionComponent, ReactNode, useState } from 'react'
 
 import NavbarContent from './Navbar'
 import HeaderContent from './Header';
@@ -20,11 +20,11 @@ import {
 
 import { IconSun, IconMoonStars } from '@tabler/icons';
 
-type Props = {
+interface IProps {
   children: ReactNode;
 };
 
-const Layout: React.FC<Props> = (props) => {
+const Layout: FunctionComponent<IProps> = ({ children }) => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
 
@@ -42,18 +42,15 @@ const Layout: React.FC<Props> = (props) => {
         //   </MediaQuery>
         // }
         footer={
-          <Footer height={60} p="md">
-            <FooterContent />
-          </Footer>
+          <FooterContent />
         }
         header={
-
           <HeaderContent />
-
         }
+        padding={0}
       >
-        <div className="lg:w-[1100px] mx-auto">
-          {props.children}
+        <div>
+          {children}
         </div>
       </AppShell>
     </>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { Navbar, Center, Tooltip, UnstyledButton, createStyles, Stack } from '@mantine/core';
 import {
   TablerIcon,
@@ -66,7 +66,7 @@ const mockdata = [
   { icon: IconSettings, label: 'Settings' },
 ];
 
-const NavbarContent: NextPage<NavbarLinkProps> = (props) => {
+const NavbarContent: FunctionComponent<NavbarLinkProps> = ({ }) => {
   const [active, setActive] = useState(2);
 
   const links = mockdata.map((link, index) => (
