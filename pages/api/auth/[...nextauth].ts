@@ -16,12 +16,12 @@ export default authHandler;
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: async ({ session, token }) => {
-      if (session?.user) {
-        session.user.id = token.sub as string;
-      }
-      return session;
-    },
+    // session: async ({ session, token }) => {
+    //   if (session?.user) {
+    //     session.user.id = token.sub;
+    //   }
+    //   return session;
+    // },
   },
   session: {
     strategy: 'jwt',
