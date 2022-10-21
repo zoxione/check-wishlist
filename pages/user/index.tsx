@@ -214,7 +214,7 @@ const User: NextPage<IProps> = (props: IProps) => {
 
 
   const fragmentsList = [
-    <UserSettings avatar={''} name={''} email={''} job={''} password={''} />
+    <UserSettings avatar={''} name={''} email={''} job={''} password={''} key="1" />
   ];
 
   return (
@@ -232,14 +232,14 @@ const User: NextPage<IProps> = (props: IProps) => {
       >
         <Navbar.Section grow mt={50}>
           <Stack justify="center" spacing={0}>
-            {/* {navbarData.map((link, index) => (
+            {navbarData.map((link, index) => (
               <NavbarLink
                 {...link}
                 key={link.label}
                 active={index === activeFragment}
                 onClick={() => setActiveFragment(index)}
               />
-            ))} */}
+            ))}
           </Stack>
         </Navbar.Section>
         <Navbar.Section>
