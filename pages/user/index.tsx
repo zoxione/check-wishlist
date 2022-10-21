@@ -249,7 +249,7 @@ const User: NextPage<IProps> = (props: IProps) => {
         </Navbar.Section>
       </Navbar>
 
-      {
+      {/* {
         // fragmentsList.map((fragment, index) => (
         //   <Box key={index}>
         //     {fragment}
@@ -259,7 +259,7 @@ const User: NextPage<IProps> = (props: IProps) => {
           fragmentsList[activeFragment]
         </>
 
-      }
+      } */}
     </>
   );
 }
