@@ -54,7 +54,7 @@ const Error: NextPage<Props> = (props) => {
   return (
     <Container className={classes.root}>
       <SimpleGrid spacing={80} cols={2} breakpoints={[{ maxWidth: 'sm', cols: 1, spacing: 40 }]}>
-        <Image src={"https://ui.mantine.dev/_next/static/media/image.11cd6c19.svg"} className={classes.mobileImage} />
+        <Image src={"https://ui.mantine.dev/_next/static/media/image.11cd6c19.svg"} alt="404" className={classes.mobileImage} />
         <div>
           <Title className={classes.title}>Something is not right...</Title>
           <Text color="dimmed" size="lg">
@@ -67,7 +67,7 @@ const Error: NextPage<Props> = (props) => {
             </Button>
           </Link>
         </div>
-        <Image src={"https://ui.mantine.dev/_next/static/media/image.11cd6c19.svg"} className={classes.desktopImage} />
+        <Image src={"https://ui.mantine.dev/_next/static/media/image.11cd6c19.svg"} alt="404" className={classes.desktopImage} />
       </SimpleGrid>
     </Container>
   );

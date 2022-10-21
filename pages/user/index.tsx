@@ -250,7 +250,15 @@ const User: NextPage<IProps> = (props: IProps) => {
       </Navbar>
 
       {
-        fragmentsList[activeFragment]
+        // fragmentsList.map((fragment, index) => (
+        //   <Box key={index}>
+        //     {fragment}
+        //   </Box>
+        // ))
+        <>
+          fragmentsList[activeFragment]
+        </>
+
       }
     </>
   );
