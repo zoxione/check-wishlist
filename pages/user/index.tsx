@@ -232,14 +232,14 @@ const User: NextPage<IProps> = (props: IProps) => {
       >
         <Navbar.Section grow mt={50}>
           <Stack justify="center" spacing={0}>
-            {navbarData.map((link, index) => (
+            {/* {navbarData.map((link, index) => (
               <NavbarLink
                 {...link}
                 key={link.label}
                 active={index === activeFragment}
                 onClick={() => setActiveFragment(index)}
               />
-            ))}
+            ))} */}
           </Stack>
         </Navbar.Section>
         <Navbar.Section>
@@ -249,7 +249,7 @@ const User: NextPage<IProps> = (props: IProps) => {
         </Navbar.Section>
       </Navbar>
 
-      {/* {
+      {
         // fragmentsList.map((fragment, index) => (
         //   <Box key={index}>
         //     {fragment}
@@ -259,7 +259,7 @@ const User: NextPage<IProps> = (props: IProps) => {
           fragmentsList[activeFragment]
         </>
 
-      } */}
+      }
     </>
   );
 }
