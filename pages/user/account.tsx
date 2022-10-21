@@ -1,4 +1,4 @@
-import { Avatar, Paper, createStyles, Notification, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Input, Box, Navbar, UnstyledButton, Tooltip, Stack, Center, } from '@mantine/core';
+import { Avatar, Paper, createStyles, Notification, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Input, Box, } from '@mantine/core';
 import { NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,23 +8,10 @@ import CardGift from '../../components/GiftCard';
 import { IGift } from '../../types';
 
 import { IconCheck, IconX, IconTrash } from '@tabler/icons';
-import {
-  TablerIcon,
-  IconHome2,
-  IconGauge,
-  IconDeviceDesktopAnalytics,
-  IconFingerprint,
-  IconCalendarStats,
-  IconUser,
-  IconSettings,
-  IconLogout,
-  IconSwitchHorizontal,
-} from '@tabler/icons';
 
 
 import InfoCard from '../../components/InfoCard';
 import NavbarContent from '../../components/Navbar';
-import UserSettings from '../../components/user-fragments/UserSettings';
 
 // // Получение данных с сервера
 // export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
@@ -61,64 +48,6 @@ import UserSettings from '../../components/user-fragments/UserSettings';
 // };
 
 
-const useStyles = createStyles((theme) => ({
-  active: {
-    '&, &:hover': {
-      backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background,
-      color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
-    },
-  },
-}));
-
-
-
-const navbarData = [
-  { icon: IconHome2, label: 'Home', href: '/' },
-  { icon: IconUser, label: 'Account', href: '/user/account' },
-  { icon: IconGauge, label: 'Dashboard', href: '/user/dashboard' },
-  { icon: IconDeviceDesktopAnalytics, label: 'Analytics', href: '/user/analytics' },
-  { icon: IconFingerprint, label: 'Security', href: '/user/security' },
-  { icon: IconSettings, label: 'Settings', href: '/user/settings' },
-];
-
-interface NavbarLinkProps {
-  icon: TablerIcon;
-  label: string;
-  href: string;
-  active?: boolean;
-  onClick?(): void;
-}
-
-function NavbarLink({ icon: Icon, label, href, active, onClick }: NavbarLinkProps) {
-  const { classes, cx } = useStyles();
-
-  return (
-    <Tooltip label={label} position="right" transitionDuration={0}>
-      <UnstyledButton
-        component="a"
-        onClick={onClick}
-        sx={(theme) => ({
-          width: 50,
-          height: 50,
-          borderRadius: theme.radius.md,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
-          '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
-          },
-        })}
-        className={cx({ [classes.active]: active })}
-      >
-        <Icon stroke={1.5} />
-      </UnstyledButton>
-    </Tooltip>
-  );
-}
-
-
-
 interface IProps {
   // user: UserProps
   avatar: string;
@@ -132,7 +61,7 @@ var data: IGift[] = [
 
 ]
 
-const User: NextPage<IProps> = (props: IProps) => {
+const Account: NextPage<IProps> = (props: IProps) => {
   const router = useRouter()
   const { id } = router.query
 
@@ -209,51 +138,129 @@ const User: NextPage<IProps> = (props: IProps) => {
     }
   }
 
-
-  const [activeFragment, setActiveFragment] = useState(1);
-
-
-  const fragmentsList = [
-    <UserSettings avatar={''} name={''} email={''} job={''} password={''} />
-  ];
-
   return (
     <>
 
-
-      <Navbar height={750} width={{ base: 80 }} p="md"
+      <Container
         sx={(theme) => ({
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          zIndex: 10,
-          height: '100vh',
+          height: '210px',
+          maxWidth: '100vw',
+          padding: '0',
+          margin: '0',
+          backgroundSize: 'cover',
+          backgroundColor: theme.fn.primaryColor(),
         })}
       >
-        <Navbar.Section grow mt={50}>
-          <Stack justify="center" spacing={0}>
-            {navbarData.map((link, index) => (
-              <NavbarLink
-                {...link}
-                key={link.label}
-                active={index === activeFragment}
-                onClick={() => setActiveFragment(index)}
-              />
-            ))}
-          </Stack>
-        </Navbar.Section>
-        <Navbar.Section>
-          <Stack justify="center" spacing={0}>
-            <NavbarLink icon={IconLogout} label="Logout" href="/" />
-          </Stack>
-        </Navbar.Section>
-      </Navbar>
+      </Container>
 
-      {
-        fragmentsList[activeFragment]
-      }
+      <Container
+        sx={(theme) => ({
+          marginTop: '30px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px',
+        })}
+      >
+        <InfoCard title="Основная информация">
+          <form onSubmit={handleSubmit}>
+            <Box
+              sx={(theme) => ({
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '20px',
+              })}
+            >
+              {/* <Avatar
+              src={image}
+              color="violet"
+              classNames={{
+                root: "w-[140px] h-[140px] rounded-full hover:brightness-50 cursor-pointer"
+              }}
+            /> */}
+              <Input.Wrapper label="Your name"
+                sx={(theme) => ({
+                  width: '100%',
+                  [theme.fn.largerThan('xs')]: {
+                    width: '320px',
+                  },
+                })}
+              >
+                <Input
+                  value={name}
+                  onChange={(e: any) => setName(e.currentTarget.value)}
+                />
+              </Input.Wrapper>
+              <Input.Wrapper label="Email"
+                sx={(theme) => ({
+                  width: '100%',
+                  [theme.fn.largerThan('xs')]: {
+                    width: '320px',
+                  },
+                })}
+              >
+                <Input
+                  value={email}
+                  onChange={(e: any) => setEmail(e.currentTarget.value)}
+                />
+              </Input.Wrapper>
+              <PasswordInput
+                sx={(theme) => ({
+                  width: '100%',
+                  [theme.fn.largerThan('xs')]: {
+                    width: '320px',
+                  },
+                })}
+                label="Password"
+                value={password}
+                onChange={(e: any) => setPassword(e.currentTarget.value)}
+              />
+              <Box
+                sx={(theme) => ({
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '20px',
+                  width: '100%',
+                  [theme.fn.largerThan('xs')]: {
+                    width: '320px',
+                  },
+                })}
+              >
+                <Button
+                  type="submit"
+                  variant="outline"
+                  color="teal"
+                  sx={(theme) => ({
+                    width: '100%',
+                  })}
+                >
+                  Save
+                </Button>
+                <Button
+                  type="submit"
+                  variant="filled"
+                  color="red"
+                >
+                  <IconTrash size={18} />
+                </Button>
+              </Box>
+            </Box>
+          </form>
+        </InfoCard>
+
+
+        <InfoCard title="Подарки">
+          <Box>
+
+          </Box>
+        </InfoCard>
+
+      </Container>
     </>
   );
 }
 
-export default User;
+export default Account;

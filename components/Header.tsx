@@ -5,45 +5,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconNotification, IconCode, IconBook, IconChartPie3, IconFingerprint, IconCoin, IconSun, IconMoonStars, IconChevronDown, } from '@tabler/icons';
 import { signIn } from 'next-auth/react';
 
-
-const useStyles = createStyles((theme) => ({
-  link: {
-    display: 'flex',
-    alignItems: 'center',
-    height: '100%',
-    paddingLeft: theme.spacing.md,
-    paddingRight: theme.spacing.md,
-    textDecoration: 'none',
-    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-    fontWeight: 500,
-    fontSize: theme.fontSizes.sm,
-
-    [theme.fn.smallerThan('sm')]: {
-      height: 42,
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-    },
-
-    ...theme.fn.hover({
-      color: theme.fn.primaryColor(),
-      transitionDuration: "300ms",
-    }),
-  },
-
-  hiddenMobile: {
-    [theme.fn.smallerThan('sm')]: {
-      display: 'none',
-    },
-  },
-
-  hiddenDesktop: {
-    [theme.fn.largerThan('sm')]: {
-      display: 'none',
-    },
-  },
-}));
-
+import SwitchTheme from '../components/ui/SwitchTheme';
 
 interface IProps {
 
@@ -52,15 +14,10 @@ interface IProps {
 
 const HeaderContent: FunctionComponent<IProps> = ({ }) => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-  const { classes, theme } = useStyles();
-
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const dark = colorScheme === 'dark';
 
   return (
     <Box>
-      <Header height={60} px="md">
+      <Header height={60} px="md" zIndex={1000}>
         <Group position="apart" sx={{ height: '100%' }}>
           <UnstyledButton>
             <Link href="/">
@@ -75,31 +32,68 @@ const HeaderContent: FunctionComponent<IProps> = ({ }) => {
             </Link>
           </UnstyledButton>
 
-          <Group sx={{ height: '100%' }} spacing={0} className={classes.hiddenMobile}>
+          <Group spacing={0}
+            sx={(theme) => ({
+              [theme.fn.smallerThan('sm')]: {
+                display: 'none',
+              },
+              height: '100%'
+            })}
+          >
             <Link href="/" passHref>
-              <a className={classes.link}>
+              <Text component='a'
+                sx={(theme) => ({
+                  display: 'flex',
+                  alignItems: 'center',
+                  height: '100%',
+                  paddingLeft: theme.spacing.md,
+                  paddingRight: theme.spacing.md,
+                  textDecoration: 'none',
+                  color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+                  fontWeight: 500,
+                  fontSize: theme.fontSizes.sm,
+
+                  [theme.fn.smallerThan('sm')]: {
+                    height: 42,
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
+                  },
+
+                  ...theme.fn.hover({
+                    color: theme.fn.primaryColor(),
+                    transitionDuration: "300ms",
+                  }),
+                })}
+              >
                 Home
-              </a>
+              </Text>
             </Link>
 
 
           </Group>
 
-          <Group className={classes.hiddenMobile}>
-            <UnstyledButton
-              color={dark ? 'yellow' : 'blue'}
-              onClick={() => toggleColorScheme()}
-              title="Toggle color scheme"
-            >
-              {dark ? <IconSun size={18} /> : <IconMoonStars size={18} />}
-            </UnstyledButton>
+          <Group
+            sx={(theme) => ({
+              [theme.fn.smallerThan('sm')]: {
+                display: 'none',
+              },
+            })}
+          >
+            <SwitchTheme />
             <Button variant="default" onClick={() => signIn()}>Sign in</Button>
             <Link href="/auth/signup" passHref>
               <Button>Sign up</Button>
             </Link>
           </Group>
 
-          <Burger opened={drawerOpened} onClick={toggleDrawer} className={classes.hiddenDesktop} />
+          <Burger opened={drawerOpened} onClick={toggleDrawer}
+            sx={(theme) => ({
+              [theme.fn.largerThan('sm')]: {
+                display: 'none',
+              },
+            })}
+          />
         </Group>
       </Header>
 
@@ -109,14 +103,16 @@ const HeaderContent: FunctionComponent<IProps> = ({ }) => {
         size="100%"
         padding="md"
         title="Navigation"
-        className={classes.hiddenDesktop}
+        sx={(theme) => ({
+          [theme.fn.largerThan('sm')]: {
+            display: 'none',
+          },
+        })}
         zIndex={1000000}
       >
         <ScrollArea sx={{ height: 'calc(100vh - 60px)' }} mx="-md">
-          <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
-
-
-          <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
+          {/* <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
+          <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} /> */}
 
           <Group position="center" grow pb="xl" px="md">
             <Button variant="default">Log in</Button>

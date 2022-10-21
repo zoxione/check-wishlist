@@ -2,11 +2,9 @@ import type { GetStaticProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useState } from 'react'
 import Router from "next/router";
-
-import Search from '../components/ui/Search'
 import { Container } from '@mantine/core';
-import AppHead from '../components/logics/Head';
 
+import NavbarContent from '../../components/Navbar'
 
 // export const getStaticProps: GetStaticProps = async () => {
 //   const feed = await prisma.job.findMany({
@@ -28,14 +26,13 @@ interface Props {
 }
 
 
-const Home: NextPage<Props> = (props) => {
+const Admin: NextPage<Props> = (props) => {
 
 
   return (
     <>
 
-      <AppHead />
-
+      <NavbarContent />
 
       <Container
         sx={(theme) => ({
@@ -46,10 +43,10 @@ const Home: NextPage<Props> = (props) => {
           height: '100%',
         })}
       >
-        <Search />
+
       </Container>
     </>
   )
 }
 
-export default Home;
+export default Admin;

@@ -14,7 +14,7 @@ import { IGift } from '../types';
 // }
 
 
-const CardGift: FunctionComponent<IGift> = ({ title, image, price, isGifted, gifter }: IGift) => {
+const GiftCard: FunctionComponent<IGift> = ({ title, image, price, isGifted, gifter }: IGift) => {
 
 
   return (
@@ -34,4 +34,4 @@ const CardGift: FunctionComponent<IGift> = ({ title, image, price, isGifted, gif
   );
 }
 
-export default CardGift;
+export default GiftCard;
