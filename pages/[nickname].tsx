@@ -1,4 +1,4 @@
-import { Avatar, Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Badge, } from '@mantine/core';
+import { Avatar, Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Badge, useMantineTheme, } from '@mantine/core';
 import { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
@@ -87,6 +87,8 @@ const Profile: NextPage<IProps> = ({ avatar, name, email, job }: IProps) => {
   const router = useRouter()
   const { nickname } = router.query
 
+  const theme = useMantineTheme();
+
   return (
     <>
       <Container
@@ -130,7 +132,7 @@ const Profile: NextPage<IProps> = ({ avatar, name, email, job }: IProps) => {
                 marginTop: '-80px',
               })}
             >
-              <Avatar src={avatar} size={120} radius={120} mx="auto" />
+              <Avatar src={avatar} size={120} radius={120} mx="auto" color={theme.fn.primaryColor()} />
               <Text align="center" size="lg" weight={500} mt="md">
                 {nickname}
               </Text>

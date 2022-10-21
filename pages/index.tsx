@@ -6,6 +6,7 @@ import Router from "next/router";
 import Search from '../components/ui/Search'
 import { Container } from '@mantine/core';
 import AppHead from '../components/logics/Head';
+import { useSession } from 'next-auth/react';
 
 
 // export const getStaticProps: GetStaticProps = async () => {
@@ -30,6 +31,12 @@ interface Props {
 
 const Home: NextPage<Props> = (props) => {
 
+  const { status, data } = useSession();
+
+  console.log(status, data)
+
+
+  const [search, setSearch] = useState("");
 
   return (
     <>

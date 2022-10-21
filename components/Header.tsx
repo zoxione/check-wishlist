@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { createStyles, Header, Group, Button, UnstyledButton, Text, SimpleGrid, ThemeIcon, Anchor, Divider, Center, Box, Burger, Drawer, Collapse, ScrollArea, useMantineColorScheme, ActionIcon, Title, } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconNotification, IconUser, IconCode, IconBook, IconChartPie3, IconFingerprint, IconCoin, IconSun, IconMoonStars, IconChevronDown, } from '@tabler/icons';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 import SwitchTheme from '../components/ui/SwitchTheme';
 
@@ -13,19 +13,22 @@ interface IProps {
 
 
 const HeaderContent: FunctionComponent<IProps> = ({ }) => {
+
+  const { status, data } = useSession();
+
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
 
   return (
     <Box>
-      <Header height={60} px="md" zIndex={1000}>
+      <Header height={60} px="lg" zIndex={1000}>
         <Group position="apart" sx={{ height: '100%' }}>
           <UnstyledButton>
             <Link href="/">
               <Title
-                order={4}
-                sx={(theme) => ({
-                  color: theme.fn.primaryColor(),
-                })}
+                order={3}
+                weight={900}
+                variant="gradient"
+                gradient={{ from: 'violet', to: 'orange', deg: 10 }}
               >
                 Check
               </Title>
@@ -40,7 +43,7 @@ const HeaderContent: FunctionComponent<IProps> = ({ }) => {
               height: '100%'
             })}
           >
-            <Link href="/" passHref>
+            {/* <Link href="/" passHref>
               <Text component='a'
                 sx={(theme) => ({
                   display: 'flex',
@@ -68,7 +71,7 @@ const HeaderContent: FunctionComponent<IProps> = ({ }) => {
               >
                 Home
               </Text>
-            </Link>
+            </Link> */}
 
 
           </Group>
@@ -87,9 +90,9 @@ const HeaderContent: FunctionComponent<IProps> = ({ }) => {
             </Link>
             {
               true && (
-                <Link href="/name" passHref>
+                <Link href={`${data?.user?.name}`} passHref>
                   <Button variant="outline" leftIcon={<IconUser />}>
-                    Name
+                    {data?.user?.name}
                   </Button>
                 </Link>
               )

@@ -1,6 +1,12 @@
 import { Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Box, } from '@mantine/core';
 import { NextPage } from 'next';
+import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { FormEventHandler, useState } from 'react';
+
+
+
+
 
 
 interface IProps {
@@ -9,6 +15,24 @@ interface IProps {
 
 
 const SignIn: NextPage<IProps> = (props) => {
+
+  const { status, data } = useSession();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+
+    const res = await signIn('credentials', {
+      email: email,
+      password: password,
+      redirect: false,
+      callbackUrl: "/"
+    });
+
+    console.log(res);
+  }
 
 
   return (
@@ -42,13 +66,32 @@ const SignIn: NextPage<IProps> = (props) => {
           Welcome back!
         </Title>
 
-        <TextInput label="Email address" placeholder="hello@gmail.com" size="md" />
-        <PasswordInput label="Password" placeholder="Your password" mt="md" size="md" />
-        <Checkbox label="Keep me logged in" mt="xl" size="md" />
+        <form onSubmit={handleSubmit}>
+          <TextInput
+            label="Почта"
+            placeholder="hello@gmail.com"
+            size="md"
+            value={email}
+            onChange={(e) => setEmail(e.currentTarget.value)}
+          />
+          <PasswordInput
+            label="Пароль"
+            placeholder="Your password"
+            mt="md"
+            size="md"
+            value={password}
+            onChange={(e) => setPassword(e.currentTarget.value)}
+          />
+          <Checkbox
+            label="Keep me logged in"
+            mt="xl"
+            size="md"
+          />
 
-        <Button fullWidth mt="xl" size="md">
-          Sign in
-        </Button>
+          <Button type="submit" fullWidth mt="xl" size="md">
+            Sign in
+          </Button>
+        </form>
 
         <Text align="center" mt="md">
           Don&apos;t have an account? {' '}

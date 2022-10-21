@@ -6,23 +6,15 @@ import GitHubProvider from 'next-auth/providers/github';
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, authOptions);
 export default authHandler;
 
-// export const getStaticProps: GetStaticProps = async () => {
-//   const feed = await prisma.user.findMany();
-//   return {
-//     props: { feed },
-//     revalidate: 10,
-//   };
-// };
-
 export const authOptions: NextAuthOptions = {
-  callbacks: {
-    // session: async ({ session, token }) => {
-    //   if (session?.user) {
-    //     session.user.id = token.sub;
-    //   }
-    //   return session;
-    // },
-  },
+  // callbacks: {
+  //   // session: async ({ session, token }) => {
+  //   //   if (session?.user) {
+  //   //     session.user.id = token.sub;
+  //   //   }
+  //   //   return session;
+  //   // },
+  // },
   session: {
     strategy: 'jwt',
   },
@@ -43,6 +35,15 @@ export const authOptions: NextAuthOptions = {
 
         // логика входа юзера из бд
         let result: any;
+        if (email === 'z1@gmail.com' && password === '123') {
+          result = {
+            id: 1,
+            name: 'zoxi',
+            email: '',
+            password: '123'
+          };
+        }
+
         // try {
         //   result = await prisma.user.findUnique({
         //     where: {
@@ -63,11 +64,11 @@ export const authOptions: NextAuthOptions = {
         return result;
       }
     }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID || "",
-      clientSecret: process.env.GITHUB_SECRET || "",
-    }),
+    // GitHubProvider({
+    //   clientId: process.env.GITHUB_ID || "",
+    //   clientSecret: process.env.GITHUB_SECRET || "",
+    // }),
   ],
   // adapter: PrismaAdapter(prisma),
-  secret: process.env.SECRET,
+  // secret: process.env.SECRET,
 };

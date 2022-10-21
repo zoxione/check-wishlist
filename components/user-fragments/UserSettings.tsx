@@ -22,6 +22,7 @@ import {
 } from '@tabler/icons';
 import { IGift } from '../../types';
 import GiftCard from '../GiftCard';
+import { useSession } from 'next-auth/react';
 
 interface IProps {
   avatar: string;
@@ -32,7 +33,7 @@ interface IProps {
 };
 
 
-var data: IGift[] = [
+var dataGift: IGift[] = [
   {
     title: 'Кофе',
     image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
@@ -64,9 +65,11 @@ var data: IGift[] = [
 ]
 
 const UserSettings: FunctionComponent<IProps> = (props: IProps) => {
-  const [name, setName] = useState(props.name ? props.name : "");
-  const [email, setEmail] = useState(props.email ? props.email : "");
-  const [password, setPassword] = useState(props.password ? props.password : "");
+  const { status, data } = useSession();
+
+  const [name, setName] = useState(data?.user?.name || '');
+  const [email, setEmail] = useState(data?.user?.email || '');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -299,7 +302,7 @@ const UserSettings: FunctionComponent<IProps> = (props: IProps) => {
             <Button onClick={() => setOpenModal(true)}>Добавить желаемый подарок</Button>
 
             <Grid mt={10}>
-              {data.map((gift, index) => (
+              {dataGift.map((gift, index) => (
                 <Grid.Col xs={6} sm={6} md={4} key={index}>
                   <GiftCard
                     title={'Choppie Stickies'}

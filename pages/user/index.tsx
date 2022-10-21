@@ -25,6 +25,7 @@ import {
 import InfoCard from '../../components/InfoCard';
 import NavbarContent from '../../components/Navbar';
 import UserSettings from '../../components/user-fragments/UserSettings';
+import { signOut } from 'next-auth/react';
 
 // // Получение данных с сервера
 // export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
@@ -187,9 +188,7 @@ const User: NextPage<IProps> = (props: IProps) => {
       >
         <Navbar.Section grow mt={50}>
           <Stack justify="center" spacing={0}>
-            <Link href={`/`} passHref>
-              <NavbarLink icon={IconHome2} label="Home" />
-            </Link>
+            <NavbarLink icon={IconHome2} label="Home" />
             {navbarData.map((link, index) => (
               <NavbarLink
                 {...link}
@@ -202,7 +201,7 @@ const User: NextPage<IProps> = (props: IProps) => {
         </Navbar.Section>
         <Navbar.Section>
           <Stack justify="center" spacing={0}>
-            <NavbarLink icon={IconLogout} label="Logout" />
+            <NavbarLink icon={IconLogout} label="Logout" onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
           </Stack>
         </Navbar.Section>
       </Navbar>
