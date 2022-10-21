@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import Link from 'next/link';
 import { createStyles, Header, Group, Button, UnstyledButton, Text, SimpleGrid, ThemeIcon, Anchor, Divider, Center, Box, Burger, Drawer, Collapse, ScrollArea, useMantineColorScheme, ActionIcon, Title, } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconNotification, IconCode, IconBook, IconChartPie3, IconFingerprint, IconCoin, IconSun, IconMoonStars, IconChevronDown, } from '@tabler/icons';
+import { IconNotification, IconUser, IconCode, IconBook, IconChartPie3, IconFingerprint, IconCoin, IconSun, IconMoonStars, IconChevronDown, } from '@tabler/icons';
 import { signIn } from 'next-auth/react';
 
 import SwitchTheme from '../components/ui/SwitchTheme';
@@ -85,6 +85,15 @@ const HeaderContent: FunctionComponent<IProps> = ({ }) => {
             <Link href="/auth/signup" passHref>
               <Button>Sign up</Button>
             </Link>
+            {
+              true && (
+                <Link href="/name" passHref>
+                  <Button variant="outline" leftIcon={<IconUser />}>
+                    Name
+                  </Button>
+                </Link>
+              )
+            }
           </Group>
 
           <Burger opened={drawerOpened} onClick={toggleDrawer}

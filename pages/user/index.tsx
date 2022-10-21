@@ -70,26 +70,22 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-
-
 const navbarData = [
-  { icon: IconHome2, label: 'Home', href: '/' },
-  { icon: IconUser, label: 'Account', href: '/user/account' },
-  { icon: IconGauge, label: 'Dashboard', href: '/user/dashboard' },
-  { icon: IconDeviceDesktopAnalytics, label: 'Analytics', href: '/user/analytics' },
-  { icon: IconFingerprint, label: 'Security', href: '/user/security' },
-  { icon: IconSettings, label: 'Settings', href: '/user/settings' },
+  { icon: IconUser, label: 'Account' },
+  { icon: IconGauge, label: 'Dashboard' },
+  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
+  { icon: IconFingerprint, label: 'Security' },
+  { icon: IconSettings, label: 'Settings' },
 ];
 
 interface NavbarLinkProps {
   icon: TablerIcon;
   label: string;
-  href: string;
   active?: boolean;
   onClick?(): void;
 }
 
-function NavbarLink({ icon: Icon, label, href, active, onClick }: NavbarLinkProps) {
+function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   const { classes, cx } = useStyles();
 
   return (
@@ -169,58 +165,17 @@ const User: NextPage<IProps> = (props: IProps) => {
       // });
     }
     catch (error) {
-      setShowNotification('error');
       console.error(error);
     }
   };
 
-  // Notification component, states: false, success, error
-  const [showNotification, setShowNotification] = useState('false');
-  const CustomNotification = () => {
-    switch (showNotification) {
-      case 'success':
-        return (
-          <Notification
-            icon={<IconCheck size={18} />}
-            color="teal"
-            title="Successfully"
-            className="absolute top-0 right-0 m-4 z-[1000]"
-            onClick={() => setShowNotification('false')}
-          >
-            User updated
-          </Notification>
-        )
-      case 'error':
-        return (
-          <Notification
-            icon={<IconX size={18} />}
-            color="red"
-            title="Error"
-            className="absolute top-0 right-0 m-4 z-[1000]"
-            onClick={() => setShowNotification('false')}
-          >
-            An error occurred
-          </Notification>
-        )
-      default:
-        return (
-          <></>
-        )
-    }
-  }
-
-
-  const [activeFragment, setActiveFragment] = useState(1);
-
-
+  const [activeFragment, setActiveFragment] = useState(0);
   const fragmentsList = [
     <UserSettings avatar={''} name={''} email={''} job={''} password={''} key="1" />
   ];
 
   return (
     <>
-
-
       <Navbar height={750} width={{ base: 80 }} p="md"
         sx={(theme) => ({
           position: 'fixed',
@@ -232,6 +187,9 @@ const User: NextPage<IProps> = (props: IProps) => {
       >
         <Navbar.Section grow mt={50}>
           <Stack justify="center" spacing={0}>
+            <Link href={`/`} passHref>
+              <NavbarLink icon={IconHome2} label="Home" />
+            </Link>
             {navbarData.map((link, index) => (
               <NavbarLink
                 {...link}
@@ -244,22 +202,12 @@ const User: NextPage<IProps> = (props: IProps) => {
         </Navbar.Section>
         <Navbar.Section>
           <Stack justify="center" spacing={0}>
-            <NavbarLink icon={IconLogout} label="Logout" href="/" />
+            <NavbarLink icon={IconLogout} label="Logout" />
           </Stack>
         </Navbar.Section>
       </Navbar>
 
-      {
-        // fragmentsList.map((fragment, index) => (
-        //   <Box key={index}>
-        //     {fragment}
-        //   </Box>
-        // ))
-        <>
-          fragmentsList[activeFragment]
-        </>
-
-      }
+      {fragmentsList[activeFragment]}
     </>
   );
 }

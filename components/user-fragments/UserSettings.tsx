@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React, { FunctionComponent, useState } from 'react'
 import { NextPage } from 'next';
-import { createStyles, Notification, Container, Group, ActionIcon, Footer, Box, Text, Button, PasswordInput, Input } from '@mantine/core';
+import { createStyles, Notification, Container, Group, ActionIcon, Footer, Box, Text, Button, PasswordInput, Input, Modal, NumberInput, Grid, Avatar } from '@mantine/core';
 import { IconBrandTwitter, IconCode, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons';
 import InfoCard from '../InfoCard';
 
@@ -20,6 +20,8 @@ import {
   IconX,
   IconTrash
 } from '@tabler/icons';
+import { IGift } from '../../types';
+import GiftCard from '../GiftCard';
 
 interface IProps {
   avatar: string;
@@ -28,6 +30,38 @@ interface IProps {
   job: string;
   password: string;
 };
+
+
+var data: IGift[] = [
+  {
+    title: 'Кофе',
+    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+    price: 100,
+    isGifted: false,
+    gifter: undefined,
+  },
+  {
+    title: 'Кофе',
+    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+    price: 100,
+    isGifted: false,
+    gifter: undefined,
+  },
+  {
+    title: 'Кофе',
+    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+    price: 100,
+    isGifted: false,
+    gifter: undefined,
+  },
+  {
+    title: 'Кофе',
+    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+    price: 100,
+    isGifted: false,
+    gifter: undefined,
+  },
+]
 
 const UserSettings: FunctionComponent<IProps> = (props: IProps) => {
   const [name, setName] = useState(props.name ? props.name : "");
@@ -94,6 +128,10 @@ const UserSettings: FunctionComponent<IProps> = (props: IProps) => {
     }
   }
 
+
+  const [openModal, setOpenModal] = useState(false);
+  const [price, setPrice] = useState(0);
+
   return (
     <>
       <Container
@@ -127,14 +165,16 @@ const UserSettings: FunctionComponent<IProps> = (props: IProps) => {
                 gap: '20px',
               })}
             >
-              {/* <Avatar
-              src={image}
-              color="violet"
-              classNames={{
-                root: "w-[140px] h-[140px] rounded-full hover:brightness-50 cursor-pointer"
-              }}
-            /> */}
-              <Input.Wrapper label="Your name"
+              <Avatar
+                src={props.avatar ? props.avatar : ""}
+                color="violet"
+                sx={(theme) => ({
+                  width: '150px',
+                  height: '150px',
+                  borderRadius: '50%',
+                })}
+              />
+              <Input.Wrapper label="Ваш никнейм"
                 sx={(theme) => ({
                   width: '100%',
                   [theme.fn.largerThan('xs')]: {
@@ -147,7 +187,7 @@ const UserSettings: FunctionComponent<IProps> = (props: IProps) => {
                   onChange={(e: any) => setName(e.currentTarget.value)}
                 />
               </Input.Wrapper>
-              <Input.Wrapper label="Email"
+              <Input.Wrapper label="Почта"
                 sx={(theme) => ({
                   width: '100%',
                   [theme.fn.largerThan('xs')]: {
@@ -167,7 +207,7 @@ const UserSettings: FunctionComponent<IProps> = (props: IProps) => {
                     width: '320px',
                   },
                 })}
-                label="Password"
+                label="Пароль"
                 value={password}
                 onChange={(e: any) => setPassword(e.currentTarget.value)}
               />
@@ -192,7 +232,7 @@ const UserSettings: FunctionComponent<IProps> = (props: IProps) => {
                     width: '100%',
                   })}
                 >
-                  Save
+                  Сохранить
                 </Button>
                 <Button
                   type="submit"
@@ -209,6 +249,68 @@ const UserSettings: FunctionComponent<IProps> = (props: IProps) => {
 
         <InfoCard title="Подарки">
           <Box>
+            <Modal
+              opened={openModal}
+              onClose={() => setOpenModal(false)}
+              title="Добавить подарок"
+              centered
+              overlayOpacity={0.55}
+              overlayBlur={3}
+              overflow="inside"
+            >
+              <Box
+                sx={(theme) => ({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '20px',
+                })}
+              >
+                <Input.Wrapper label="Название">
+                  <Input />
+                </Input.Wrapper>
+                <Input.Wrapper label="Ссылка на подарок">
+                  <Input />
+                </Input.Wrapper>
+                <Input.Wrapper label="Описание">
+                  <Input />
+                </Input.Wrapper>
+                <NumberInput
+                  label="Price"
+                  hideControls
+                  value={price}
+                  parser={(value) => value?.replace(/\$\s?|(,*)/g, '')}
+                  formatter={(value) =>
+                    !Number.isNaN(parseFloat(value ? value : '0'))
+                      ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                      : '$ '
+                  }
+                />
+                <Button
+                  type="submit"
+                  variant="filled"
+                  color="teal"
+                >
+                  Добавить
+                </Button>
+              </Box>
+            </Modal>
+            <Button onClick={() => setOpenModal(true)}>Добавить желаемый подарок</Button>
+
+            <Grid mt={10}>
+              {data.map((gift, index) => (
+                <Grid.Col xs={6} sm={6} md={4} key={index}>
+                  <GiftCard
+                    title={'Choppie Stickies'}
+                    image={'https://firebasestorage.googleapis.com/v0/b/onlywish-9d17b.appspot.com/o/items%2F590bf649-f3ee-41e6-a6ef-e76fba225b48?alt=media&token=4fad8c05-54b3-465f-8022-dff06acecd01'}
+                    price={9.43}
+                    isGifted={false}
+                    gifter={undefined}
+                  />
+                </Grid.Col>
+              ))}
+            </Grid>
 
           </Box>
         </InfoCard>

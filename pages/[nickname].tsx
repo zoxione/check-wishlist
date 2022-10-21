@@ -96,9 +96,20 @@ const Profile: NextPage<IProps> = ({ avatar, name, email, job }: IProps) => {
           padding: '0',
           margin: '0',
           backgroundSize: 'cover',
-          backgroundColor: theme.fn.primaryColor(),
+          backgroundColor: theme.colors.blue[5],
         })}
       >
+        <Link href="/user">
+          <Button variant="filled"
+            sx={(theme) => ({
+              position: 'fixed',
+              top: '80px',
+              right: '20px',
+            })}
+          >
+            Изменить
+          </Button>
+        </Link>
       </Container>
 
       <Container

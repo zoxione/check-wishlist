@@ -17,7 +17,7 @@ const Layout: FunctionComponent<IProps> = ({ children }) => {
       <AppShell
         sx={(theme) => ({
           main: {
-            paddingBottom: '30px',
+            // paddingBottom: '30px',
           }
         })}
         header={
