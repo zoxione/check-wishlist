@@ -2,10 +2,10 @@ import { Avatar, Paper, createStyles, Notification, TextInput, PasswordInput, Ch
 import { NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { useState } from 'react';
-import CardGift from '../../components/GiftCard';
-import { IGift } from '../../types';
+
+import { signOut, useSession } from 'next-auth/react';
 
 import { IconCheck, IconX, IconTrash } from '@tabler/icons';
 import {
@@ -22,10 +22,15 @@ import {
 } from '@tabler/icons';
 
 
-import InfoCard from '../../components/InfoCard';
-import NavbarContent from '../../components/Navbar';
+
+
+import CardGift from '../../components/GiftCard';
+import { IGift } from '../../types';
+import UserAccount from '../../components/user-fragments/UserAccount';
+import UserDashboard from '../../components/user-fragments/UserDashboard';
+import UserAnalytics from '../../components/user-fragments/UserAnalytics';
 import UserSettings from '../../components/user-fragments/UserSettings';
-import { signOut } from 'next-auth/react';
+
 
 // // Получение данных с сервера
 // export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
@@ -75,7 +80,6 @@ const navbarData = [
   { icon: IconUser, label: 'Account' },
   { icon: IconGauge, label: 'Dashboard' },
   { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-  { icon: IconFingerprint, label: 'Security' },
   { icon: IconSettings, label: 'Settings' },
 ];
 
@@ -130,6 +134,8 @@ var data: IGift[] = [
 ]
 
 const User: NextPage<IProps> = (props: IProps) => {
+  const { data: session, status } = useSession();
+
   const router = useRouter()
   const { id } = router.query
 
@@ -172,7 +178,10 @@ const User: NextPage<IProps> = (props: IProps) => {
 
   const [activeFragment, setActiveFragment] = useState(0);
   const fragmentsList = [
-    <UserSettings avatar={''} name={''} email={''} job={''} password={''} key="1" />
+    <UserAccount avatar={''} name={''} email={''} job={''} password={''} key={1} />,
+    <UserDashboard key={2} />,
+    <UserAnalytics key={3} />,
+    <UserSettings key={4} />,
   ];
 
   return (
@@ -187,8 +196,8 @@ const User: NextPage<IProps> = (props: IProps) => {
         })}
       >
         <Navbar.Section grow mt={50}>
-          <Stack justify="center" spacing={0}>
-            <NavbarLink icon={IconHome2} label="Home" />
+          <Stack justify="center" spacing={10}>
+            <NavbarLink icon={IconHome2} label="Home" onClick={() => Router.push(`${session?.user?.name}`)} />
             {navbarData.map((link, index) => (
               <NavbarLink
                 {...link}

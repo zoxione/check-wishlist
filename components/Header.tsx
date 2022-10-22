@@ -7,15 +7,14 @@ import { signIn, useSession } from 'next-auth/react';
 
 import SwitchTheme from '../components/ui/SwitchTheme';
 
+
 interface IProps {
 
 }
 
 
 const HeaderContent: FunctionComponent<IProps> = ({ }) => {
-
   const { status, data } = useSession();
-
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
 
   return (
@@ -84,18 +83,23 @@ const HeaderContent: FunctionComponent<IProps> = ({ }) => {
             })}
           >
             <SwitchTheme />
-            <Button variant="default" onClick={() => signIn()}>Sign in</Button>
-            <Link href="/auth/signup" passHref>
-              <Button>Sign up</Button>
-            </Link>
             {
-              true && (
-                <Link href={`${data?.user?.name}`} passHref>
-                  <Button variant="outline" leftIcon={<IconUser />}>
-                    {data?.user?.name}
-                  </Button>
-                </Link>
-              )
+              status === 'authenticated'
+                ? <>
+                  <Link href={`${data?.user?.name}`} passHref>
+                    <Button variant="filled" leftIcon={<IconUser />}>
+                      {data?.user?.name}
+                    </Button>
+                  </Link>
+                </>
+                : <>
+                  <Link href="/auth/signin" passHref>
+                    <Button variant="default" >Sign in</Button>
+                  </Link>
+                  <Link href="/auth/signup" passHref>
+                    <Button>Sign up</Button>
+                  </Link>
+                </>
             }
           </Group>
 
@@ -108,6 +112,8 @@ const HeaderContent: FunctionComponent<IProps> = ({ }) => {
           />
         </Group>
       </Header>
+
+
 
       <Drawer
         opened={drawerOpened}

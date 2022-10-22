@@ -10,16 +10,16 @@ interface IProps {
 };
 
 
-const UserSettings: FunctionComponent<IProps> = ({ }) => {
+const UserDashboard: FunctionComponent<IProps> = ({ }) => {
 
 
   return (
     <UserFragmentLayout>
-      <InfoCard title="Настройки">
+      <InfoCard title="Приборная панель">
 
       </InfoCard>
     </UserFragmentLayout>
   )
 }
 
-export default UserSettings;
+export default UserDashboard;

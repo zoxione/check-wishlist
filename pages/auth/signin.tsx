@@ -1,11 +1,12 @@
 import { Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Box, } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 import { NextPage } from 'next';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { FormEventHandler, useState } from 'react';
 
 
-
+import { IconX, IconCheck } from '@tabler/icons';
 
 
 
@@ -15,23 +16,49 @@ interface IProps {
 
 
 const SignIn: NextPage<IProps> = (props) => {
-
   const { status, data } = useSession();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    const res = await signIn('credentials', {
-      email: email,
-      password: password,
-      redirect: false,
-      callbackUrl: "/"
-    });
+    try {
+      const res = await signIn('credentials', {
+        email: email,
+        password: password,
+        redirect: false,
+        callbackUrl: "/"
+      });
+      console.log(res);
 
-    console.log(res);
+      showNotification({
+        id: 'login-success',
+        disallowClose: true,
+        autoClose: 2000,
+        title: "Успешно",
+        message: 'Вы успешно авторизовались',
+        color: 'green',
+        icon: <IconCheck />,
+        loading: false,
+      });
+    }
+    catch (e) {
+      console.log(e);
+
+      showNotification({
+        id: 'login-failed',
+        disallowClose: true,
+        autoClose: 2000,
+        title: "Не удалось войти",
+        message: 'Неверный логин или пароль',
+        color: 'red',
+        icon: <IconX />,
+        loading: false,
+      });
+    }
   }
 
 

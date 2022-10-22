@@ -1,73 +1,69 @@
-import { createStyles, Image, Container, Title, Text, Button, SimpleGrid } from '@mantine/core';
+import { createStyles, Image, Container, Title, Text, Button, SimpleGrid, Box } from '@mantine/core';
 import { NextPage } from 'next';
 import Link from 'next/link';
-import image from './image.svg';
-
-const useStyles = createStyles((theme) => ({
-  root: {
-    paddingTop: 80,
-    paddingBottom: 80,
-    height: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-  },
-
-  title: {
-    fontWeight: 900,
-    fontSize: 34,
-    marginBottom: theme.spacing.md,
-    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-
-    [theme.fn.smallerThan('sm')]: {
-      fontSize: 32,
-    },
-  },
-
-  control: {
-    [theme.fn.smallerThan('sm')]: {
-      width: '100%',
-    },
-  },
-
-  mobileImage: {
-    [theme.fn.largerThan('sm')]: {
-      display: 'none',
-    },
-  },
-
-  desktopImage: {
-    [theme.fn.smallerThan('sm')]: {
-      display: 'none',
-    },
-  },
-}));
 
 
-interface Props {
+
+interface IProps {
 
 }
 
 
-const Error: NextPage<Props> = (props) => {
-  const { classes } = useStyles();
-
+const Error: NextPage<IProps> = (props) => {
   return (
-    <Container className={classes.root}>
+    <Container
+      sx={(theme) => ({
+        paddingTop: 80,
+        paddingBottom: 80,
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+      })}
+    >
       <SimpleGrid spacing={80} cols={2} breakpoints={[{ maxWidth: 'sm', cols: 1, spacing: 40 }]}>
-        <Image src={"https://ui.mantine.dev/_next/static/media/image.11cd6c19.svg"} alt="404" className={classes.mobileImage} />
-        <div>
-          <Title className={classes.title}>Something is not right...</Title>
+        <Image src={"https://ui.mantine.dev/_next/static/media/image.11cd6c19.svg"} alt="404"
+          sx={(theme) => ({
+            [theme.fn.largerThan('sm')]: {
+              display: 'none',
+            },
+          })}
+        />
+        <Box>
+          <Title
+            sx={(theme) => ({
+              fontWeight: 900,
+              fontSize: 34,
+              marginBottom: theme.spacing.md,
+              fontFamily: ``,
+              [theme.fn.smallerThan('sm')]: {
+                fontSize: 32,
+              },
+            })}
+          >
+            Такой страницы не существует
+          </Title>
           <Text color="dimmed" size="lg">
-            Page you are trying to open does not exist. You may have mistyped the address, or the
-            page has been moved to another URL. If you think this is an error contact support.
+            Возможно, вы ошиблись при вводе адреса или страница была удалена.
           </Text>
           <Link href="/" passHref>
-            <Button variant="outline" size="md" mt="xl" className={classes.control}>
-              Get back to home page
+            <Button variant="outline" size="md" mt="xl"
+              sx={(theme) => ({
+                [theme.fn.smallerThan('sm')]: {
+                  width: '100%',
+                },
+              })}
+            >
+              Вернуться на главную
             </Button>
           </Link>
-        </div>
-        <Image src={"https://ui.mantine.dev/_next/static/media/image.11cd6c19.svg"} alt="404" className={classes.desktopImage} />
+        </Box>
+        <Image src={"https://ui.mantine.dev/_next/static/media/image.11cd6c19.svg"} alt="404"
+          sx={(theme) => ({
+            [theme.fn.smallerThan('sm')]: {
+              display: 'none',
+            },
+          })}
+        />
       </SimpleGrid>
     </Container>
   );

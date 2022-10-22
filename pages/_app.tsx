@@ -9,6 +9,7 @@ import { SessionProvider } from 'next-auth/react'
 import { useState } from 'react';
 import { MantineProvider, ColorSchemeProvider, ColorScheme, Loader, MantineTheme, MantineThemeOverride, Center } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
+import { NotificationsProvider } from '@mantine/notifications';
 
 import Layout from '../components/Layout';
 import { RouterTransition } from '../components/logics/RouterTransition';
@@ -49,10 +50,12 @@ const App = ({ Component, pageProps }: AppProps<{ session: Session }>) => {
       <SessionProvider session={pageProps.session}>
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
           <MantineProvider theme={appTheme} withGlobalStyles withNormalizeCSS>
-            <Layout>
-              <RouterTransition />
-              <Component {...pageProps} />
-            </Layout>
+            <NotificationsProvider>
+              <Layout>
+                <RouterTransition />
+                <Component {...pageProps} />
+              </Layout>
+            </NotificationsProvider>
           </MantineProvider>
         </ColorSchemeProvider>
       </SessionProvider>
