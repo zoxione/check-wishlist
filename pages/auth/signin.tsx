@@ -1,13 +1,12 @@
-import { Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Box, } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
 import { NextPage } from 'next';
-import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { FormEventHandler, useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import Router from 'next/router';
 
-
+import { useForm } from '@mantine/form';
 import { IconX, IconCheck } from '@tabler/icons';
-
+import { Paper, TextInput, PasswordInput, Button, Title, Text, Anchor, Box, } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 
 
 interface IProps {
@@ -15,39 +14,29 @@ interface IProps {
 }
 
 
-const SignIn: NextPage<IProps> = (props) => {
-  const { status, data } = useSession();
+const SignIn: NextPage<IProps> = ({ }) => {
+  const form = useForm({
+    initialValues: {
+      email: '',
+      password: '',
+    },
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Неверный формат почты'),
+      password: (value) => (value.length > 5 ? null : 'Пароль должен быть больше 5 символов'),
+    },
+  });
 
+  const handleSubmit = async () => {
+    const res = await signIn('credentials', {
+      email: form.values.email,
+      password: form.values.password,
+      redirect: false,
+      callbackUrl: "/"
+    });
+    console.log(res);
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await signIn('credentials', {
-        email: email,
-        password: password,
-        redirect: false,
-        callbackUrl: "/"
-      });
-      console.log(res);
-
-      showNotification({
-        id: 'login-success',
-        disallowClose: true,
-        autoClose: 2000,
-        title: "Успешно",
-        message: 'Вы успешно авторизовались',
-        color: 'green',
-        icon: <IconCheck />,
-        loading: false,
-      });
-    }
-    catch (e) {
-      console.log(e);
-
+    if (res?.ok == false) {
       showNotification({
         id: 'login-failed',
         disallowClose: true,
@@ -59,8 +48,10 @@ const SignIn: NextPage<IProps> = (props) => {
         loading: false,
       });
     }
+    else {
+      Router.push("/");
+    }
   }
-
 
   return (
     <Box
@@ -73,12 +64,10 @@ const SignIn: NextPage<IProps> = (props) => {
       <Paper
         radius={0} p={30}
         sx={(theme) => ({
-          borderRight: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[3]
-            }`,
+          borderRight: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[3]}`,
           minHeight: '100%',
           maxWidth: 450,
           paddingTop: 80,
-
           [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
             maxWidth: '100%',
           },
@@ -90,41 +79,33 @@ const SignIn: NextPage<IProps> = (props) => {
             fontFamily: `Greycliff CF, ${theme.fontFamily}`,
           })}
         >
-          Welcome back!
+          С возвращением!
         </Title>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.onSubmit(() => handleSubmit())}>
           <TextInput
             label="Почта"
             placeholder="hello@gmail.com"
             size="md"
-            value={email}
-            onChange={(e) => setEmail(e.currentTarget.value)}
+            {...form.getInputProps('email')}
           />
           <PasswordInput
             label="Пароль"
-            placeholder="Your password"
-            mt="md"
+            placeholder="qwerty123"
+            mt={10}
             size="md"
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
+            {...form.getInputProps('password')}
           />
-          <Checkbox
-            label="Keep me logged in"
-            mt="xl"
-            size="md"
-          />
-
           <Button type="submit" fullWidth mt="xl" size="md">
-            Sign in
+            Войти
           </Button>
         </form>
 
         <Text align="center" mt="md">
-          Don&apos;t have an account? {' '}
+          У вас нет аккаунт? {' '}
           <Link href="/auth/signup" passHref>
             <Anchor<'a'> href="#" weight={700}>
-              Sign up
+              Зарегистрироваться
             </Anchor>
           </Link>
         </Text>

@@ -35,12 +35,12 @@ export const authOptions: NextAuthOptions = {
 
         // логика входа юзера из бд
         let result: any;
-        if (email === 'z1@gmail.com' && password === '123') {
+        if (email === 'z1@gmail.com' && password === '123456') {
           result = {
             id: 1,
             name: 'zoxi',
-            email: '',
-            password: '123'
+            email: 'z1@gmail.com',
+            password: '123456'
           };
         }
 

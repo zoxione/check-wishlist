@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { Session } from "next-auth";
 import { SessionProvider } from 'next-auth/react'
 import { useState } from 'react';
-import { MantineProvider, ColorSchemeProvider, ColorScheme, Loader, MantineTheme, MantineThemeOverride, Center } from '@mantine/core';
+import { MantineProvider, ColorSchemeProvider, ColorScheme, Loader, MantineTheme, MantineThemeOverride, Center, ButtonStylesParams } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { NotificationsProvider } from '@mantine/notifications';
 
@@ -27,7 +27,25 @@ export const appTheme: MantineThemeOverride = {
           color: 'violet',
         },
       },
-    }
+    },
+    Button: {
+      // Subscribe to theme and component params
+      styles: (theme, params: ButtonStylesParams) => ({
+        root: {
+          ":hover": {
+            transitionDuration: '0.4s',
+            backgroundColor:
+              params.variant === 'outline'
+                ? theme.colors[params.color || theme.primaryColor][6]
+                : undefined,
+            color:
+              params.variant === 'outline'
+                ? theme.colors[params.color || theme.primaryColor][0]
+                : undefined,
+          },
+        },
+      }),
+    },
   }
 };
 

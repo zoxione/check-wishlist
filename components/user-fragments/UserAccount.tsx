@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React, { FunctionComponent, useState } from 'react'
 import { NextPage } from 'next';
-import { createStyles, Notification, Container, Group, ActionIcon, Footer, Box, Text, Button, PasswordInput, Input, Modal, NumberInput, Grid, Avatar } from '@mantine/core';
+import { createStyles, Notification, Container, Group, ActionIcon, Footer, Box, Text, Button, PasswordInput, Input, Modal, NumberInput, Grid, Avatar, TextInput, useMantineTheme, Center } from '@mantine/core';
 import { IconBrandTwitter, IconCode, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons';
 import InfoCard from '../InfoCard';
 
@@ -26,14 +26,10 @@ import UserFragmentLayout from './UserFragmentLayout';
 
 
 import { useSession } from 'next-auth/react';
+import { useForm } from '@mantine/form';
+import Router from 'next/router';
 
-interface IProps {
-  avatar: string;
-  name: string;
-  email: string;
-  job: string;
-  password: string;
-};
+
 
 
 var dataGift: IGift[] = [
@@ -67,74 +63,61 @@ var dataGift: IGift[] = [
   },
 ]
 
+
+interface IProps {
+  avatar: string;
+  name: string;
+  email: string;
+  job: string;
+  password: string;
+};
+
+
 const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
   const { status, data } = useSession();
+  const theme = useMantineTheme();
 
-  const [name, setName] = useState(data?.user?.name || '');
-  const [email, setEmail] = useState(data?.user?.email || '');
-  const [password, setPassword] = useState('');
+  const form = useForm({
+    initialValues: {
+      name: data?.user?.name,
+      password: data?.user?.email,
+    },
 
-  const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
+    // validate: {
+    //   name: (value: string | any[]) => (value.length > 2 ? null : 'Я не знаю, что это такое'),
+    //   password: (value: string | any[]) => (value.length > 5 ? null : 'Пароль должен быть больше 5 символов'),
+    // },
+  });
 
-    try {
-      // const body = { name, email, password, image };
-      // await fetch(`/api/user/${props.user?.id}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(body),
-      // }).then((res) => {
-      //   if (res.status === 200) {
-      //     setShowNotification('success');
-      //   }
-      //   else {
-      //     setShowNotification('error');
-      //     console.log(res);
-      //   }
-      // });
-    }
-    catch (error) {
-      // setShowNotification('error');
-      console.error(error);
-    }
-  };
+  const handleSubmit = async () => {
+    confirm('Вы уверены, что хотите изменить данные?');
 
-  // // Notification component, states: false, success, error
-  // const [showNotification, setShowNotification] = useState('false');
-  // const CustomNotification = () => {
-  //   switch (showNotification) {
-  //     case 'success':
-  //       return (
-  //         <Notification
-  //           icon={<IconCheck size={18} />}
-  //           color="teal"
-  //           title="Successfully"
-  //           className="absolute top-0 right-0 m-4 z-[1000]"
-  //           onClick={() => setShowNotification('false')}
-  //         >
-  //           User updated
-  //         </Notification>
-  //       )
-  //     case 'error':
-  //       return (
-  //         <Notification
-  //           icon={<IconX size={18} />}
-  //           color="red"
-  //           title="Error"
-  //           className="absolute top-0 right-0 m-4 z-[1000]"
-  //           onClick={() => setShowNotification('false')}
-  //         >
-  //           An error occurred
-  //         </Notification>
-  //       )
-  //     default:
-  //       return (
-  //         <></>
-  //       )
-  //   }
-  // }
+    // const res = await signIn('credentials', {
+    //   email: form.values.email,
+    //   password: form.values.password,
+    //   redirect: false,
+    //   callbackUrl: "/"
+    // });
+    // console.log(res);
 
+    // if (res?.ok == false) {
+    //   showNotification({
+    //     id: 'login-failed',
+    //     disallowClose: true,
+    //     autoClose: 2000,
+    //     title: "Не удалось войти",
+    //     message: 'Неверный логин или пароль',
+    //     color: 'red',
+    //     icon: <IconX />,
+    //     loading: false,
+    //   });
+    // }
+    // else {
+    //   Router.push("/");
+    // }
+  }
 
+  // Модалка
   const [openModal, setOpenModal] = useState(false);
   const [price, setPrice] = useState(0);
 
@@ -154,97 +137,54 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
 
       <UserFragmentLayout>
         <InfoCard title="Основная информация">
-          <form onSubmit={handleSubmit}>
-            <Box
-              sx={(theme) => ({
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '20px',
-              })}
-            >
-              <Avatar
-                src={props.avatar ? props.avatar : ""}
-                color="violet"
-                sx={(theme) => ({
-                  width: '150px',
-                  height: '150px',
-                  borderRadius: '50%',
-                })}
+          <Box
+            sx={(theme) => ({
+              maxWidth: '350px',
+              margin: '0 auto',
+            })}
+          >
+            <form onSubmit={form.onSubmit(() => handleSubmit())}>
+              <Center>
+                <Avatar
+                  src={props.avatar ? props.avatar : ""}
+                  color={theme.fn.primaryColor()}
+                  sx={(theme) => ({
+                    width: '180px',
+                    height: '180px',
+                    borderRadius: '50%',
+                  })}
+                />
+              </Center>
+              <TextInput
+                label="Имя"
+                mt={20}
+                size="md"
+                {...form.getInputProps('name')}
               />
-              <Input.Wrapper label="Ваш никнейм"
-                sx={(theme) => ({
-                  width: '100%',
-                  [theme.fn.largerThan('xs')]: {
-                    width: '320px',
-                  },
-                })}
-              >
-                <Input
-                  value={name}
-                  onChange={(e: any) => setName(e.currentTarget.value)}
-                />
-              </Input.Wrapper>
-              <Input.Wrapper label="Почта"
-                sx={(theme) => ({
-                  width: '100%',
-                  [theme.fn.largerThan('xs')]: {
-                    width: '320px',
-                  },
-                })}
-              >
-                <Input
-                  value={email}
-                  onChange={(e: any) => setEmail(e.currentTarget.value)}
-                />
-              </Input.Wrapper>
               <PasswordInput
-                sx={(theme) => ({
-                  width: '100%',
-                  [theme.fn.largerThan('xs')]: {
-                    width: '320px',
-                  },
-                })}
                 label="Пароль"
-                value={password}
-                onChange={(e: any) => setPassword(e.currentTarget.value)}
+                mt={10}
+                size="md"
+                {...form.getInputProps('password')}
               />
               <Box
+                mt={20}
                 sx={(theme) => ({
                   display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  justifyContent: 'space-between',
                   gap: '20px',
-                  width: '100%',
-                  [theme.fn.largerThan('xs')]: {
-                    width: '320px',
-                  },
                 })}
               >
-                <Button
-                  type="submit"
-                  variant="outline"
-                  color="teal"
-                  sx={(theme) => ({
-                    width: '100%',
-                  })}
-                >
+                <Button type="submit" fullWidth variant="outline" color="teal">
                   Сохранить
                 </Button>
-                <Button
-                  type="submit"
-                  variant="filled"
-                  color="red"
-                >
+                <Button onClick={() => { form.reset() }} variant="filled" color="red">
                   <IconTrash size={18} />
                 </Button>
               </Box>
-            </Box>
-          </form>
+            </form>
+          </Box>
         </InfoCard>
-
 
         <InfoCard title="Подарки">
           <Box>

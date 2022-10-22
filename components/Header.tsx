@@ -3,9 +3,12 @@ import Link from 'next/link';
 import { createStyles, Header, Group, Button, UnstyledButton, Text, SimpleGrid, ThemeIcon, Anchor, Divider, Center, Box, Burger, Drawer, Collapse, ScrollArea, useMantineColorScheme, ActionIcon, Title, } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconNotification, IconUser, IconCode, IconBook, IconChartPie3, IconFingerprint, IconCoin, IconSun, IconMoonStars, IconChevronDown, } from '@tabler/icons';
-import { signIn, useSession } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 
 import SwitchTheme from '../components/ui/SwitchTheme';
+import { GetServerSideProps } from 'next';
+import { authOptions } from '../pages/api/auth/[...nextauth]';
+import { Session, unstable_getServerSession } from 'next-auth';
 
 
 interface IProps {
@@ -13,9 +16,34 @@ interface IProps {
 }
 
 
-const HeaderContent: FunctionComponent<IProps> = ({ }) => {
-  const { status, data } = useSession();
+const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
+  const { data: session } = useSession();
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
+
+  let rightMenu;
+  if (session) {
+    rightMenu = (
+      <>
+        <Link href={`${session.user?.name}`} passHref>
+          <Button variant="filled" leftIcon={<IconUser />}>
+            {session.user?.name}
+          </Button>
+        </Link>
+      </>
+    )
+  }
+  else {
+    rightMenu = (
+      <>
+        <Link href="/auth/signin" passHref>
+          <Button variant="default" >Sign in</Button>
+        </Link>
+        <Link href="/auth/signup" passHref>
+          <Button>Sign up</Button>
+        </Link>
+      </>
+    )
+  }
 
   return (
     <Box>
@@ -83,24 +111,7 @@ const HeaderContent: FunctionComponent<IProps> = ({ }) => {
             })}
           >
             <SwitchTheme />
-            {
-              status === 'authenticated'
-                ? <>
-                  <Link href={`${data?.user?.name}`} passHref>
-                    <Button variant="filled" leftIcon={<IconUser />}>
-                      {data?.user?.name}
-                    </Button>
-                  </Link>
-                </>
-                : <>
-                  <Link href="/auth/signin" passHref>
-                    <Button variant="default" >Sign in</Button>
-                  </Link>
-                  <Link href="/auth/signup" passHref>
-                    <Button>Sign up</Button>
-                  </Link>
-                </>
-            }
+            {rightMenu}
           </Group>
 
           <Burger opened={drawerOpened} onClick={toggleDrawer}
