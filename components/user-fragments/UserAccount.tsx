@@ -27,7 +27,7 @@ import UserFragmentLayout from './UserFragmentLayout';
 
 import { useSession } from 'next-auth/react';
 import { useForm } from '@mantine/form';
-import Router from 'next/router';
+import AddGiftModal from '../logics/AddGiftModal';
 
 
 
@@ -35,6 +35,7 @@ import Router from 'next/router';
 var dataGift: IGift[] = [
   {
     title: 'Кофе',
+    description: 'Кофе вкусный',
     image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
     price: 100,
     isGifted: false,
@@ -77,6 +78,9 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
   const { status, data } = useSession();
   const theme = useMantineTheme();
 
+  // Модалка
+  const [openedAddGiftModal, setOpenedAddGiftModal] = useState(false);
+
   const form = useForm({
     initialValues: {
       name: data?.user?.name,
@@ -116,10 +120,6 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
     //   Router.push("/");
     // }
   }
-
-  // Модалка
-  const [openModal, setOpenModal] = useState(false);
-  const [price, setPrice] = useState(0);
 
   return (
     <>
@@ -188,55 +188,9 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
 
         <InfoCard title="Список желаний">
           <Box>
-            <Modal
-              opened={openModal}
-              onClose={() => setOpenModal(false)}
-              title="Добавить подарок"
-              centered
-              overlayOpacity={0.55}
-              overlayBlur={3}
-              overflow="inside"
-            >
-              <Box
-                sx={(theme) => ({
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '20px',
-                })}
-              >
-                <Input.Wrapper label="Название">
-                  <Input />
-                </Input.Wrapper>
-                <Input.Wrapper label="Ссылка на подарок">
-                  <Input />
-                </Input.Wrapper>
-                <Input.Wrapper label="Описание">
-                  <Input />
-                </Input.Wrapper>
-                <NumberInput
-                  label="Price"
-                  hideControls
-                  value={price}
-                  parser={(value) => value?.replace(/\$\s?|(,*)/g, '')}
-                  formatter={(value) =>
-                    !Number.isNaN(parseFloat(value ? value : '0'))
-                      ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                      : '$ '
-                  }
-                />
-                <Button
-                  type="submit"
-                  variant="filled"
-                  color="teal"
-                >
-                  Добавить
-                </Button>
-              </Box>
-            </Modal>
+            <AddGiftModal opened={openedAddGiftModal} setOpened={setOpenedAddGiftModal} />
             <Button
-              onClick={() => setOpenModal(true)}
+              onClick={() => setOpenedAddGiftModal(true)}
               leftIcon={<IconTextPlus size={18} />}
             >
               Добавить
@@ -248,6 +202,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                   <GiftCard
                     title={'Choppie Stickies'}
                     image={'https://firebasestorage.googleapis.com/v0/b/onlywish-9d17b.appspot.com/o/items%2F590bf649-f3ee-41e6-a6ef-e76fba225b48?alt=media&token=4fad8c05-54b3-465f-8022-dff06acecd01'}
+                    description={'Chopdas ChopdasChopdasCho dsada d sa dadas da sdas pdas sd d'}
                     price={9.43}
                     isGifted={false}
                     gifter={undefined}
@@ -259,7 +214,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
           </Box>
         </InfoCard>
 
-      </UserFragmentLayout>
+      </UserFragmentLayout >
     </>
   )
 }

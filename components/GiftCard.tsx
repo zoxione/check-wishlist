@@ -1,87 +1,81 @@
-import { IconEye, IconMessageCircle } from '@tabler/icons';
+import { IconEye, IconTrash, IconX, IconCheck } from '@tabler/icons';
 import { Card, Text, Group, Center, createStyles, Button, Modal, Box, Input, NumberInput } from '@mantine/core';
 import { FunctionComponent, useState } from 'react';
 import { Image } from '@mantine/core';
-import { IGift } from '../types';
+
+import GiveGiftModal from './logics/GiveGiftModal';
+import { showNotification } from '@mantine/notifications';
 
 
-// interface IProps {
-//   title: string;
-//   image: string;
-//   price: number;
-//   isGifted: boolean;
-//   gifter: string | undefined;
-// }
+interface IProps {
+  title: string;
+  description: string | null;
+  image: string | null;
+  price: number;
+  isGifted: boolean;
+  gifter: string | null;
+  isOwner: boolean;
+}
 
 
-const GiftCard: FunctionComponent<IGift> = ({ title, image, price, isGifted, gifter }: IGift) => {
-  const [openModal, setOpenModal] = useState(false);
+const GiftCard: FunctionComponent<IProps> = (props) => {
+  const [openedGiveGiftModal, setOpenedGiveGiftModal] = useState(false);
+
+  const deleteGift = () => {
+    console.log('delete');
+
+    showNotification({
+      id: 'delete-gift-success',
+      disallowClose: true,
+      autoClose: 2000,
+      title: "Подарок удален",
+      message: "Подарок успешно удален из списка",
+      color: 'green',
+      icon: <IconCheck />,
+      loading: false,
+    });
+  }
 
   return (
-    <Card withBorder p="lg" radius="md">
+    <Card withBorder p="lg" radius="md"
+      sx={(theme) => ({
+
+        '&:hover': {
+          backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
+        },
+      })}
+    >
       <Card.Section mb="sm">
-        <Image src={image} alt={title} height={180} />
+        <Image src={props.image} alt={props.title} height={250} />
+        {
+          !props.isOwner &&
+          <Button
+            variant="filled"
+            color="red"
+            onClick={() => deleteGift()}
+            style={{ position: 'absolute', top: 0, right: 0, borderRadius: '0 0 0 10px' }}
+          >
+            <IconTrash size={20} />
+          </Button>
+        }
       </Card.Section>
 
       <Text mt="xs">
-        {title}
+        {props.title}
+      </Text>
+
+      <Text weight={300} >
+        {props.description}
       </Text>
 
       <Text weight={600} >
-        $ {price}
+        {props.price} ₽
       </Text>
 
-      <Button variant="light" fullWidth mt="md" radius="md" onClick={() => setOpenModal(true)}>
+      <GiveGiftModal opened={openedGiveGiftModal} setOpened={setOpenedGiveGiftModal} />
+      <Button variant="light" fullWidth mt="md" radius="md" onClick={() => setOpenedGiveGiftModal(true)}>
         Подарить
       </Button>
-
-      <Modal
-        opened={openModal}
-        onClose={() => setOpenModal(false)}
-        title="Добавить подарок"
-        centered
-        overlayOpacity={0.55}
-        overlayBlur={3}
-        overflow="inside"
-      >
-        <Box
-          sx={(theme) => ({
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '20px',
-          })}
-        >
-          <Input.Wrapper label="Название">
-            <Input />
-          </Input.Wrapper>
-          <Input.Wrapper label="Ссылка на подарок">
-            <Input />
-          </Input.Wrapper>
-          <Input.Wrapper label="Описание">
-            <Input />
-          </Input.Wrapper>
-          <NumberInput
-            label="Price"
-            hideControls
-            value={price}
-            parser={(value) => value?.replace(/\$\s?|(,*)/g, '')}
-            formatter={(value) =>
-              !Number.isNaN(parseFloat(value ? value : '0'))
-                ? `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                : '$ '
-            }
-          />
-          <Button
-            type="submit"
-            variant="filled"
-            color="teal"
-          >
-            Подарить
-          </Button>
-        </Box>
-      </Modal>
     </Card>
   );
 }

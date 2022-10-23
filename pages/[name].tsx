@@ -92,19 +92,13 @@ const Profile: NextPage<IProps> = (props: IProps) => {
       >
         {
           props.isOwner &&
-          <Link href="/user">
-            <Button
-              variant="filled"
-              leftIcon={<IconPencil size={18} />}
-              sx={(theme) => ({
-                position: 'fixed',
-                top: '80px',
-                right: '20px',
-              })}
-            >
-              Изменить
-            </Button>
-          </Link>
+          <Group position="right" p={20}>
+            <Link href="/user">
+              <Button variant="filled" leftIcon={<IconPencil size={18} />}>
+                Изменить
+              </Button>
+            </Link>
+          </Group>
         }
       </Container>
 
@@ -114,7 +108,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
           maxWidth: '1024px',
         })}
       >
-        <Grid>
+        <Grid justify="center">
           <Grid.Col sm={4}>
             <Paper
               radius="md"
@@ -127,7 +121,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
               })}
             >
               <Group position="center">
-                <Indicator position="bottom-end" offset={15} size={30} label={<IconCheck size={18} />}>
+                <Indicator position="bottom-end" color="cyan" offset={15} size={24} label={<IconCheck size={14} />}>
                   <Avatar src={props.avatar} size={120} radius={120} mx="auto" color={theme.fn.primaryColor()} />
                 </Indicator>
               </Group>

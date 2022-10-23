@@ -6,6 +6,7 @@ export interface User {
 
 export interface IGift {
   title: string;
+  description?: string;
   image: string;
   price: number;
   isGifted: boolean;
