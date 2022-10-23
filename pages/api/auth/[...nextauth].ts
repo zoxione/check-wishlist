@@ -11,11 +11,21 @@ const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, authOptions
 export default authHandler;
 
 export const authOptions: NextAuthOptions = {
+  // callbacks: {
+  //   session: async ({ session, token }) => {
+  //     if (session?.user) {
+  //       session.user.id = token.sub;
+  //       session.user.createdAt = "1/1/2021";
+  //     }
+  //     return session;
+  //   },
+  // },
+
   callbacks: {
     session: async ({ session, token }) => {
       if (session?.user) {
+        {/* @ts-ignore */ }
         session.user.id = token.sub;
-        session.user.createdAt = "1/1/2021";
       }
       return session;
     },
