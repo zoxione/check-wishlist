@@ -2,7 +2,7 @@ import Link from 'next/link';
 import React, { FunctionComponent, useState } from 'react'
 import { NextPage } from 'next';
 import { createStyles, Notification, Container, Group, ActionIcon, Footer, Box, Text, Button, PasswordInput, Input, Modal, NumberInput, Grid, Avatar, TextInput, useMantineTheme, Center } from '@mantine/core';
-import { IconBrandTwitter, IconCode, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons';
+import { IconTextPlus, IconCode, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons';
 import InfoCard from '../InfoCard';
 
 import {
@@ -186,7 +186,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
           </Box>
         </InfoCard>
 
-        <InfoCard title="Подарки">
+        <InfoCard title="Список желаний">
           <Box>
             <Modal
               opened={openModal}
@@ -235,7 +235,12 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                 </Button>
               </Box>
             </Modal>
-            <Button onClick={() => setOpenModal(true)}>Добавить желаемый подарок</Button>
+            <Button
+              onClick={() => setOpenModal(true)}
+              leftIcon={<IconTextPlus size={18} />}
+            >
+              Добавить
+            </Button>
 
             <Grid mt={10}>
               {dataGift.map((gift, index) => (

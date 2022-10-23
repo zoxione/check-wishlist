@@ -1,20 +1,25 @@
 import { GetStaticProps, NextApiHandler } from 'next';
 import NextAuth, { NextAuthOptions, User } from "next-auth"
+import Providers from 'next-auth/providers';
+import Adapters, { AdapterUser } from 'next-auth/adapters';
 import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from 'next-auth/providers/github';
+import { Session } from 'inspector';
+import { JWT } from 'next-auth/jwt';
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, authOptions);
 export default authHandler;
 
 export const authOptions: NextAuthOptions = {
-  // callbacks: {
-  //   // session: async ({ session, token }) => {
-  //   //   if (session?.user) {
-  //   //     session.user.id = token.sub;
-  //   //   }
-  //   //   return session;
-  //   // },
-  // },
+  callbacks: {
+    session: async ({ session, token }) => {
+      if (session?.user) {
+        session.user.id = token.sub;
+        session.user.createdAt = "1/1/2021";
+      }
+      return session;
+    },
+  },
   session: {
     strategy: 'jwt',
   },

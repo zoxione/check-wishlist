@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import GiftCard from '../components/GiftCard';
 import { IGift } from '../types';
 
-import { IconX, IconCheck } from '@tabler/icons';
+import { IconX, IconCheck, IconPencil } from '@tabler/icons';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
 
@@ -93,7 +93,9 @@ const Profile: NextPage<IProps> = (props: IProps) => {
         {
           props.isOwner &&
           <Link href="/user">
-            <Button variant="filled"
+            <Button
+              variant="filled"
+              leftIcon={<IconPencil size={18} />}
               sx={(theme) => ({
                 position: 'fixed',
                 top: '80px',
