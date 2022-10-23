@@ -205,7 +205,8 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                     description={'Chopdas ChopdasChopdasCho dsada d sa dadas da sdas pdas sd d'}
                     price={9.43}
                     isGifted={false}
-                    gifter={undefined}
+                    gifter={null}
+                    isOwner={true}
                   />
                 </Grid.Col>
               ))}

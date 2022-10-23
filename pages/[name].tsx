@@ -174,10 +174,12 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                     <Grid.Col xs={6} sm={6} md={4} key={index}>
                       <GiftCard
                         title={'Choppie Stickies'}
+                        description={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'}
                         image={'https://firebasestorage.googleapis.com/v0/b/onlywish-9d17b.appspot.com/o/items%2F590bf649-f3ee-41e6-a6ef-e76fba225b48?alt=media&token=4fad8c05-54b3-465f-8022-dff06acecd01'}
                         price={9.43}
                         isGifted={false}
-                        gifter={undefined}
+                        gifter={null}
+                        isOwner={true}
                       />
                     </Grid.Col>
                   ))}
