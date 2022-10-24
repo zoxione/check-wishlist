@@ -176,10 +176,29 @@ const User: NextPage<IProps> = (props: IProps) => {
     }
   };
 
+  var datddda = [
+    {
+      id: 1,
+      giftName: "Подарок 1",
+      gifterName: "Даритель 1",
+      userName: "Получатель 1",
+      createdAt: "2021-05-01",
+      isCompleted: false,
+    },
+    {
+      id: 2,
+      giftName: "Подарок 2",
+      gifterName: "Даритель 2",
+      userName: "Получатель 2",
+      createdAt: "2021-05-02",
+      isCompleted: true,
+    },
+  ]
+
   const [activeFragment, setActiveFragment] = useState(0);
   const fragmentsList = [
     <UserAccount avatar={''} name={''} email={''} job={''} password={''} key={1} />,
-    <UserDashboard key={2} />,
+    <UserDashboard key={2} data={datddda} />,
     <UserAnalytics key={3} />,
     <UserSettings key={4} />,
   ];
