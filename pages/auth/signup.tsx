@@ -108,7 +108,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
   }
 
   const formList = [
-    <form onSubmit={form1.onSubmit(() => handleSubmit())}>
+    <form key={1} onSubmit={form1.onSubmit(() => handleSubmit())}>
       <TextInput
         label="Ваша почта"
         placeholder="hello@gmail.com"
@@ -149,7 +149,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
         </Button>
       </Box>
     </form>,
-    <form onSubmit={form2.onSubmit(() => handleSubmit())}>
+    <form key={2} onSubmit={form2.onSubmit(() => handleSubmit())}>
       <TextInput
         label="Как вы хотите, чтобы вас звали?"
         placeholder="Александр Пушкин"
@@ -216,7 +216,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
         </Button>
       </Box>
     </form>,
-    <form onSubmit={form3.onSubmit(() => handleSubmit())}>
+    <form key={3} onSubmit={form3.onSubmit(() => handleSubmit())}>
       <TextInput
         label="ТикТок"
         placeholder="candyyy_giiirl"
