@@ -3,7 +3,7 @@ import React, { FunctionComponent, useState } from 'react'
 import { NextPage } from 'next';
 import { createStyles, Notification, Container, Group, ActionIcon, Footer, Box, Text, Button, PasswordInput, Input, Modal, NumberInput, Grid, Avatar, TextInput, useMantineTheme, Center } from '@mantine/core';
 import { IconTextPlus, IconCode, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons';
-import InfoCard from '../InfoCard';
+import InfoCard from '../ui/InfoCard';
 
 import {
   TablerIcon,
@@ -21,48 +21,15 @@ import {
   IconTrash
 } from '@tabler/icons';
 import { IGift } from '../../types';
-import GiftCard from '../GiftCard';
+import GiftCard from '../ui/GiftCard';
 import UserFragmentLayout from './UserFragmentLayout';
 
 
 import { useSession } from 'next-auth/react';
 import { useForm } from '@mantine/form';
 import AddGiftModal from '../logics/AddGiftModal';
+import { dataGift } from '../../pages/[name]';
 
-
-
-
-var dataGift: IGift[] = [
-  {
-    title: 'Кофе',
-    description: 'Кофе вкусный',
-    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-    price: 100,
-    isGifted: false,
-    gifter: undefined,
-  },
-  {
-    title: 'Кофе',
-    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-    price: 100,
-    isGifted: false,
-    gifter: undefined,
-  },
-  {
-    title: 'Кофе',
-    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-    price: 100,
-    isGifted: false,
-    gifter: undefined,
-  },
-  {
-    title: 'Кофе',
-    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-    price: 100,
-    isGifted: false,
-    gifter: undefined,
-  },
-]
 
 
 interface IProps {
@@ -200,13 +167,17 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
               {dataGift.map((gift, index) => (
                 <Grid.Col xs={6} sm={6} md={4} key={index}>
                   <GiftCard
-                    title={'Choppie Stickies'}
-                    image={'https://firebasestorage.googleapis.com/v0/b/onlywish-9d17b.appspot.com/o/items%2F590bf649-f3ee-41e6-a6ef-e76fba225b48?alt=media&token=4fad8c05-54b3-465f-8022-dff06acecd01'}
-                    description={'Chopdas ChopdasChopdasCho dsada d sa dadas da sdas pdas sd d'}
-                    price={9.43}
-                    isGifted={false}
-                    gifter={null}
+                    title={gift.title}
+                    description={gift.description}
+                    price={gift.price}
+                    imageUrl={gift.imageUrl}
+                    isGifted={gift.isGifted}
+                    userId={gift.userId}
                     isOwner={true}
+                    id={gift.id}
+                    shopName={gift.shopName}
+                    shopUrl={gift.shopUrl}
+                    createdAt={gift.createdAt}
                   />
                 </Grid.Col>
               ))}

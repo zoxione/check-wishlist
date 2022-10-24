@@ -18,13 +18,17 @@ interface IProps {
 const GiveGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
   const form = useForm({
     initialValues: {
-      card: '',
+      numberCard: '',
+      dateCard: '',
+      cvvCard: '',
       description: '',
     },
 
     validate: zodResolver(
       z.object({
-        card: z.string().regex(/^[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}$/, { message: 'Номер карты должен быть в формате 0000 0000 0000 0000' }),
+        numberCard: z.string().regex(/^[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}$/, { message: 'Номер карты должен быть в формате 0000 0000 0000 0000' }),
+        dateCard: z.string().regex(/^[0-9]{2}\/[0-9]{2}$/, { message: 'Дата должна быть в формате 00/00' }),
+        cvvCard: z.string().regex(/^[0-9]{3}$/, { message: 'CVV должен быть в формате 000' }),
         description: z.string().max(256, { message: 'Описание должно быть меньше 256 символов' }),
       })
     ),
@@ -34,14 +38,10 @@ const GiveGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
     console.log(form.values)
 
     showNotification({
-      id: 'give-gift-success',
-      disallowClose: true,
-      autoClose: 2000,
-      title: "Подарок отправлен",
-      message: "Подарок успешно отправлен получателю",
-      color: 'green',
-      icon: <IconCheck />,
-      loading: false,
+      title: 'Подарок отправлен',
+      message: 'Подарок успешно отправлен',
+      color: 'teal',
+      icon: <IconCheck stroke={1.5} size={24} />,
     });
 
     // const res = await signIn('credentials', {
@@ -95,9 +95,39 @@ const GiveGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
               size="md"
               required
               placeholder="XXXX XXXX XXXX XXXX"
-              {...form.getInputProps('card')}
+              {...form.getInputProps('numberCard')}
             />
           </Input.Wrapper>
+          <Box
+            sx={(theme) => ({
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '15px',
+              marginTop: '10px',
+            })}
+          >
+            <Input.Wrapper label="Срок действия" required>
+              <Input
+                component={InputMask}
+                mask="99/99"
+                size="md"
+                required
+                placeholder="MM/YY"
+                {...form.getInputProps('dateCard')}
+              />
+            </Input.Wrapper>
+            <Input.Wrapper label="Код безопасности" required>
+              <Input
+                component={InputMask}
+                mask="999"
+                size="md"
+                required
+                placeholder="XXX"
+                {...form.getInputProps('cvvCard')}
+              />
+            </Input.Wrapper>
+          </Box>
           <Textarea
             label="Описание"
             size="md"

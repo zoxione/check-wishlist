@@ -3,43 +3,86 @@ import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
-import GiftCard from '../components/GiftCard';
-import { IGift } from '../types';
+import GiftCard from '../components/ui/GiftCard';
 
 import { IconX, IconCheck, IconPencil } from '@tabler/icons';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
 
+import { IGift } from '../types';
 
-
-var dataGift: IGift[] = [
+export var dataGift: IGift[] = [
   {
+    id: "1",
     title: 'Кофе',
-    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+    description: 'Кофе',
+    shopName: 'Кофе',
+    shopUrl: 'https://google.com',
     price: 100,
+    createdAt: new Date(),
+    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
     isGifted: false,
-    gifter: undefined,
+    userId: "dddd",
   },
   {
+    id: "2",
     title: 'Кофе',
-    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+    description: 'Кофе',
+    shopName: 'Кофе',
+    shopUrl: 'https://google.com',
     price: 100,
+    createdAt: new Date(),
+    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
     isGifted: false,
-    gifter: undefined,
+    userId: "dddd",
   },
   {
-    title: 'Кофе',
-    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
-    price: 100,
+    id: "3",
+    title: 'Молоко',
+    description: 'Молоко',
+    shopName: 'Кофе',
+    shopUrl: 'https://google.com',
+    price: 231,
+    createdAt: new Date(),
+    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
     isGifted: false,
-    gifter: undefined,
+    userId: "dddd",
   },
   {
+    id: "4",
     title: 'Кофе',
-    image: 'https://images.unsplash.com/photo-1611181928379-8b8b8b2b9b1c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80',
+    description: 'Кофе',
+    shopName: 'Кофе',
+    shopUrl: 'https://google.com',
+    price: 3155,
+    createdAt: new Date(),
+    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
+    isGifted: true,
+    userId: "dddd",
+  },
+  {
+    id: "5",
+    title: 'Кофе',
+    description: 'Кофе',
+    shopName: 'Кофе',
+    shopUrl: 'https://google.com',
     price: 100,
+    createdAt: new Date(),
+    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
     isGifted: false,
-    gifter: undefined,
+    userId: "dddd",
+  },
+  {
+    id: "6",
+    title: 'Кофе',
+    description: 'Кофе',
+    shopName: 'Кофе',
+    shopUrl: 'https://google.com',
+    price: 3123,
+    createdAt: new Date(),
+    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
+    isGifted: true,
+    userId: "dddd",
   },
 ]
 
@@ -173,13 +216,17 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                   {dataGift.map((gift, index) => (
                     <Grid.Col xs={6} sm={6} md={4} key={index}>
                       <GiftCard
-                        title={'Choppie Stickies'}
-                        description={'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'}
-                        image={'https://firebasestorage.googleapis.com/v0/b/onlywish-9d17b.appspot.com/o/items%2F590bf649-f3ee-41e6-a6ef-e76fba225b48?alt=media&token=4fad8c05-54b3-465f-8022-dff06acecd01'}
-                        price={9.43}
-                        isGifted={false}
-                        gifter={null}
+                        title={gift.title}
+                        description={gift.description}
+                        price={gift.price}
+                        imageUrl={gift.imageUrl}
+                        isGifted={gift.isGifted}
+                        userId={gift.userId}
                         isOwner={true}
+                        id={gift.id}
+                        shopName={gift.shopName}
+                        shopUrl={gift.shopUrl}
+                        createdAt={gift.createdAt}
                       />
                     </Grid.Col>
                   ))}

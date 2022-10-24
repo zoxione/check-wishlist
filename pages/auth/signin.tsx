@@ -38,17 +38,19 @@ const SignIn: NextPage<IProps> = ({ }) => {
 
     if (res?.ok == false) {
       showNotification({
-        id: 'login-failed',
-        disallowClose: true,
-        autoClose: 2000,
-        title: "Не удалось войти",
+        title: 'Ошибка',
         message: 'Неверный логин или пароль',
         color: 'red',
-        icon: <IconX />,
-        loading: false,
+        icon: <IconX stroke={1.5} size={24} />,
       });
     }
     else {
+      showNotification({
+        title: 'Успешно',
+        message: 'Вы успешно вошли в аккаунт',
+        color: 'teal',
+        icon: <IconCheck stroke={1.5} size={24} />,
+      });
       Router.push("/");
     }
   }
@@ -87,6 +89,7 @@ const SignIn: NextPage<IProps> = ({ }) => {
             label="Почта"
             placeholder="hello@gmail.com"
             size="md"
+            required
             {...form.getInputProps('email')}
           />
           <PasswordInput
@@ -94,6 +97,7 @@ const SignIn: NextPage<IProps> = ({ }) => {
             placeholder="qwerty123"
             mt={10}
             size="md"
+            required
             {...form.getInputProps('password')}
           />
           <Button type="submit" fullWidth mt="xl" size="md">

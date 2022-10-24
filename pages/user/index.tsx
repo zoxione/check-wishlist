@@ -24,7 +24,7 @@ import {
 
 
 
-import CardGift from '../../components/GiftCard';
+import CardGift from '../../components/ui/GiftCard';
 import { IGift } from '../../types';
 import UserAccount from '../../components/user-fragments/UserAccount';
 import UserDashboard from '../../components/user-fragments/UserDashboard';
@@ -77,10 +77,10 @@ const useStyles = createStyles((theme) => ({
 }));
 
 const navbarData = [
-  { icon: IconUser, label: 'Account' },
-  { icon: IconGauge, label: 'Dashboard' },
-  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-  { icon: IconSettings, label: 'Settings' },
+  { icon: IconUser, label: 'Аккаунт' },
+  { icon: IconGauge, label: 'Приборная панель' },
+  { icon: IconDeviceDesktopAnalytics, label: 'Аналитика' },
+  { icon: IconSettings, label: 'Настройки' },
 ];
 
 interface NavbarLinkProps {
@@ -216,7 +216,7 @@ const User: NextPage<IProps> = (props: IProps) => {
       >
         <Navbar.Section grow mt={50}>
           <Stack justify="center" spacing={10}>
-            <NavbarLink icon={IconHome2} label="Home" onClick={() => Router.push(`${session?.user?.name}`)} />
+            <NavbarLink icon={IconHome2} label="Мой профиль" onClick={() => Router.push(`${session?.user?.name}`)} />
             {navbarData.map((link, index) => (
               <NavbarLink
                 {...link}
@@ -229,7 +229,7 @@ const User: NextPage<IProps> = (props: IProps) => {
         </Navbar.Section>
         <Navbar.Section>
           <Stack justify="center" spacing={0}>
-            <NavbarLink icon={IconLogout} label="Logout" onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
+            <NavbarLink icon={IconLogout} label="Выйти" onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
           </Stack>
         </Navbar.Section>
       </Navbar>

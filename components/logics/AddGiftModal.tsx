@@ -17,36 +17,33 @@ interface IProps {
 const AddGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
   const form = useForm({
     initialValues: {
-      name: '',
+      title: '',
       description: '',
-      shop: 'dns',
-      link: '',
+      shopName: 'dns',
+      shopUrl: '',
       price: 0,
-      isUrgent: false,
+      imageUrl: '',
     },
 
     validate: zodResolver(
       z.object({
-        name: z.string().min(2, { message: 'Имя должно быть больше 2 символов' }),
+        title: z.string().min(2, { message: 'Название должно быть больше 2 символов' }).max(64, { message: 'Название должно быть меньше 64 символов' }),
         description: z.string().max(256, { message: 'Описание должно быть меньше 256 символов' }),
-        link: z.string().url({ message: 'Ссылка должна быть валидной' }),
+        shopUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
         price: z.number().positive({ message: 'Цена должна быть больше 0' }),
+        // imageUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
       })
     ),
   });
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     console.log(form.values)
 
     showNotification({
-      id: 'add-gift-success',
-      disallowClose: true,
-      autoClose: 2000,
-      title: "Подарок добавлен",
-      message: "Подарок успешно добавлен в список подарков",
-      color: 'green',
-      icon: <IconCheck />,
-      loading: false,
+      title: 'Подарок добавлен',
+      message: 'Подарок успешно добавлен',
+      color: 'teal',
+      icon: <IconCheck stroke={1.5} size={24} />,
     });
 
     // const res = await signIn('credentials', {
@@ -98,7 +95,7 @@ const AddGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
             size="md"
             required
             placeholder="Наушники"
-            {...form.getInputProps('name')}
+            {...form.getInputProps('title')}
           />
           <Textarea
             label="Описание"
@@ -114,7 +111,7 @@ const AddGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
             mt={10}
             required
             placeholder="https://www.dns-shop.ru/product/96be2d41015ac823/radiocastotnaa-garnitura-razer-barracuda-x-cernyj/"
-            {...form.getInputProps('link')}
+            {...form.getInputProps('shopUrl')}
             rightSection={
               <NativeSelect
                 styles={{
@@ -130,7 +127,7 @@ const AddGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
                   { value: 'dns', label: 'ДНС' },
                   { value: 'regard', label: 'Регард' },
                 ]}
-                {...form.getInputProps('shop')}
+                {...form.getInputProps('shopName')}
               />
             }
             rightSectionWidth={92}
@@ -144,14 +141,8 @@ const AddGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
             required
             {...form.getInputProps('price')}
           />
-          <Checkbox
-            mt="md"
-            label="Это срочно"
-            {...form.getInputProps('isUrgent', { type: 'checkbox' })}
-          />
 
-
-          <Button type="submit" mt={20} fullWidth variant="outline">
+          <Button type="submit" onClick={() => { console.log('d') }} mt={20} fullWidth variant="outline">
             Добавить
           </Button>
         </form>

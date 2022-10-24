@@ -1,7 +1,7 @@
 import { Anchor, Box, Checkbox, Container } from '@mantine/core';
 import { FunctionComponent } from 'react'
 
-import InfoCard from '../InfoCard';
+import InfoCard from '../ui/InfoCard';
 import UserFragmentLayout from './UserFragmentLayout';
 
 import { createStyles, Text } from '@mantine/core';
@@ -42,6 +42,7 @@ const UserDashboard: FunctionComponent<IProps> = ({ data }) => {
                       <Box
                         sx={(theme) => ({
                           display: 'flex',
+                          justifyContent: 'flex-start',
                           alignItems: 'center',
                           borderRadius: theme.radius.md,
                           border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
@@ -85,13 +86,14 @@ const UserDashboard: FunctionComponent<IProps> = ({ data }) => {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'space-between',
+                              gap: '10px',
                               marginTop: 5,
                             })}
                           >
                             <Anchor href="#">
                               {item.gifterName}
                             </Anchor>
-                            <IconArrowNarrowRight size={18} />
+                            <IconArrowNarrowRight size={20} />
                             <Anchor href="#">
                               {item.userName}
                             </Anchor>
@@ -99,12 +101,12 @@ const UserDashboard: FunctionComponent<IProps> = ({ data }) => {
                           <Text color="dimmed" size="sm">
                             Дата создания: {item.createdAt}
                           </Text>
-                          <Checkbox
-                            defaultChecked={item.isCompleted}
-                            label="Выполнен"
-                            mt={10}
-                          />
                         </div>
+                        <Checkbox
+                          defaultChecked={item.isCompleted}
+                          label="Выполнен"
+                          ml="auto"
+                        />
                       </Box>
                     )}
                   </Draggable>

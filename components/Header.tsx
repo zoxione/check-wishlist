@@ -25,7 +25,7 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
     rightMenu = (
       <>
         <Link href={`${session.user?.name}`} passHref>
-          <Button variant="filled" leftIcon={<IconUser />}>
+          <Button onClick={() => closeDrawer()} variant="filled" leftIcon={<IconUser size={18} />}>
             {session.user?.name}
           </Button>
         </Link>
@@ -36,10 +36,10 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
     rightMenu = (
       <>
         <Link href="/auth/signin" passHref>
-          <Button variant="default" >Sign in</Button>
+          <Button onClick={() => closeDrawer()} variant="default">Войти</Button>
         </Link>
         <Link href="/auth/signup" passHref>
-          <Button>Sign up</Button>
+          <Button onClick={() => closeDrawer()}>Зарегистрироваться</Button>
         </Link>
       </>
     )
@@ -131,7 +131,7 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Navigation"
+        title="Check"
         sx={(theme) => ({
           [theme.fn.largerThan('sm')]: {
             display: 'none',
@@ -144,8 +144,7 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
           <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} /> */}
 
           <Group position="center" grow pb="xl" px="md">
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+            {rightMenu}
           </Group>
         </ScrollArea>
       </Drawer>

@@ -2,7 +2,6 @@ import { IconEye, IconMessageCircle } from '@tabler/icons';
 import { Card, Text, Group, Center, createStyles, Paper, Title } from '@mantine/core';
 import { Children, FunctionComponent, ReactNode } from 'react';
 import { Image } from '@mantine/core';
-import { IGift } from '../types';
 
 
 interface IProps {

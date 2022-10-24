@@ -3,18 +3,14 @@ import { Card, Text, Group, Center, createStyles, Button, Modal, Box, Input, Num
 import { FunctionComponent, useState } from 'react';
 import { Image } from '@mantine/core';
 
-import GiveGiftModal from './logics/GiveGiftModal';
+import GiveGiftModal from '.././logics/GiveGiftModal';
 import { showNotification } from '@mantine/notifications';
+import { IGift } from '../../types';
 
 
-interface IProps {
-  title: string;
-  description: string | null;
-  image: string | null;
-  price: number;
-  isGifted: boolean;
-  gifter: string | null;
+interface IProps extends IGift {
   isOwner: boolean;
+
 }
 
 
@@ -25,14 +21,10 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
     console.log('delete');
 
     showNotification({
-      id: 'delete-gift-success',
-      disallowClose: true,
-      autoClose: 2000,
-      title: "Подарок удален",
-      message: "Подарок успешно удален из списка",
-      color: 'green',
-      icon: <IconCheck />,
-      loading: false,
+      title: 'Подарок удален',
+      message: 'Подарок успешно удален',
+      color: 'teal',
+      icon: <IconCheck stroke={1.5} size={24} />,
     });
   }
 
@@ -46,7 +38,7 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
       })}
     >
       <Card.Section mb="sm">
-        <Image src={props.image} alt={props.title} height={250} />
+        <Image src={props.imageUrl} alt={props.title} height={250} />
         {
           !props.isOwner &&
           <Button
