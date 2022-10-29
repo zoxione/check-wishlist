@@ -136,7 +136,8 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                               <Checkbox
                                 defaultChecked={item.isCompleted}
                                 onChange={(event) => {
-                                  fetch(`http://localhost:8080/transaction/${item.id}`, {
+                                  // fetch(`http://localhost:8080/transaction/${item.id}`, {
+                                  fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/transaction/${item.id}`, {
                                     method: 'PATCH',
                                     headers: {
                                       'Content-Type': 'application/json'

@@ -25,7 +25,8 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
 
   const deleteGift = async () => {
     try {
-      await fetch(`http://localhost:8080/gift/${props.gift?.id}`, {
+      // await fetch(`http://localhost:8080/gift/${props.gift?.id}`, {
+      await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift/${props.gift?.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

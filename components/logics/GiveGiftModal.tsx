@@ -49,7 +49,8 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
     console.log(JSON.stringify(transaction));
 
     try {
-      await fetch(`http://localhost:8080/gift_give`, {
+      // await fetch(`http://localhost:8080/gift_give`, {
+      await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift_give`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

@@ -54,7 +54,8 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
     console.log(JSON.stringify(gift));
 
     try {
-      await fetch(`http://localhost:8080/gift`, {
+      // await fetch(`http://localhost:8080/gift`, {
+      await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

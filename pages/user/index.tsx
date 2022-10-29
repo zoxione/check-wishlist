@@ -90,14 +90,16 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
   let user: IUser | null = null;
 
   try {
-    const response = await fetch(`http://localhost:8080/user/${session?.user?.name}`)
+    // const response = await fetch(`http://localhost:8080/user/${session?.user?.name}`)
+    const response = await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user/${session?.user?.name}`)
     user = await response.json()
   }
   catch (e) {
     console.log(e)
   }
 
-  const ggg: IGift[] = await (await fetch(`http://localhost:8080/gift`)).json()
+  // const ggg: IGift[] = await (await fetch(`http://localhost:8080/gift`)).json()
+  const ggg: IGift[] = await (await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift`)).json()
   const gifts: IGift[] = ggg.filter((gift) => gift.userId === user?.id && gift.isGifted === false)
 
   return {

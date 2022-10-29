@@ -116,7 +116,8 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
     console.log(JSON.stringify(user));
 
     try {
-      await fetch(`http://localhost:8080/user/${props.user?.id}`, {
+      // await fetch(`http://localhost:8080/user/${props.user?.id}`, {
+      await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user/${props.user?.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
