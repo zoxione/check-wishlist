@@ -4,43 +4,53 @@ declare module 'next-auth' {
   interface Session {
     user?: DefaultUser & {
       id: string;
+      username: string;
+      fullname?: string;
     };
   }
 }
 
-interface IUser {
-  id: string;
-  name: string;
-  email: string;
+export interface IUser {
+  id?: string;
+  username: string;
+  fullname?: string;
+  email?: string;
   password: string;
+  about?: string;
   imageUrl?: string;
-  coverUrl?: string;
+  backgroundUrl?: string;
   address?: string;
+  isVerified?: boolean;
+  role?: string;
   tiktokName: string;
   twitterName?: string;
   vkName?: string;
   telegramName?: string;
   instagramName?: string;
-  createdAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-interface IGift {
-  id: string;
+export interface IGift {
+  id?: string;
   title: string;
   description?: string;
   shopName: string;
-  shopUrl: string | null | undefined;
+  shopUrl: string;
   price: number;
-  createdAt: Date;
   imageUrl?: string;
-  isGifted: boolean;
+  isGifted?: boolean;
   userId: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-interface ITransaction {
-  id: string;
+export interface ITransaction {
+  id?: string;
   giftId: string;
+  userId: string;
   gifterId: string;
-  createdAt: Date;
-  isCompleted: boolean;
+  isCompleted?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

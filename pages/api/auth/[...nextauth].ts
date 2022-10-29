@@ -1,11 +1,13 @@
 import { GetStaticProps, NextApiHandler } from 'next';
-import NextAuth, { NextAuthOptions, User } from "next-auth"
+import NextAuth, { DefaultUser, NextAuthOptions, User } from "next-auth"
 import Providers from 'next-auth/providers';
 import Adapters, { AdapterUser } from 'next-auth/adapters';
 import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from 'next-auth/providers/github';
-import { Session } from 'inspector';
+import { Session } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
+import { any } from 'zod';
+import { IUser } from '../../../types';
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, authOptions);
 export default authHandler;
@@ -22,7 +24,7 @@ export const authOptions: NextAuthOptions = {
   // },
 
   callbacks: {
-    session: async ({ session, token }) => {
+    session: async ({ session, token, user }) => {
       if (session?.user) {
         {/* @ts-ignore */ }
         session.user.id = token.sub;
@@ -49,15 +51,52 @@ export const authOptions: NextAuthOptions = {
         };
 
         // логика входа юзера из бд
-        let result: any;
-        if (email === 'z1@gmail.com' && password === '123456') {
-          result = {
-            id: 1,
-            name: 'zoxi',
-            email: 'z1@gmail.com',
-            password: '123456'
-          };
-        }
+        let result: DefaultUser | null = null;
+
+        await fetch('http://localhost:8080/user_login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
+        }).then(async (res) => {
+          if (res.ok) {
+            const data = await res.json();
+            const { username, email, imageUrl, id } = await data as {
+              username: string,
+              email: string,
+              imageUrl: string,
+              id: string
+            };
+            result = {
+              id: id,
+              name: username,
+              email: email,
+              image: imageUrl,
+            };
+            // result = {
+            //   id: await response.id,
+            //   name: response.username,
+            //   email: response.email,
+            //   image: response.imageUrl,
+            // }
+          }
+        })
+
+
+
+
+        // if (email === 'z1@gmail.com' && password === '123123') {
+        //   result = {
+        //     id: 1,
+        //     name: 'zoxi',
+        //     email: 'z1@gmail.com',
+        //     password: '123456'
+        //   };
+        // }
 
         // try {
         //   result = await prisma.user.findUnique({
@@ -71,7 +110,6 @@ export const authOptions: NextAuthOptions = {
 
 
         // if (result === null || result.password !== password) {
-
         //   throw new Error("invalid credentials");
         // }
 

@@ -47,7 +47,17 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
 
   return (
     <Box>
-      <Header height={60} px="lg" zIndex={1000}>
+      <Header withBorder={false} height={80} px="lg" zIndex={1000}
+        sx={(theme) => ({
+          // background: 'rgba(255, 255, 255, 0.2)',
+          // boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+          // backdropFilter: 'blur(5px)',
+          // border: '1px solid rgba(255, 255, 255, 0.31)',
+          '@media (max-width: 600px)': {
+            height: 60,
+          },
+        })}
+      >
         <Group position="apart" sx={{ height: '100%' }}>
           <UnstyledButton>
             <Link href="/">

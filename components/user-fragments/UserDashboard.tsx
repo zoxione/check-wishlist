@@ -8,22 +8,27 @@ import { createStyles, Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { IconGripVertical, IconArrowNarrowRight } from '@tabler/icons';
+import { GetStaticProps } from 'next';
+import { ITransaction } from '../../types';
 
+import useSWR from 'swr'
+import Router from "next/router";
+
+const fetcher = (url: RequestInfo | URL) => fetch(url).then((res) => res.json());
 
 interface IProps {
-  data: {
-    id: number;
-    giftName: string;
-    gifterName: string;
-    userName: string;
-    createdAt: string;
-    isCompleted: boolean;
-  }[];
+
 };
 
+const UserDashboard: FunctionComponent<IProps> = (props) => {
+  // c
 
-const UserDashboard: FunctionComponent<IProps> = ({ data }) => {
-  const [state, handlers] = useListState(data);
+
+  const { data, error } = useSWR('http://localhost:8080/transaction', fetcher)
+  const transactions: ITransaction[] = data;
+  console.log(transactions)
+
+  const [state, handlers] = useListState(transactions);
 
   return (
     <UserFragmentLayout>
@@ -37,18 +42,22 @@ const UserDashboard: FunctionComponent<IProps> = ({ data }) => {
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {state.map((item, index) => (
-                  <Draggable key={item.id} index={index} draggableId={item.id.toString()}>
+                  <Draggable key={index} index={index} draggableId={index.toString()}>
                     {(provided, snapshot) => (
                       <Box
                         sx={(theme) => ({
                           display: 'flex',
+                          flexDirection: 'row',
+                          [theme.fn.smallerThan('sm')]: {
+                            flexDirection: 'column',
+                          },
                           justifyContent: 'flex-start',
                           alignItems: 'center',
                           borderRadius: theme.radius.md,
                           border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
                             }`,
                           padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
-                          paddingLeft: theme.spacing.xl - theme.spacing.md, // to offset drag handle
+                          paddingLeft: theme.spacing.xl - theme.spacing.md,
                           backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
                           marginBottom: theme.spacing.sm,
                         })}
@@ -62,6 +71,7 @@ const UserDashboard: FunctionComponent<IProps> = ({ data }) => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            textAlign: 'center',
                             height: '100%',
                             color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[6],
                             paddingLeft: theme.spacing.md,
@@ -69,18 +79,25 @@ const UserDashboard: FunctionComponent<IProps> = ({ data }) => {
                           })}
                         >
                           <IconGripVertical size={18} stroke={1.5} />
+                          <Text
+                            sx={(theme) => ({
+                              fontSize: 30,
+                              fontWeight: 700,
+                              width: 60,
+                              color: theme.colorScheme === 'dark' ? 'white' : 'black',
+                            })}
+                          >
+                            {index}
+                          </Text>
                         </Box>
-                        <Text
+                        <Box
                           sx={(theme) => ({
-                            fontSize: 30,
-                            fontWeight: 700,
-                            width: 60,
+                            [theme.fn.smallerThan('sm')]: {
+                              textAlign: 'center',
+                            },
                           })}
                         >
-                          {index}
-                        </Text>
-                        <div>
-                          <Text weight={500}>{item.giftName}</Text>
+                          <Text weight={500}>{item.giftId}</Text>
                           <Box
                             sx={(theme) => ({
                               display: 'flex',
@@ -88,25 +105,54 @@ const UserDashboard: FunctionComponent<IProps> = ({ data }) => {
                               justifyContent: 'space-between',
                               gap: '10px',
                               marginTop: 5,
+                              [theme.fn.smallerThan('sm')]: {
+                                flexDirection: 'column',
+                                gap: '0px',
+                              },
                             })}
                           >
                             <Anchor href="#">
-                              {item.gifterName}
+                              {item.gifterId}
                             </Anchor>
                             <IconArrowNarrowRight size={20} />
                             <Anchor href="#">
-                              {item.userName}
+                              {item.userId}
                             </Anchor>
                           </Box>
                           <Text color="dimmed" size="sm">
-                            Дата создания: {item.createdAt}
+                            Дата создания: {item.createdAt?.toString()}
                           </Text>
-                        </div>
-                        <Checkbox
-                          defaultChecked={item.isCompleted}
-                          label="Выполнен"
-                          ml="auto"
-                        />
+                        </Box>
+                        {
+                          item.isCompleted ? (
+                            <Checkbox
+                              defaultChecked={item.isCompleted}
+                              disabled
+                              label="Выполнен"
+                              ml="auto"
+                            />
+                          )
+                            : (
+                              <Checkbox
+                                defaultChecked={item.isCompleted}
+                                onChange={(event) => {
+                                  fetch(`http://localhost:8080/transaction/${item.id}`, {
+                                    method: 'PATCH',
+                                    headers: {
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                      isCompleted: event.target.checked
+                                    })
+                                  })
+                                  Router.reload()
+                                }}
+                                label="Выполнен"
+                                ml="auto"
+                              />
+                            )
+                        }
+
                       </Box>
                     )}
                   </Draggable>

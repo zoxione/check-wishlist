@@ -6,6 +6,9 @@ import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, Select, Gro
 import { useForm, zodResolver } from "@mantine/form";
 import { IconCurrencyRubel, IconX, IconCheck } from '@tabler/icons';
 import { showNotification } from "@mantine/notifications";
+import { IGift } from "../../types";
+import { useSession } from "next-auth/react";
+import Router from "next/router";
 
 
 
@@ -14,7 +17,9 @@ interface IProps {
   setOpened: (opened: boolean) => void;
 };
 
-const AddGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
+const AddGiftModal: FunctionComponent<IProps> = (props) => {
+  const { data: session, status } = useSession();
+
   const form = useForm({
     initialValues: {
       title: '',
@@ -28,7 +33,7 @@ const AddGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
     validate: zodResolver(
       z.object({
         title: z.string().min(2, { message: 'Название должно быть больше 2 символов' }).max(64, { message: 'Название должно быть меньше 64 символов' }),
-        description: z.string().max(256, { message: 'Описание должно быть меньше 256 символов' }),
+        description: z.string().max(120, { message: 'Описание должно быть меньше 120 символов' }),
         shopUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
         price: z.number().positive({ message: 'Цена должна быть больше 0' }),
         // imageUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
@@ -36,46 +41,63 @@ const AddGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
     ),
   });
 
-  const handleSubmit = () => {
-    console.log(form.values)
+  const handleSubmit = async () => {
+    const gift: IGift = {
+      title: form.values.title,
+      description: form.values.description,
+      shopName: form.values.shopName,
+      shopUrl: form.values.shopUrl,
+      price: form.values.price,
+      imageUrl: form.values.imageUrl,
+      userId: session?.user?.id ? session.user.id : '',
+    }
+    console.log(JSON.stringify(gift));
 
-    showNotification({
-      title: 'Подарок добавлен',
-      message: 'Подарок успешно добавлен',
-      color: 'teal',
-      icon: <IconCheck stroke={1.5} size={24} />,
-    });
-
-    // const res = await signIn('credentials', {
-    //   email: form.values.email,
-    //   password: form.values.password,
-    //   redirect: false,
-    //   callbackUrl: "/"
-    // });
-    // console.log(res);
-
-    // if (res?.ok == false) {
-    //   showNotification({
-    //     id: 'login-failed',
-    //     disallowClose: true,
-    //     autoClose: 2000,
-    //     title: "Не удалось войти",
-    //     message: 'Неверный логин или пароль',
-    //     color: 'red',
-    //     icon: <IconX />,
-    //     loading: false,
-    //   });
-    // }
-    // else {
-    //   Router.push("/");
-    // }
+    try {
+      await fetch(`http://localhost:8080/gift`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(gift),
+      }).then((res) => {
+        if (res.ok) {
+          showNotification({
+            title: 'Успешно',
+            message: 'Подарок успешно добавлен',
+            color: 'teal',
+            icon: <IconCheck stroke={1.5} size={24} />,
+          });
+          props.setOpened(false);
+          Router.reload();
+        }
+        else {
+          console.log(res);
+          showNotification({
+            title: 'Ошибка',
+            message: 'Не удалось добавить подарок',
+            color: 'red',
+            icon: <IconX stroke={1.5} size={24} />,
+          });
+        }
+      });
+    }
+    catch (error) {
+      console.error(error);
+      showNotification({
+        title: 'Ошибка',
+        message: 'Не удалось добавить подарок',
+        color: 'red',
+        icon: <IconX stroke={1.5} size={24} />,
+      });
+    }
   }
 
 
   return (
     <Modal
-      opened={opened}
-      onClose={() => setOpened(false)}
+      opened={props.opened}
+      onClose={() => props.setOpened(false)}
       title="Добавить подарок"
       centered
       overlayOpacity={0.55}

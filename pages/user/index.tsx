@@ -1,5 +1,5 @@
-import { Avatar, Paper, createStyles, Notification, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Input, Box, Navbar, UnstyledButton, Tooltip, Stack, Center, } from '@mantine/core';
-import { NextPage } from 'next';
+import { Avatar, Paper, createStyles, Notification, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Input, Box, Navbar, UnstyledButton, Tooltip, Stack, Center, Loader, } from '@mantine/core';
+import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import Router, { useRouter } from 'next/router'
@@ -25,47 +25,13 @@ import {
 
 
 import CardGift from '../../components/ui/GiftCard';
-import { IGift } from '../../types';
+import { IGift, IUser } from '../../types';
 import UserAccount from '../../components/user-fragments/UserAccount';
 import UserDashboard from '../../components/user-fragments/UserDashboard';
 import UserAnalytics from '../../components/user-fragments/UserAnalytics';
 import UserSettings from '../../components/user-fragments/UserSettings';
-
-
-// // Получение данных с сервера
-// export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
-//   // Проверка на авторизацию
-//   //const session = await getSession({ req });
-//   const session = await unstable_getServerSession(req, res, authOptions)
-//   if (!session) {
-//     res.statusCode = 403;
-//     return { props: {} };
-//   }
-
-//   const user = await prisma.user.findUnique({
-//     where: {
-//       id: String(params?.id)
-//     }
-//   });
-//   const jobs = await prisma.job.findMany({
-//     where: {
-//       author: { email: session?.user?.email ? session.user.email : '' },
-//     },
-//     include: {
-//       author: {
-//         select: { name: true },
-//       },
-//     },
-//   });
-//   jobs.sort((a, b) => {
-//     return a.title < b.title ? -1 : a.title > b.title ? 1 : 0;
-//   });
-
-//   return {
-//     props: { user, jobs },
-//   };
-// };
-
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 const useStyles = createStyles((theme) => ({
   active: {
@@ -119,62 +85,81 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 }
 
 
+export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
+  const session = await unstable_getServerSession(req, res, authOptions)
+  let user: IUser | null = null;
+
+  try {
+    const response = await fetch(`http://localhost:8080/user/${session?.user?.name}`)
+    user = await response.json()
+  }
+  catch (e) {
+    console.log(e)
+  }
+
+  const ggg: IGift[] = await (await fetch(`http://localhost:8080/gift`)).json()
+  const gifts: IGift[] = ggg.filter((gift) => gift.userId === user?.id && gift.isGifted === false)
+
+  return {
+    props: { user, gifts },
+  };
+};
+
 
 interface IProps {
-  // user: UserProps
-  avatar: string;
-  name: string;
-  email: string;
-  job: string;
-  password: string;
+  user: IUser;
+  gifts: IGift[];
 }
 
-var data: IGift[] = [
-
-]
 
 const User: NextPage<IProps> = (props: IProps) => {
   const { data: session, status } = useSession();
+  console.log(props)
 
-  const router = useRouter()
-  const { id } = router.query
+  const [activeFragment, setActiveFragment] = useState(0);
+  const fragmentsList = [
+    <UserAccount key={1} user={props.user} gifts={props.gifts} />,
+    <UserDashboard key={2} />,
+    <UserAnalytics key={3} />,
+    <UserSettings key={4} />,
+  ];
 
-  // const { data: session, status } = useSession();
+  if (status === 'loading') {
+    return (
+      <Box
+        sx={(theme) => ({
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          textAlign: 'center',
+        })}
+      >
+        <Loader variant="dots" />
+      </Box>
+    )
+  }
 
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     Router.replace("/auth/signin");
-  //   }
-  // }, [status]);
-
-  const [name, setName] = useState(props.name ? props.name : "");
-  const [email, setEmail] = useState(props.email ? props.email : "");
-  const [password, setPassword] = useState(props.password ? props.password : "");
-  // const [image, setImage] = useState(props.user?.image ? image : "");
-
-  const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-
-    try {
-      // const body = { name, email, password, image };
-      // await fetch(`/api/user/${props.user?.id}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(body),
-      // }).then((res) => {
-      //   if (res.status === 200) {
-      //     setShowNotification('success');
-      //   }
-      //   else {
-      //     setShowNotification('error');
-      //     console.log(res);
-      //   }
-      // });
-    }
-    catch (error) {
-      console.error(error);
-    }
-  };
+  if (status === 'unauthenticated' || props.user === null) {
+    return (
+      <Box
+        sx={(theme) => ({
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          textAlign: 'center',
+        })}
+      >
+        <Title order={2} mb={10}>Вы не авторизованы</Title>
+        <Link href="/auth/signin">
+          <Anchor>Войти</Anchor>
+        </Link>
+      </Box>
+    )
+  }
 
   var datddda = [
     {
@@ -195,14 +180,6 @@ const User: NextPage<IProps> = (props: IProps) => {
     },
   ]
 
-  const [activeFragment, setActiveFragment] = useState(0);
-  const fragmentsList = [
-    <UserAccount avatar={''} name={''} email={''} job={''} password={''} key={1} />,
-    <UserDashboard key={2} data={datddda} />,
-    <UserAnalytics key={3} />,
-    <UserSettings key={4} />,
-  ];
-
   return (
     <>
       <Navbar height={750} width={{ base: 80 }} p="md"
@@ -216,7 +193,7 @@ const User: NextPage<IProps> = (props: IProps) => {
       >
         <Navbar.Section grow mt={50}>
           <Stack justify="center" spacing={10}>
-            <NavbarLink icon={IconHome2} label="Мой профиль" onClick={() => Router.push(`${session?.user?.name}`)} />
+            <NavbarLink icon={IconHome2} label="Мой профиль" onClick={() => Router.push(`${props.user?.username}`)} />
             {navbarData.map((link, index) => (
               <NavbarLink
                 {...link}

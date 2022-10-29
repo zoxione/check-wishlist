@@ -28,6 +28,7 @@ const SignIn: NextPage<IProps> = ({ }) => {
   });
 
   const handleSubmit = async () => {
+    console.log('form.values', form.values);
     const res = await signIn('credentials', {
       email: form.values.email,
       password: form.values.password,

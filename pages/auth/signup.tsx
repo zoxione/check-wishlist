@@ -10,6 +10,8 @@ import { IconChevronRight, IconChevronLeft, IconCheck, IconX } from '@tabler/ico
 import { useState } from 'react';
 import { z } from 'zod';
 
+import { IUser } from '../../types'
+
 interface IProps {
 
 }
@@ -18,11 +20,13 @@ interface IProps {
 const SignUp: NextPage<IProps> = ({ }) => {
   const form1 = useForm({
     initialValues: {
+      username: '',
       email: '',
       password: '',
       passwordConfirm: '',
     },
     validate: {
+      username: (value) => (value.length > 3 ? null : 'Имя должно быть больше 3 символов'),
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Неверный формат почты'),
       password: (value) => (value.length > 5 ? null : 'Пароль должен быть больше 5 символов'),
       passwordConfirm: (value, values) => (value === values.password ? null : 'Пароли не совпадают'),
@@ -31,14 +35,15 @@ const SignUp: NextPage<IProps> = ({ }) => {
 
   const form2 = useForm({
     initialValues: {
-      name: '',
+      fullname: '',
+      about: '',
       imageUrl: '',
-      coverUrl: '',
+      backgroundUrl: '',
       address: '',
     },
     validate: zodResolver(
       z.object({
-        name: z.string().min(2, { message: 'Имя должно быть больше 2 символов' }),
+        fullname: z.string().min(3, { message: 'ФИО должно быть больше 3 символов' }),
         // imageUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
         // coverUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
         // address: z.string().min(5, { message: 'Адрес должен быть больше 5 символов' }),
@@ -66,29 +71,65 @@ const SignUp: NextPage<IProps> = ({ }) => {
   });
 
   const handleSubmit = async () => {
-    if (form1.isValid() && form2.isValid() && form3.isValid()) {
-      const data = {
-        ...form1.values,
-        ...form2.values,
-        ...form3.values
+    if (step === 2) {
+      const user: IUser = {
+        username: form1.values.username,
+        fullname: form2.values.fullname,
+        email: form1.values.email,
+        password: form1.values.password,
+        about: form2.values.about,
+        imageUrl: form2.values.imageUrl,
+        backgroundUrl: form2.values.backgroundUrl,
+        address: form2.values.address,
+        isVerified: false,
+        tiktokName: form3.values.tiktokName,
+        twitterName: form3.values.twitterName,
+        vkName: form3.values.vkName,
+        telegramName: form3.values.telegramName,
+        instagramName: form3.values.instagramName,
       }
-      console.log(data);
-      showNotification({
-        title: 'Успешно',
-        message: 'Вы успешно зарегистрировались',
-        color: 'teal',
-        icon: <IconCheck stroke={1.5} size={24} />,
-      });
-      Router.push('/auth/signin');
+      console.log(JSON.stringify(user));
+
+      try {
+        await fetch('http://localhost:8080/user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(user),
+        }).then((res) => {
+          if (res.ok) {
+            showNotification({
+              title: 'Успешно',
+              message: 'Вы успешно зарегистрировались',
+              color: 'teal',
+              icon: <IconCheck stroke={1.5} size={24} />,
+            });
+            Router.push('/auth/signin');
+          }
+          else {
+            console.log(res);
+            showNotification({
+              title: 'Ошибка',
+              message: 'Возникла ошибка при регистрации',
+              color: 'red',
+              icon: <IconX stroke={1.5} size={24} />,
+            });
+          }
+        });
+      }
+      catch (error) {
+        console.error(error);
+        showNotification({
+          title: 'Ошибка',
+          message: 'Возникла ошибка при регистрации',
+          color: 'red',
+          icon: <IconX stroke={1.5} size={24} />,
+        });
+      }
     }
     else {
       handleStep("next");
-      showNotification({
-        title: 'Ошибка',
-        message: 'Возникла ошибка при регистрации',
-        color: 'red',
-        icon: <IconX stroke={1.5} size={24} />,
-      });
     }
   }
 
@@ -108,10 +149,38 @@ const SignUp: NextPage<IProps> = ({ }) => {
   }
 
   const formList = [
-    <form key={1} onSubmit={form1.onSubmit(() => handleSubmit())}>
+    <form key={1} onSubmit={form1.onSubmit(() => handleStep("next"))}>
+      <TextInput
+        rightSectionProps={`${form1.values.username}`}
+        label="Ваш никнейм"
+        placeholder="Nagibator228"
+        size="md"
+        required
+        {...form1.getInputProps('username')}
+      />
+      <Input.Wrapper
+        mt={10}
+        size="md"
+      >
+        <ScrollArea style={{ width: "100%" }}>
+          <Text
+            sx={(theme) => ({
+              backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[2],
+              borderRadius: theme.radius.md,
+              padding: '8px 10px',
+              color: theme.fn.primaryColor(),
+              overflow: 'hidden',
+              fontWeight: 500,
+            })}
+          >
+            {`https://check-marketplace.vercel.app/${form1.values.username}`}
+          </Text>
+        </ScrollArea>
+      </Input.Wrapper>
       <TextInput
         label="Ваша почта"
         placeholder="hello@gmail.com"
+        mt={10}
         size="md"
         required
         {...form1.getInputProps('email')}
@@ -149,35 +218,22 @@ const SignUp: NextPage<IProps> = ({ }) => {
         </Button>
       </Box>
     </form>,
-    <form key={2} onSubmit={form2.onSubmit(() => handleSubmit())}>
+    <form key={2} onSubmit={form2.onSubmit(() => handleStep("next"))}>
       <TextInput
         label="Как вы хотите, чтобы вас звали?"
         placeholder="Александр Пушкин"
         type="text"
         size="md"
         required
-        {...form2.getInputProps('name')}
+        {...form2.getInputProps('fullname')}
       />
-      <Input.Wrapper
-        label="У вас будет ссылка:"
+      <TextInput
+        label="Напишите пару слов о себе"
+        placeholder="Я - человек, который любит писать стихи"
         mt={10}
         size="md"
-      >
-        <ScrollArea style={{ width: "100%" }}>
-          <Text
-            sx={(theme) => ({
-              backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[2],
-              borderRadius: theme.radius.md,
-              padding: '8px 10px',
-              color: theme.fn.primaryColor(),
-              overflow: 'hidden',
-              fontWeight: 500,
-            })}
-          >
-            {`https://check-marketplace.vercel.app/${form2.values.name}`}
-          </Text>
-        </ScrollArea>
-      </Input.Wrapper>
+        {...form2.getInputProps('about')}
+      />
       <TextInput
         label="Ссылка на аватарку"
         placeholder="https://example.com/photo.jpg"
@@ -190,7 +246,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
         placeholder="https://example.com/cover.jpg"
         mt={10}
         size="md"
-        {...form2.getInputProps('coverUrl')}
+        {...form2.getInputProps('backgroundUrl')}
       />
       <TextInput
         label="Адрес доставки"

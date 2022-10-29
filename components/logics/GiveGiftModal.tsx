@@ -7,15 +7,21 @@ import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, Select, Gro
 import { useForm, zodResolver } from "@mantine/form";
 import { IconCurrencyRubel, IconX, IconCheck } from '@tabler/icons';
 import { showNotification } from "@mantine/notifications";
+import { IGift, ITransaction } from "../../types";
+import { useSession } from "next-auth/react";
+import Router from "next/router";
 
 
 
 interface IProps {
+  gift: IGift,
   opened: boolean;
   setOpened: (opened: boolean) => void;
 };
 
-const GiveGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
+const GiveGiftModal: FunctionComponent<IProps> = (props) => {
+  const { data: session, status } = useSession();
+
   const form = useForm({
     initialValues: {
       numberCard: '',
@@ -29,51 +35,64 @@ const GiveGiftModal: FunctionComponent<IProps> = ({ opened, setOpened }) => {
         numberCard: z.string().regex(/^[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}$/, { message: 'Номер карты должен быть в формате 0000 0000 0000 0000' }),
         dateCard: z.string().regex(/^[0-9]{2}\/[0-9]{2}$/, { message: 'Дата должна быть в формате 00/00' }),
         cvvCard: z.string().regex(/^[0-9]{3}$/, { message: 'CVV должен быть в формате 000' }),
-        description: z.string().max(256, { message: 'Описание должно быть меньше 256 символов' }),
+        description: z.string().max(120, { message: 'Описание должно быть меньше 120 символов' }),
       })
     ),
   });
 
   const handleSubmit = async () => {
-    console.log(form.values)
+    const transaction: ITransaction = {
+      giftId: props.gift?.id ? props.gift.id : '',
+      userId: props.gift?.userId ? props.gift.userId : '',
+      gifterId: session?.user?.id ? session.user.id : '',
+    }
+    console.log(JSON.stringify(transaction));
 
-    showNotification({
-      title: 'Подарок отправлен',
-      message: 'Подарок успешно отправлен',
-      color: 'teal',
-      icon: <IconCheck stroke={1.5} size={24} />,
-    });
-
-    // const res = await signIn('credentials', {
-    //   email: form.values.email,
-    //   password: form.values.password,
-    //   redirect: false,
-    //   callbackUrl: "/"
-    // });
-    // console.log(res);
-
-    // if (res?.ok == false) {
-    //   showNotification({
-    //     id: 'login-failed',
-    //     disallowClose: true,
-    //     autoClose: 2000,
-    //     title: "Не удалось войти",
-    //     message: 'Неверный логин или пароль',
-    //     color: 'red',
-    //     icon: <IconX />,
-    //     loading: false,
-    //   });
-    // }
-    // else {
-    //   Router.push("/");
-    // }
+    try {
+      await fetch(`http://localhost:8080/gift_give`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(transaction),
+      }).then((res) => {
+        if (res.ok) {
+          showNotification({
+            title: 'Успешно',
+            message: 'Подарок успешно отправлен',
+            color: 'teal',
+            icon: <IconCheck stroke={1.5} size={24} />,
+          });
+          props.setOpened(false);
+          Router.reload();
+        }
+        else {
+          console.log(res);
+          showNotification({
+            title: 'Ошибка',
+            message: 'Не удалось отправить подарок',
+            color: 'red',
+            icon: <IconX stroke={1.5} size={24} />,
+          });
+        }
+      });
+    }
+    catch (error) {
+      console.error(error);
+      showNotification({
+        title: 'Ошибка',
+        message: 'Не удалось отправить подарок',
+        color: 'red',
+        icon: <IconX stroke={1.5} size={24} />,
+      });
+    }
   }
 
 
   return (
     <Modal
-      opened={opened}
-      onClose={() => setOpened(false)}
+      opened={props.opened}
+      onClose={() => props.setOpened(false)}
       title="Подарить подарок"
       centered
       overlayOpacity={0.55}
