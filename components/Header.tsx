@@ -49,13 +49,10 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
     <Box>
       <Header withBorder={false} height={80} px="lg" zIndex={1000}
         sx={(theme) => ({
-          // background: 'rgba(255, 255, 255, 0.2)',
-          // boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-          // backdropFilter: 'blur(5px)',
-          // border: '1px solid rgba(255, 255, 255, 0.31)',
-          '@media (max-width: 600px)': {
-            height: 60,
-          },
+          backdropFilter: 'blur(10px)',
+          background: theme.colorScheme === 'dark' ? 'rgba(26, 27, 30, 0.3)' : 'rgba(255, 255, 255, 0.3)',
+          maxWidth: '960px',
+          margin: '0 auto',
         })}
       >
         <Group position="apart" sx={{ height: '100%' }}>
@@ -63,16 +60,14 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
             <Link href="/">
               <Title
                 order={3}
-                weight={900}
-                variant="gradient"
-                gradient={{ from: 'violet', to: 'orange', deg: 10 }}
+                weight={700}
               >
                 Check
               </Title>
             </Link>
           </UnstyledButton>
 
-          <Group spacing={0}
+          {/* <Group spacing={0}
             sx={(theme) => ({
               [theme.fn.smallerThan('sm')]: {
                 display: 'none',
@@ -80,7 +75,7 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
               height: '100%'
             })}
           >
-            {/* <Link href="/" passHref>
+            <Link href="/" passHref>
               <Text component='a'
                 sx={(theme) => ({
                   display: 'flex',
@@ -108,10 +103,10 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
               >
                 Home
               </Text>
-            </Link> */}
+            </Link>
 
 
-          </Group>
+          </Group> */}
 
           <Group
             sx={(theme) => ({
@@ -141,7 +136,21 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Check"
+        title={
+          <Group position="apart" sx={{ height: '100%' }}>
+            <UnstyledButton onClick={() => closeDrawer()}>
+              <Link href="/">
+                <Title
+                  order={3}
+                  weight={700}
+                >
+                  Check
+                </Title>
+              </Link>
+            </UnstyledButton>
+            <SwitchTheme />
+          </Group>
+        }
         sx={(theme) => ({
           [theme.fn.largerThan('sm')]: {
             display: 'none',

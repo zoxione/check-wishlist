@@ -19,7 +19,7 @@ const Search: FunctionComponent<TextInputProps> = ({ }) => {
       radius="xl"
       size="xl"
       rightSection={
-        <ActionIcon onClick={() => handleSearch()} size={50} radius="xl" color={theme.primaryColor} variant="filled">
+        <ActionIcon onClick={() => handleSearch()} variant="gradient" size={50} radius="xl" color={theme.primaryColor}>
           <IconArrowRight color="white" size={25} stroke={1.5} />
         </ActionIcon>
       }

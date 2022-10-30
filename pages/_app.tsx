@@ -22,11 +22,12 @@ export const appTheme: MantineThemeOverride = {
   defaultRadius: 'md',
   components: {
     ActionIcon: {
-      styles: {
+      styles: (theme, params: ButtonStylesParams) => ({
         root: {
+          backgroundImage: params.variant === "gradient" ? `linear-gradient(to left top, #7048e8, #8c4ce8, #a451e8, #b956e8, #cc5de8)` : '',
           color: 'violet',
         },
-      },
+      }),
     },
     Button: {
       styles: (theme, params: ButtonStylesParams) => ({

@@ -101,7 +101,7 @@ const SignIn: NextPage<IProps> = ({ }) => {
             required
             {...form.getInputProps('password')}
           />
-          <Button type="submit" fullWidth mt="xl" size="md">
+          <Button type="submit" variant="gradient" fullWidth mt="xl" size="md">
             Войти
           </Button>
         </form>
