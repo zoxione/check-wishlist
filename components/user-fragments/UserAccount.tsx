@@ -24,9 +24,10 @@ import { IGift, IUser } from '../../types';
 import GiftCard from '../ui/GiftCard';
 import UserFragmentLayout from './UserFragmentLayout';
 
+import Joi from 'joi';
 
 import { useSession } from 'next-auth/react';
-import { useForm, zodResolver } from '@mantine/form';
+import { useForm, zodResolver, joiResolver } from '@mantine/form';
 import AddGiftModal from '../logics/AddGiftModal';
 import { z } from 'zod';
 import { showNotification } from '@mantine/notifications';
@@ -66,7 +67,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
     initialValues: {
       username: props.user?.username,
       fullname: props.user?.fullname,
-      //email: props.user?.email,
+      email: props.user?.email,
       password: props.user?.password,
       about: props.user?.about,
       imageUrl: props.user?.imageUrl,
@@ -79,21 +80,65 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
       instagramName: props.user?.instagramName,
     },
 
-    validate: zodResolver(
-      z.object({
-        username: z.string().min(3, { message: 'Имя должно быть больше 3 символов' }).max(14, { message: 'Имя должно быть меньше 14 символов' }),
-        fullname: z.string().max(30, { message: 'ФИО должно быть меньше 30 символов' }),
-        // email: z.string().email({message: 'Неверный формат почты'}),
-        password: z.string().min(5, { message: 'Пароль должен быть больше 5 символов' }).max(20, { message: 'Пароль должен быть меньше 20 символов' }),
-        about: z.string().max(80, { message: 'Описание должно быть меньше 80 символов' }),
-        imageUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
-        backgroundUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
-        address: z.string().max(30, { message: 'Адрес должен быть меньше 30 символов' }),
-        tiktokName: z.string().max(20, { message: 'Имя должно быть меньше 20 символов' }),
-        twitterName: z.string().max(20, { message: 'Имя должно быть меньше 20 символов' }),
-        vkName: z.string().max(20, { message: 'Имя должно быть меньше 20 символов' }),
-        telegramName: z.string().max(20, { message: 'Имя должно быть меньше 20 символов' }),
-        instagramName: z.string().max(20, { message: 'Имя должно быть меньше 20 символов' }),
+    validate: joiResolver(
+      Joi.object({
+        username: Joi.string().min(3).max(13).messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.empty': 'Имя не может быть пустым',
+          'string.min': 'Имя должно быть больше 2 символов',
+          'string.max': 'Имя должно быть меньше 14 символов',
+        }),
+        fullname: Joi.string().max(29).allow('').messages({
+          'string.base': 'ФИО должно быть строкой',
+          'string.max': 'ФИО должно быть меньше 30 символов',
+        }),
+        email: Joi.string().email({ tlds: { allow: false } }).messages({
+          'string.base': 'Email должен быть строкой',
+          'string.empty': 'Email не может быть пустым',
+          'string.email': 'Email должен быть валидным',
+        }),
+        password: Joi.string().min(6).max(19).messages({
+          'string.base': 'Пароль должен быть строкой',
+          'string.empty': 'Пароль не может быть пустым',
+          'string.min': 'Пароль должен быть больше 5 символов',
+          'string.max': 'Пароль должен быть меньше 20 символов',
+        }),
+        about: Joi.string().max(79).allow('').messages({
+          'string.base': 'Описание должно быть строкой',
+          'string.max': 'Описание должно быть меньше 80 символов',
+        }),
+        imageUrl: Joi.string().uri().allow('').messages({
+          'string.base': 'Ссылка должна быть строкой',
+          'string.uri': 'Ссылка должна быть валидной',
+        }),
+        backgroundUrl: Joi.string().uri().allow('').messages({
+          'string.base': 'Ссылка должна быть строкой',
+          'string.uri': 'Ссылка должна быть валидной',
+        }),
+        address: Joi.string().max(29).allow('').messages({
+          'string.base': 'Адрес должен быть строкой',
+          'string.max': 'Адрес должен быть меньше 30 символов',
+        }),
+        tiktokName: Joi.string().max(19).allow('').messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.max': 'Имя должно быть меньше 20 символов',
+        }),
+        twitterName: Joi.string().max(19).allow('').messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.max': 'Имя должно быть меньше 20 символов',
+        }),
+        vkName: Joi.string().max(19).allow('').messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.max': 'Имя должно быть меньше 20 символов',
+        }),
+        telegramName: Joi.string().max(19).allow('').messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.max': 'Имя должно быть меньше 20 символов',
+        }),
+        instagramName: Joi.string().max(19).allow('').messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.max': 'Имя должно быть меньше 20 символов',
+        }),
       })
     ),
   });
@@ -102,6 +147,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
     const user: IUser = {
       username: form.values.username,
       fullname: form.values.fullname,
+      email: form.values.email,
       password: form.values.password,
       about: form.values.about,
       imageUrl: form.values.imageUrl,
@@ -116,8 +162,8 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
     console.log(JSON.stringify(user));
 
     try {
-      // await fetch(`http://localhost:8080/user/${props.user?.id}`, {
-      await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user/${props.user?.id}`, {
+      await fetch(`http://localhost:8080/user/${props.user?.id}`, {
+        // await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user/${props.user?.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -201,6 +247,12 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                 mt={10}
                 size="md"
                 {...form.getInputProps('fullname')}
+              />
+              <TextInput
+                label="Почта"
+                mt={10}
+                size="md"
+                {...form.getInputProps('email')}
               />
               <PasswordInput
                 label="Пароль"
@@ -287,6 +339,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
             <Button
               onClick={() => setOpenedAddGiftModal(true)}
               leftIcon={<IconTextPlus size={18} />}
+              variant="gradient"
             >
               Добавить
             </Button>

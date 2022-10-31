@@ -1,5 +1,5 @@
 import { Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Box, Input, ScrollArea, Group, } from '@mantine/core';
-import { useForm, zodResolver } from '@mantine/form';
+import { useForm, joiResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { NextPage } from 'next';
 import Link from 'next/link';
@@ -9,6 +9,7 @@ import Router from 'next/router';
 import { IconChevronRight, IconChevronLeft, IconCheck, IconX } from '@tabler/icons';
 import { useState } from 'react';
 import { z } from 'zod';
+import Joi from 'joi';
 
 import { IUser } from '../../types'
 
@@ -25,12 +26,32 @@ const SignUp: NextPage<IProps> = ({ }) => {
       password: '',
       passwordConfirm: '',
     },
-    validate: {
-      username: (value) => (value.length > 3 ? null : 'Имя должно быть больше 3 символов'),
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Неверный формат почты'),
-      password: (value) => (value.length > 5 ? null : 'Пароль должен быть больше 5 символов'),
-      passwordConfirm: (value, values) => (value === values.password ? null : 'Пароли не совпадают'),
-    }
+    validate: joiResolver(
+      Joi.object({
+        username: Joi.string().min(3).max(13).messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.empty': 'Имя не может быть пустым',
+          'string.min': 'Имя должно быть больше 2 символов',
+          'string.max': 'Имя должно быть меньше 14 символов',
+        }),
+        email: Joi.string().email({ tlds: { allow: false } }).messages({
+          'string.base': 'Email должен быть строкой',
+          'string.empty': 'Email не может быть пустым',
+          'string.email': 'Email должен быть валидным',
+        }),
+        password: Joi.string().min(6).max(19).messages({
+          'string.base': 'Пароль должен быть строкой',
+          'string.empty': 'Пароль не может быть пустым',
+          'string.min': 'Пароль должен быть больше 5 символов',
+          'string.max': 'Пароль должен быть меньше 20 символов',
+        }),
+        passwordConfirm: Joi.string().valid(Joi.ref('password')).messages({
+          'string.base': 'Пароль должен быть строкой',
+          'string.empty': 'Пароль не может быть пустым',
+          'any.only': 'Пароли должны совпадать',
+        }),
+      })
+    ),
   });
 
   const form2 = useForm({
@@ -41,14 +62,30 @@ const SignUp: NextPage<IProps> = ({ }) => {
       backgroundUrl: '',
       address: '',
     },
-    validate: zodResolver(
-      z.object({
-        fullname: z.string().min(3, { message: 'ФИО должно быть больше 3 символов' }),
-        // imageUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
-        // coverUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
-        // address: z.string().min(5, { message: 'Адрес должен быть больше 5 символов' }),
+    validate: joiResolver(
+      Joi.object({
+        fullname: Joi.string().max(29).allow('').messages({
+          'string.base': 'ФИО должно быть строкой',
+          'string.max': 'ФИО должно быть меньше 30 символов',
+        }),
+        about: Joi.string().max(79).allow('').messages({
+          'string.base': 'Описание должно быть строкой',
+          'string.max': 'Описание должно быть меньше 80 символов',
+        }),
+        imageUrl: Joi.string().uri().allow('').messages({
+          'string.base': 'Ссылка должна быть строкой',
+          'string.uri': 'Ссылка должна быть валидной',
+        }),
+        backgroundUrl: Joi.string().uri().allow('').messages({
+          'string.base': 'Ссылка должна быть строкой',
+          'string.uri': 'Ссылка должна быть валидной',
+        }),
+        address: Joi.string().max(29).allow('').messages({
+          'string.base': 'Адрес должен быть строкой',
+          'string.max': 'Адрес должен быть меньше 30 символов',
+        }),
       })
-    )
+    ),
   });
 
   const form3 = useForm({
@@ -59,15 +96,30 @@ const SignUp: NextPage<IProps> = ({ }) => {
       telegramName: '',
       instagramName: ''
     },
-    validate: zodResolver(
-      z.object({
-        // tiktokName: z.string().min(2, { message: 'Имя должно быть больше 2 символов' }),
-        // twitterName: z.string().min(2, { message: 'Имя должно быть больше 2 символов' }),
-        // vkName: z.string().min(2, { message: 'Имя должно быть больше 2 символов' }),
-        // telegramName: z.string().min(2, { message: 'Имя должно быть больше 2 символов' }),
-        // instagramName: z.string().min(2, { message: 'Имя должно быть больше 2 символов' }),
+    validate: joiResolver(
+      Joi.object({
+        tiktokName: Joi.string().max(19).allow('').messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.max': 'Имя должно быть меньше 20 символов',
+        }),
+        twitterName: Joi.string().max(19).allow('').messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.max': 'Имя должно быть меньше 20 символов',
+        }),
+        vkName: Joi.string().max(19).allow('').messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.max': 'Имя должно быть меньше 20 символов',
+        }),
+        telegramName: Joi.string().max(19).allow('').messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.max': 'Имя должно быть меньше 20 символов',
+        }),
+        instagramName: Joi.string().max(19).allow('').messages({
+          'string.base': 'Имя должно быть строкой',
+          'string.max': 'Имя должно быть меньше 20 символов',
+        }),
       })
-    )
+    ),
   });
 
   const handleSubmit = async () => {
@@ -91,8 +143,8 @@ const SignUp: NextPage<IProps> = ({ }) => {
       console.log(JSON.stringify(user));
 
       try {
-        // await fetch('http://localhost:8080/user', {
-        await fetch('http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user', {
+        await fetch('http://localhost:8080/user', {
+          // await fetch('http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -151,33 +203,51 @@ const SignUp: NextPage<IProps> = ({ }) => {
 
   const formList = [
     <form key={1} onSubmit={form1.onSubmit(() => handleStep("next"))}>
-      <TextInput
-        rightSectionProps={`${form1.values.username}`}
-        label="Ваш никнейм"
-        placeholder="Nagibator228"
-        size="md"
-        required
-        {...form1.getInputProps('username')}
-      />
-      <Input.Wrapper
-        mt={10}
-        size="md"
+
+      <Box
+
       >
-        <ScrollArea style={{ width: "100%" }}>
-          <Text
+        <Input.Wrapper>
+          <Input.Label size="md" required>Ваш никнейм</Input.Label>
+          <Box
             sx={(theme) => ({
-              backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[2],
-              borderRadius: theme.radius.md,
-              padding: '8px 10px',
-              color: theme.fn.primaryColor(),
-              overflow: 'hidden',
-              fontWeight: 500,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
             })}
           >
-            {`https://check-marketplace.vercel.app/${form1.values.username}`}
-          </Text>
-        </ScrollArea>
-      </Input.Wrapper>
+            <Input
+              sx={(theme) => ({
+                input: {
+                  borderTopRightRadius: 0,
+                  borderBottomRightRadius: 0,
+                  backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[2],
+                  '&:active, &:focus': {
+                    borderColor: theme.colors.gray[4],
+                  }
+                },
+                width: '250px',
+              })}
+              size="md"
+              readOnly
+              value={`check-wishlist.ru/${form1.values.username}`}
+            />
+            <TextInput
+              sx={(theme) => ({
+                input: {
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                },
+                width: '100%',
+              })}
+              placeholder="Nagibator228"
+              size="md"
+              {...form1.getInputProps('username')}
+            />
+          </Box>
+        </Input.Wrapper>
+      </Box>
       <TextInput
         label="Ваша почта"
         placeholder="hello@gmail.com"

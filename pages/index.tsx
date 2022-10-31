@@ -3,7 +3,8 @@ import Head from 'next/head'
 import { useState } from 'react'
 import Router from "next/router";
 import { useSession } from 'next-auth/react';
-import { Box, Button, Container, Title, Text, Image, Grid, Anchor } from '@mantine/core';
+import Image from 'next/image';
+import { Box, Button, Container, Title, Text, Grid, Anchor } from '@mantine/core';
 
 
 
@@ -110,21 +111,24 @@ const Home: NextPage<Props> = (props) => {
                 Добавьте подарки в свой список желаний
               </Title>
               <Text>
-                Создайте список пожеланий, ориентированный на конфиденциальность, с продуктами наших брендов-партнеров или любого другого магазина. Поделитесь своим списком со своими подписчиками, добавив его в свою биографию и рассказав своим поклонникам о своем списке желаний.
+                Создайте список желаемых подарков с избранных магазинов. Поделитесь своим списком с друзьями или подписчиками, добавив его в свой профиль и рассказав своим поклонникам о своем списке желаний.
               </Text>
             </Box>
             <Box
               sx={(theme) => ({
                 width: '50%',
+                display: 'flex',
+                justifyContent: 'center',
                 [theme.fn.smallerThan('sm')]: {
                   width: '100%',
                 },
               })}
             >
               <Image
-                radius="md"
-                src="https://images.unsplash.com/photo-1511216335778-7cb8f49fa7a3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"
-                alt="Random unsplash image"
+                src="/add_gifts.png"
+                alt="add gifts"
+                width={290}
+                height={410}
               />
             </Box>
           </Box>
@@ -145,15 +149,18 @@ const Home: NextPage<Props> = (props) => {
             <Box
               sx={(theme) => ({
                 width: '50%',
+                display: 'flex',
+                justifyContent: 'center',
                 [theme.fn.smallerThan('sm')]: {
                   width: '100%',
                 },
               })}
             >
               <Image
-                radius="md"
-                src="https://firebasestorage.googleapis.com/v0/b/onlywish-9d17b.appspot.com/o/common%2Flanding%2Fcheckout.svg?alt=media&token=e135cc0c-f32a-4838-887a-bef39102efd4"
-                alt="Random unsplash image"
+                src="/give_gifts.png"
+                alt="give gifts"
+                width={320}
+                height={420}
               />
             </Box>
             <Box
@@ -177,7 +184,7 @@ const Home: NextPage<Props> = (props) => {
                 Ваши поклонники покупают подарки
               </Title>
               <Text>
-                Поделившись ссылкой на «Трон» со своими поклонниками, они смогут посетить ваш список желаний и купить подарки. Поклонники могут оставить сообщение и свое имя во время оформления заказа. Благодаря нашей интеграции вы можете показывать подарки в прямом эфире или автоматически отправлять твиты о новых подарках.
+                Поделитесь своей ссылкой на check-wishlist.ru со своими друзьями или подписчиками, и они смогут посетить ваш список желаний и купить вам подарки. Поклонники могут оставить сообщение и свое имя во время оформления заказа
               </Text>
             </Box>
           </Box>
@@ -216,21 +223,24 @@ const Home: NextPage<Props> = (props) => {
                 Мы покупаем подарки и доставляем их
               </Title>
               <Text>
-                Затем Throne отправляет подарки, купленные фанатами, прямо на ваш адрес. Процесс заказа в Throne полностью отделен от покупки подарка вашим поклонником, чтобы обеспечить 100% конфиденциальность.
+                Затем мы отправляем подарки, купленные вашими друзьями или подписчиками, прямо на ваш адрес. Процесс заказа полностью отделен от покупки подарка вашим поклонником, чтобы обеспечить 100% конфиденциальность.
               </Text>
             </Box>
             <Box
               sx={(theme) => ({
                 width: '50%',
+                display: 'flex',
+                justifyContent: 'center',
                 [theme.fn.smallerThan('sm')]: {
                   width: '100%',
                 },
               })}
             >
               <Image
-                radius="md"
-                src="https://firebasestorage.googleapis.com/v0/b/onlywish-9d17b.appspot.com/o/common%2Flanding%2Fnewlanding%2FGroup%201%20(1).png?alt=media&token=c49f0538-2258-4fd2-9a64-97f588b2ab77"
-                alt="Random unsplash image"
+                src="/delivery_gifts.png"
+                alt="delivery gifts"
+                width={280}
+                height={290}
               />
             </Box>
           </Box>

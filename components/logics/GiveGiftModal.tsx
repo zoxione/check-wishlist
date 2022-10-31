@@ -3,15 +3,15 @@ import { FunctionComponent } from "react";
 import { z } from 'zod';
 import InputMask from "react-input-mask";
 
-import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, Select, Group, Grid, Checkbox, Input } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
-import { IconCurrencyRubel, IconX, IconCheck } from '@tabler/icons';
+import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, Select, Group, Grid, Image, Input } from "@mantine/core";
+import { useForm, joiResolver } from "@mantine/form";
+import { IconCurrencyRubel, IconX, IconCheck, IconGift } from '@tabler/icons';
 import { showNotification } from "@mantine/notifications";
 import { IGift, ITransaction } from "../../types";
 import { useSession } from "next-auth/react";
 import Router from "next/router";
 
-
+import Joi from 'joi';
 
 interface IProps {
   gift: IGift,
@@ -30,59 +30,84 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
       description: '',
     },
 
-    validate: zodResolver(
-      z.object({
-        numberCard: z.string().regex(/^[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}$/, { message: 'Номер карты должен быть в формате 0000 0000 0000 0000' }),
-        dateCard: z.string().regex(/^[0-9]{2}\/[0-9]{2}$/, { message: 'Дата должна быть в формате 00/00' }),
-        cvvCard: z.string().regex(/^[0-9]{3}$/, { message: 'CVV должен быть в формате 000' }),
-        description: z.string().max(120, { message: 'Описание должно быть меньше 120 символов' }),
+    validate: joiResolver(
+      Joi.object({
+        numberCard: Joi.string().regex(/^[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}$/).messages({
+          'string.base': 'Номер карты должен быть строкой',
+          'string.empty': 'Номер карты не может быть пустым',
+          'string.pattern.base': 'Номер карты должен быть в формате 0000 0000 0000 0000',
+        }),
+        dateCard: Joi.string().regex(/^[0-9]{2}\/[0-9]{2}$/).messages({
+          'string.base': 'Срок действия карты должен быть строкой',
+          'string.empty': 'Срок действия карты не может быть пустым',
+          'string.pattern.base': 'Срок действия карты должен быть в формате 00/00',
+        }),
+        cvvCard: Joi.string().regex(/^[0-9]{3}$/).messages({
+          'string.base': 'CVV карты должен быть строкой',
+          'string.empty': 'CVV карты не может быть пустым',
+          'string.pattern.base': 'CVV карты должен быть в формате 000',
+        }),
+        description: Joi.string().max(79).allow('').messages({
+          'string.base': 'Описание должно быть строкой',
+          'string.max': 'Описание должно быть меньше 80 символов',
+        }),
       })
     ),
   });
 
   const handleSubmit = async () => {
-    const transaction: ITransaction = {
-      giftId: props.gift?.id ? props.gift.id : '',
-      userId: props.gift?.userId ? props.gift.userId : '',
-      gifterId: session?.user?.id ? session.user.id : '',
-    }
-    console.log(JSON.stringify(transaction));
+    if (status === 'authenticated') {
+      const transaction: ITransaction = {
+        giftId: props.gift?.id ? props.gift.id : '',
+        userId: props.gift?.userId ? props.gift.userId : '',
+        gifterId: session?.user?.id ? session.user.id : '',
+      }
+      console.log(JSON.stringify(transaction));
 
-    try {
-      // await fetch(`http://localhost:8080/gift_give`, {
-      await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift_give`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(transaction),
-      }).then((res) => {
-        if (res.ok) {
-          showNotification({
-            title: 'Успешно',
-            message: 'Подарок успешно отправлен',
-            color: 'teal',
-            icon: <IconCheck stroke={1.5} size={24} />,
-          });
-          props.setOpened(false);
-          Router.reload();
-        }
-        else {
-          console.log(res);
-          showNotification({
-            title: 'Ошибка',
-            message: 'Не удалось отправить подарок',
-            color: 'red',
-            icon: <IconX stroke={1.5} size={24} />,
-          });
-        }
-      });
+      try {
+        await fetch(`http://localhost:8080/gift_give`, {
+          // await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift_give`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(transaction),
+        }).then((res) => {
+          if (res.ok) {
+            showNotification({
+              title: 'Успешно',
+              message: 'Подарок успешно отправлен',
+              color: 'teal',
+              icon: <IconCheck stroke={1.5} size={24} />,
+            });
+            props.setOpened(false);
+            Router.reload();
+          }
+          else {
+            console.log(res);
+            showNotification({
+              title: 'Ошибка',
+              message: 'Не удалось отправить подарок',
+              color: 'red',
+              icon: <IconX stroke={1.5} size={24} />,
+            });
+          }
+        });
+      }
+      catch (error) {
+        console.error(error);
+        showNotification({
+          title: 'Ошибка',
+          message: 'Не удалось отправить подарок',
+          color: 'red',
+          icon: <IconX stroke={1.5} size={24} />,
+        });
+      }
     }
-    catch (error) {
-      console.error(error);
+    else {
       showNotification({
         title: 'Ошибка',
-        message: 'Не удалось отправить подарок',
+        message: 'Необходимо авторизоваться',
         color: 'red',
         icon: <IconX stroke={1.5} size={24} />,
       });
@@ -94,12 +119,16 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
     <Modal
       opened={props.opened}
       onClose={() => props.setOpened(false)}
-      title="Подарить подарок"
+      title={
+        <Text size="xl" weight={500}>
+          Отправить подарок
+        </Text>
+      }
       centered
       overlayOpacity={0.55}
       overlayBlur={3}
       overflow="inside"
-      closeOnClickOutside={false}
+      closeOnClickOutside={true}
     >
       <Box
         sx={(theme) => ({
@@ -107,8 +136,30 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
           margin: '0 auto',
         })}
       >
+        <Box
+          sx={(theme) => ({
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            marginBottom: '20px'
+          })}
+        >
+          <Image src={props.gift?.imageUrl} />
+          <Box>
+            <Text size="xl">
+              {props.gift?.title}
+            </Text>
+            <Text size="md" weight={500}>
+              {props.gift?.price} ₽
+            </Text>
+          </Box>
+        </Box>
+
+
         <form onSubmit={form.onSubmit(() => handleSubmit())}>
-          <Input.Wrapper label="Номер карты" required>
+          <Input.Wrapper label="Детали карты" required>
             <Input
               component={InputMask}
               mask="9999 9999 9999 9999"
@@ -127,26 +178,22 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
               marginTop: '10px',
             })}
           >
-            <Input.Wrapper label="Срок действия" required>
-              <Input
-                component={InputMask}
-                mask="99/99"
-                size="md"
-                required
-                placeholder="MM/YY"
-                {...form.getInputProps('dateCard')}
-              />
-            </Input.Wrapper>
-            <Input.Wrapper label="Код безопасности" required>
-              <Input
-                component={InputMask}
-                mask="999"
-                size="md"
-                required
-                placeholder="XXX"
-                {...form.getInputProps('cvvCard')}
-              />
-            </Input.Wrapper>
+            <Input
+              component={InputMask}
+              mask="99/99"
+              size="md"
+              required
+              placeholder="MM/YY"
+              {...form.getInputProps('dateCard')}
+            />
+            <Input
+              component={InputMask}
+              mask="999"
+              size="md"
+              required
+              placeholder="XXX"
+              {...form.getInputProps('cvvCard')}
+            />
           </Box>
           <Textarea
             label="Описание"

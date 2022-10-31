@@ -1,14 +1,14 @@
 import { FunctionComponent } from "react";
 
-import { z } from 'zod';
-
 import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, Select, Group, Grid, Checkbox, NativeSelect } from "@mantine/core";
-import { useForm, zodResolver } from "@mantine/form";
+import { useForm, joiResolver } from "@mantine/form";
 import { IconCurrencyRubel, IconX, IconCheck } from '@tabler/icons';
 import { showNotification } from "@mantine/notifications";
 import { IGift } from "../../types";
 import { useSession } from "next-auth/react";
 import Router from "next/router";
+
+import Joi from 'joi';
 
 
 
@@ -30,18 +30,62 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
       imageUrl: '',
     },
 
-    validate: zodResolver(
-      z.object({
-        title: z.string().min(2, { message: 'Название должно быть больше 2 символов' }).max(64, { message: 'Название должно быть меньше 64 символов' }),
-        description: z.string().max(120, { message: 'Описание должно быть меньше 120 символов' }),
-        shopUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
-        price: z.number().positive({ message: 'Цена должна быть больше 0' }),
-        // imageUrl: z.string().url({ message: 'Ссылка должна быть валидной' }),
+    validate: joiResolver(
+      Joi.object({
+        title: Joi.string().min(3).max(29).messages({
+          'string.base': 'Название должно быть строкой',
+          'string.empty': 'Название не может быть пустым',
+          'string.min': 'Название должно быть больше 2 символов',
+          'string.max': 'Название должно быть меньше 30 символов',
+        }),
+        description: Joi.string().max(79).allow('').messages({
+          'string.base': 'Описание должно быть строкой',
+          'string.max': 'Описание должно быть меньше 80 символов',
+        }),
+        shopName: Joi.allow(''),
+        shopUrl: Joi.string().uri().messages({
+          'string.base': 'Ссылка должна быть строкой',
+          'string.empty': 'Ссылка не может быть пустой',
+          'string.uri': 'Ссылка должна быть валидной',
+        }),
+        price: Joi.number().positive().messages({
+          'number.base': 'Цена должна быть числом',
+          'number.empty': 'Цена не может быть пустой',
+          'number.positive': 'Цена должна быть больше 0',
+        }),
+        imageUrl: Joi.string().uri().allow('').messages({
+          'string.base': 'Ссылка должна быть строкой',
+          'string.uri': 'Ссылка должна быть валидной',
+        }),
       })
     ),
   });
 
   const handleSubmit = async () => {
+    switch (form.values.shopName) {
+      case 'dns':
+        let regex = /https:\/\/www\.dns-shop\.ru\/product\/[A-Za-z0-9]+\/([A-Za-z0-9]+(-[A-Za-z0-9]+)+)\//i
+        let match = form.values.shopUrl.match(regex);
+
+        if (match) {
+          // парсим сайт
+        }
+        else {
+          showNotification({
+            title: 'Ошибка',
+            message: 'Ссылка должна быть на товар DNS',
+            color: 'red',
+            icon: <IconX stroke={1.5} size={24} />,
+          });
+          return;
+        }
+        break;
+      case 'regard':
+        break;
+      default:
+        break;
+    }
+
     const gift: IGift = {
       title: form.values.title,
       description: form.values.description,
@@ -54,8 +98,8 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
     console.log(JSON.stringify(gift));
 
     try {
-      // await fetch(`http://localhost:8080/gift`, {
-      await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift`, {
+      await fetch(`http://localhost:8080/gift`, {
+        // await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -70,7 +114,7 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
             icon: <IconCheck stroke={1.5} size={24} />,
           });
           props.setOpened(false);
-          Router.reload();
+          Router.push('/user');
         }
         else {
           console.log(res);
@@ -99,12 +143,16 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
     <Modal
       opened={props.opened}
       onClose={() => props.setOpened(false)}
-      title="Добавить подарок"
+      title={
+        <Text size="xl" weight={500}>
+          Добавить подарок
+        </Text>
+      }
       centered
       overlayOpacity={0.55}
       overlayBlur={3}
       overflow="inside"
-      closeOnClickOutside={false}
+      closeOnClickOutside={true}
     >
       <Box
         sx={(theme) => ({
@@ -154,6 +202,14 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
               />
             }
             rightSectionWidth={92}
+          />
+
+          <TextInput
+            label="Ссылка на изображение"
+            size="md"
+            mt={10}
+            placeholder="https://c.dns-shop.ru/thumb/st1/fit/500/500/5effd2afc06f810b4424b43eb595da53/dc5dd08ef0adb5bef02bd822042966ceab39738b2abd77eda73ec029cec8be44.jpg"
+            {...form.getInputProps('imageUrl')}
           />
 
           <NumberInput

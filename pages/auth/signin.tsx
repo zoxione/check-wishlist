@@ -3,11 +3,11 @@ import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import Router from 'next/router';
 
-import { useForm } from '@mantine/form';
+import { useForm, joiResolver } from '@mantine/form';
 import { IconX, IconCheck } from '@tabler/icons';
 import { Paper, TextInput, PasswordInput, Button, Title, Text, Anchor, Box, } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
-
+import Joi from 'joi';
 
 interface IProps {
 
@@ -21,10 +21,21 @@ const SignIn: NextPage<IProps> = ({ }) => {
       password: '',
     },
 
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Неверный формат почты'),
-      password: (value) => (value.length > 5 ? null : 'Пароль должен быть больше 5 символов'),
-    },
+    validate: joiResolver(
+      Joi.object({
+        email: Joi.string().email({ tlds: { allow: false } }).messages({
+          'string.base': 'Email должен быть строкой',
+          'string.empty': 'Email не может быть пустым',
+          'string.email': 'Email должен быть валидным',
+        }),
+        password: Joi.string().min(6).max(19).messages({
+          'string.base': 'Пароль должен быть строкой',
+          'string.empty': 'Пароль не может быть пустым',
+          'string.min': 'Пароль должен быть больше 5 символов',
+          'string.max': 'Пароль должен быть меньше 20 символов',
+        }),
+      })
+    ),
   });
 
   const handleSubmit = async () => {

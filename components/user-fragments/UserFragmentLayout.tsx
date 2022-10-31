@@ -19,6 +19,7 @@ const UserFragmentLayout: FunctionComponent<IProps> = ({ children }) => {
           flexDirection: 'column',
           gap: '20px',
           paddingBottom: '30px',
+
         })}
       >
         {children}

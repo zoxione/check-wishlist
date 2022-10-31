@@ -2,13 +2,25 @@ import { FunctionComponent } from 'react';
 import Link from 'next/link';
 import { createStyles, Header, Group, Button, UnstyledButton, Text, SimpleGrid, ThemeIcon, Anchor, Divider, Center, Box, Burger, Drawer, Collapse, ScrollArea, useMantineColorScheme, ActionIcon, Title, } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconNotification, IconUser, IconCode, IconBook, IconChartPie3, IconFingerprint, IconCoin, IconSun, IconMoonStars, IconChevronDown, } from '@tabler/icons';
-import { getSession, signIn, useSession } from 'next-auth/react';
+import {
+  IconNotification, TablerIcon,
+  IconHome2,
+  IconGauge,
+  IconDeviceDesktopAnalytics,
+  IconCalendarStats,
+  IconSettings,
+  IconLogout,
+  IconSwitchHorizontal, IconUser, IconCode, IconBook, IconChartPie3, IconFingerprint, IconCoin, IconSun, IconMoonStars, IconChevronDown,
+} from '@tabler/icons';
+import { getSession, signIn, signOut, useSession } from 'next-auth/react';
 
 import SwitchTheme from '../components/ui/SwitchTheme';
 import { GetServerSideProps } from 'next';
 import { authOptions } from '../pages/api/auth/[...nextauth]';
 import { Session, unstable_getServerSession } from 'next-auth';
+
+import { NavbarLink } from './ui/NavbarLink';
+import { HeaderLink } from './ui/HeaderLink';
 
 
 interface IProps {
@@ -25,7 +37,7 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
     rightMenu = (
       <>
         <Link href={`${session.user?.name}`} passHref>
-          <Button onClick={() => closeDrawer()} variant="filled" leftIcon={<IconUser size={18} />}>
+          <Button variant="gradient" leftIcon={<IconUser size={18} />}>
             {session.user?.name}
           </Button>
         </Link>
@@ -36,10 +48,10 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
     rightMenu = (
       <>
         <Link href="/auth/signin" passHref>
-          <Button onClick={() => closeDrawer()} variant="default">Войти</Button>
+          <Button variant="default">Войти</Button>
         </Link>
         <Link href="/auth/signup" passHref>
-          <Button onClick={() => closeDrawer()}>Зарегистрироваться</Button>
+          <Button variant="gradient">Зарегистрироваться</Button>
         </Link>
       </>
     )
@@ -51,8 +63,6 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
         sx={(theme) => ({
           backdropFilter: 'blur(10px)',
           background: theme.colorScheme === 'dark' ? 'rgba(26, 27, 30, 0.3)' : 'rgba(255, 255, 255, 0.3)',
-          maxWidth: '960px',
-          margin: '0 auto',
         })}
       >
         <Group position="apart" sx={{ height: '100%' }}>
@@ -134,11 +144,12 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}
+        onClick={() => closeDrawer()}
         size="100%"
         padding="md"
         title={
           <Group position="apart" sx={{ height: '100%' }}>
-            <UnstyledButton onClick={() => closeDrawer()}>
+            <UnstyledButton>
               <Link href="/">
                 <Title
                   order={3}
@@ -158,13 +169,33 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
         })}
         zIndex={1000000}
       >
-        <ScrollArea sx={{ height: 'calc(100vh - 60px)' }} mx="-md">
-          {/* <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} />
-          <Divider my="sm" color={theme.colorScheme === 'dark' ? 'dark.5' : 'gray.1'} /> */}
-
-          <Group position="center" grow pb="xl" px="md">
+        <ScrollArea sx={{ height: 'calc(100vh - 80px)' }} mx="-md">
+          <Group position="center" grow px="md">
             {rightMenu}
           </Group>
+
+          <Divider my="sm" />
+
+          {
+            session &&
+            <Box
+              sx={(theme) => ({
+                padding: '0px 16px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '16px',
+              })}
+            >
+              <HeaderLink icon={IconUser} label='Аккаунт' href={'/user'} activeFragment={0} />
+              <HeaderLink icon={IconGauge} label='Приборная панель' href={'/user'} activeFragment={1} />
+              <HeaderLink icon={IconDeviceDesktopAnalytics} label='Аналитика' href={'/user'} activeFragment={2} />
+              <HeaderLink icon={IconSettings} label='Настройки' href={'/user'} activeFragment={3} />
+              <Divider />
+              <HeaderLink icon={IconLogout} label='Выйти' onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
+            </Box>
+          }
         </ScrollArea>
       </Drawer>
     </Box>
