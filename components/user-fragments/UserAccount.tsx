@@ -28,12 +28,17 @@ import Joi from 'joi';
 
 import { useSession } from 'next-auth/react';
 import { useForm, zodResolver, joiResolver } from '@mantine/form';
-import AddGiftModal from '../logics/AddGiftModal';
+
 import { z } from 'zod';
 import { showNotification } from '@mantine/notifications';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '../../pages/api/auth/[...nextauth]';
 import Router from 'next/router';
+import dynamic from 'next/dynamic';
+
+const AddGiftModal = dynamic(() => import('../logics/AddGiftModal'), {
+  ssr: false,
+});
 
 
 // export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {

@@ -9,8 +9,8 @@ const AppHead: FunctionComponent<IProps> = ({ title }) => {
 
   return (
     <Head>
-      <title>{title ? title : "Check"}</title>
-      <meta name="description" content="check" />
+      <title>{title ? title : "Check wishlist"}</title>
+      <meta name="description" content="Создай свой список желаемых подарков и поделись им с друзьями или фанатами!" />
       <link rel="icon" href="/favicon.ico" />
     </Head>
   )

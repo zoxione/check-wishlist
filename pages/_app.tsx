@@ -14,6 +14,8 @@ import { NotificationsProvider } from '@mantine/notifications';
 import Layout from '../components/Layout';
 import { RouterTransition } from '../components/logics/RouterTransition';
 
+import { Analytics } from '@vercel/analytics/react';
+
 
 // mantine theme
 export const appTheme: MantineThemeOverride = {
@@ -73,6 +75,7 @@ const App = ({ Component, pageProps }: AppProps<{ session: Session }>) => {
               <Layout>
                 <RouterTransition />
                 <Component {...pageProps} />
+                <Analytics />
               </Layout>
             </NotificationsProvider>
           </MantineProvider>

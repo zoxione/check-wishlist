@@ -3,10 +3,15 @@ import { Card, Text, Group, Center, createStyles, Button, Modal, Box, Input, Num
 import { FunctionComponent, useState } from 'react';
 import { Image } from '@mantine/core';
 
-import GiveGiftModal from '.././logics/GiveGiftModal';
 import { showNotification } from '@mantine/notifications';
 import { IGift } from '../../types';
 import Router from 'next/router';
+import dynamic from 'next/dynamic';
+
+
+const GiveGiftModal = dynamic(() => import('../logics/GiveGiftModal'), {
+  ssr: false,
+});
 
 
 interface IProps {
