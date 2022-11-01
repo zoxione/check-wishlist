@@ -6,8 +6,8 @@ const nextConfig = {
     domains: ['i.imgur.com'],
   },
   env: {
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    // NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    // NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     SUPABASE_API_URL: process.env.SUPABASE_API_URL,
     SUPABASE_API_KEY: process.env.SUPABASE_API_KEY,
   }
