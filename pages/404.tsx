@@ -46,7 +46,7 @@ const Error: NextPage<IProps> = (props) => {
             Возможно, вы ошиблись при вводе адреса или страница была удалена.
           </Text>
           <Link href="/" passHref>
-            <Button variant="outline" size="md" mt="xl"
+            <Button variant="gradient" size="md" mt="xl"
               sx={(theme) => ({
                 [theme.fn.smallerThan('sm')]: {
                   width: '100%',
