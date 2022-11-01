@@ -1,13 +1,6 @@
 import { GetStaticProps, NextApiHandler } from 'next';
 import NextAuth, { DefaultUser, NextAuthOptions, User } from "next-auth"
-import Providers from 'next-auth/providers';
-import Adapters, { AdapterUser } from 'next-auth/adapters';
 import CredentialsProvider from "next-auth/providers/credentials";
-import GitHubProvider from 'next-auth/providers/github';
-import { Session } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
-import { any } from 'zod';
-import { IUser } from '../../../types';
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, authOptions);
 export default authHandler;
