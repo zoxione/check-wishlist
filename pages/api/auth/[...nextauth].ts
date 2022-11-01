@@ -52,68 +52,30 @@ export const authOptions: NextAuthOptions = {
 
         // логика входа юзера из бд
         let result: DefaultUser | null = null;
-        await fetch('http://localhost:8080/user_login', {
-          // await fetch('http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user_login', {
-          method: 'POST',
+
+        await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?email=eq.${email}&select=*`, {
+          method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
+            'apikey': process.env.SUPABASE_API_KEY || '',
+            'Authorization': process.env.SUPABASE_API_KEY || '',
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
           },
-          body: JSON.stringify({
-            email: email,
-            password: password
-          })
         }).then(async (res) => {
           if (res.ok) {
             const data = await res.json();
-            const { username, email, imageUrl, id } = await data as {
-              username: string,
-              email: string,
-              imageUrl: string,
-              id: string
-            };
-            result = {
-              id: id,
-              name: username,
-              email: email,
-              image: imageUrl,
-            };
-            // result = {
-            //   id: await response.id,
-            //   name: response.username,
-            //   email: response.email,
-            //   image: response.imageUrl,
-            // }
+            if (data.length > 0) {
+              if (password === data[0].password) {
+                result = {
+                  id: data[0].id,
+                  name: data[0].username,
+                  email: data[0].email,
+                  image: data[0].imageUrl,
+                };
+              }
+            }
           }
         })
-
-
-
-
-        // if (email === 'z1@gmail.com' && password === '123123') {
-        //   result = {
-        //     id: 1,
-        //     name: 'zoxi',
-        //     email: 'z1@gmail.com',
-        //     password: '123456'
-        //   };
-        // }
-
-        // try {
-        //   result = await prisma.user.findUnique({
-        //     where: {
-        //       email: email,
-        //     },
-        //   })
-        // } catch (error) {
-        //   throw new Error();
-        // }
-
-
-        // if (result === null || result.password !== password) {
-        //   throw new Error("invalid credentials");
-        // }
-
-        // // если все норм
         return result;
       }
     }),

@@ -31,6 +31,7 @@ import UserSettings from '../../components/user-fragments/UserSettings';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { NavbarLink } from '../../components/ui/NavbarLink';
+import { GetUserFromId } from '../../api/User';
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params, query }) => {
@@ -38,22 +39,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params,
   let user: IUser | null = null;
 
   try {
-    const userResponse = await fetch(`http://localhost:8080/user/${session?.user?.name}`)
-    // const response = await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user/${session?.user?.name}`)
-    user = await userResponse.json()
+    user = await GetUserFromId(session?.user?.id || '');
   }
   catch (e) {
     console.log(e)
   }
 
-  const giftsResponse: IGift[] = await (await fetch(`http://localhost:8080/gift`)).json()
-  // const ggg: IGift[] = await (await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift`)).json()
-  const gifts: IGift[] = giftsResponse.filter((gift) => gift.userId === user?.id && gift.isGifted === false)
-
-  const transactions: ITransaction[] = await (await fetch(`http://localhost:8080/transaction`)).json()
-
   return {
-    props: { user, gifts, transactions, activeFragment: query.activeFragment || 0 }
+    props: { user, activeFragment: query.activeFragment || 0 }
   };
 };
 
@@ -72,10 +65,10 @@ const User: NextPage<IProps> = (props: IProps) => {
 
   const [activeFragment, setActiveFragment] = useState(props.activeFragment);
   const fragmentsList = [
-    <UserAccount key={1} user={props.user} gifts={props.gifts} />,
-    <UserDashboard key={2} transactions={props.transactions} />,
+    <UserAccount key={1} user={props.user} />,
+    <UserDashboard key={2} />,
     <UserAnalytics key={3} />,
-    <UserSettings key={4} />,
+    <UserSettings key={4} user={props.user} />,
   ];
   useEffect(() => {
     setActiveFragment(props.activeFragment)

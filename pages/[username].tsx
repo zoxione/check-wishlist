@@ -1,4 +1,4 @@
-import { Avatar, Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Badge, useMantineTheme, Indicator, CopyButton, Box, } from '@mantine/core';
+import { Avatar, Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Badge, useMantineTheme, Indicator, CopyButton, Box, Loader, Center, } from '@mantine/core';
 import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -9,83 +9,12 @@ import { IconX, IconCheck, IconMail, IconPencil, IconBrandTiktok, IconBrandTwitt
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
 
-import { IGift, IUser } from '../types';
+import { IGift, ITransaction, IUser } from '../types';
 import { showNotification } from '@mantine/notifications';
-
-export var dataGift: IGift[] = [
-  {
-    id: "1",
-    title: 'Кофе',
-    description: 'Кофе',
-    shopName: 'Кофе',
-    shopUrl: 'https://google.com',
-    price: 100,
-    createdAt: new Date(),
-    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
-    isGifted: false,
-    userId: "dddd",
-  },
-  {
-    id: "2",
-    title: 'Кофе',
-    description: 'Кофе',
-    shopName: 'Кофе',
-    shopUrl: 'https://google.com',
-    price: 100,
-    createdAt: new Date(),
-    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
-    isGifted: false,
-    userId: "dddd",
-  },
-  {
-    id: "3",
-    title: 'Молоко',
-    description: 'Молоко',
-    shopName: 'Кофе',
-    shopUrl: 'https://google.com',
-    price: 231,
-    createdAt: new Date(),
-    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
-    isGifted: false,
-    userId: "dddd",
-  },
-  {
-    id: "4",
-    title: 'Кофе',
-    description: 'Кофе',
-    shopName: 'Кофе',
-    shopUrl: 'https://google.com',
-    price: 3155,
-    createdAt: new Date(),
-    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
-    isGifted: true,
-    userId: "dddd",
-  },
-  {
-    id: "5",
-    title: 'Кофе',
-    description: 'Кофе',
-    shopName: 'Кофе',
-    shopUrl: 'https://google.com',
-    price: 100,
-    createdAt: new Date(),
-    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
-    isGifted: false,
-    userId: "dddd",
-  },
-  {
-    id: "6",
-    title: 'Кофе',
-    description: 'Кофе',
-    shopName: 'Кофе',
-    shopUrl: 'https://google.com',
-    price: 3123,
-    createdAt: new Date(),
-    imageUrl: "https://miro.medium.com/max/1400/1*dDdKQEH296jQdl7-1pGzww.jpeg",
-    isGifted: true,
-    userId: "dddd",
-  },
-]
+import { useUser } from '../api/User';
+import { GiveGift, useGifts } from '../api/Gift';
+import { GetUserFromUsername } from '../api/User';
+import { useEffect } from 'react';
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
@@ -94,17 +23,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
   let user: IUser | null = null;
 
   try {
-    const response = await fetch(`http://localhost:8080/user/${username}`)
-    // const response = await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user/${username}`)
-    user = await response.json()
+    user = await GetUserFromUsername(username);
   }
   catch (e) {
     console.log(e)
   }
-
-  const ggg: IGift[] = await (await fetch(`http://localhost:8080/gift`)).json()
-  // const ggg: IGift[] = await (await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift`)).json()
-  const gifts: IGift[] = ggg.filter((gift) => gift.userId === user?.id)
 
   var isOwner = false;
   if (user?.username === session?.user?.name) {
@@ -112,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
   }
 
   return {
-    props: { user, isOwner, gifts },
+    props: { user, isOwner },
   };
 };
 
@@ -120,13 +43,16 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
 interface IProps {
   user: IUser;
   isOwner: boolean;
-  gifts: IGift[];
 }
 
 
 const Profile: NextPage<IProps> = (props: IProps) => {
   const theme = useMantineTheme();
-  console.log(props)
+
+  const { gifts, isLoading, mutate } = useGifts(props.user?.id || '');
+  const wishlist: IGift[] = gifts?.filter((gift) => !gift.isGifted)
+  const gifted: IGift[] = gifts?.filter((gift) => gift.isGifted)
+
 
   if (props.user === null) {
     return (
@@ -152,21 +78,20 @@ const Profile: NextPage<IProps> = (props: IProps) => {
     )
   }
 
-  const wishlist = props.gifts.filter((gift) => !gift.isGifted)
-  const gifted = props.gifts.filter((gift) => gift.isGifted)
-
+  console.log(props)
+  console.log(gifts)
 
   let linkList = [
-    <CopyButton key={1} value={props.user?.email ? props.user.email : ''}>
+    <CopyButton key={1} value={props.user?.email ? props.user?.email : ''}>
       {({ copied, copy }) => (
         <Button onClick={copy} variant="gradient" fullWidth leftIcon={<IconMail size={18} />}>
-          {copied ? "Скопировано" : props.user.email}
+          {copied ? "Скопировано" : props.user?.email}
         </Button>
       )}
     </CopyButton>
   ]
 
-  if (props.user.tiktokName != "") {
+  if (props.user?.tiktokName != "") {
     linkList.push(
       <Link key={2} href={`https://tiktok.com/@${props.user?.tiktokName}`}>
         <Button variant="light" fullWidth leftIcon={<IconBrandTiktok size={18} />}>
@@ -175,7 +100,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
       </Link>
     )
   }
-  if (props.user.twitterName != "") {
+  if (props.user?.twitterName != "") {
     linkList.push(
       <Link key={3} href={`https://twitter.com/${props.user?.twitterName}`}>
         <Button variant="light" fullWidth leftIcon={<IconBrandTwitter size={18} />}>
@@ -184,7 +109,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
       </Link>
     )
   }
-  if (props.user.vkName != "") {
+  if (props.user?.vkName != "") {
     linkList.push(
       <Link key={4} href={`https://vk.com/${props.user?.vkName}`}>
         <Button variant="light" fullWidth leftIcon={<IconBrandVk size={18} />}>
@@ -193,7 +118,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
       </Link>
     )
   }
-  if (props.user.telegramName != "") {
+  if (props.user?.telegramName != "") {
     linkList.push(
       <Link key={5} href={`https://t.me/${props.user?.telegramName}`}>
         <Button variant="light" fullWidth leftIcon={<IconBrandTelegram size={18} />}>
@@ -202,7 +127,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
       </Link>
     )
   }
-  if (props.user.instagramName != "") {
+  if (props.user?.instagramName != "") {
     linkList.push(
       <Link key={6} href={`https://instagram.com/${props.user?.instagramName}`}>
         <Button variant="light" fullWidth leftIcon={<IconBrandInstagram size={18} />}>
@@ -223,7 +148,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
           margin: '0',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundImage: `url(${props.user?.backgroundUrl ? props.user.backgroundUrl : ''})`,
+          backgroundImage: `url(${props.user?.backgroundUrl ? props.user?.backgroundUrl : ''})`,
           backgroundColor: props.user?.backgroundUrl ? '' : theme.colors.gray[4],
         })}
       >
@@ -275,7 +200,6 @@ const Profile: NextPage<IProps> = (props: IProps) => {
               <Text align="center" color="dimmed" size="sm">
                 {props.user?.about}
               </Text>
-
               <Group mt="xl" spacing="sm">
                 {linkList}
               </Group>
@@ -283,58 +207,70 @@ const Profile: NextPage<IProps> = (props: IProps) => {
           </Grid.Col>
 
           <Grid.Col sm={8}>
-            <Tabs defaultValue="wishlist">
-              <Tabs.List>
-                <Tabs.Tab
-                  rightSection={
-                    <Badge sx={{ width: 16, height: 16, pointerEvents: 'none' }} variant="filled" size="xs" p={0}>
-                      {wishlist.length}
-                    </Badge>
-                  }
-                  value="wishlist"
-                >
-                  Список желаний
-                </Tabs.Tab>
-                <Tabs.Tab
-                  rightSection={
-                    <Badge sx={{ width: 16, height: 16, pointerEvents: 'none' }} variant="filled" size="xs" p={0}>
-                      {gifted.length}
-                    </Badge>
-                  }
-                  value="gifted"
-                >
-                  Подаренное
-                </Tabs.Tab>
-              </Tabs.List>
+            {
+              isLoading
+                ? (
+                  <Center>
+                    <Loader variant="dots" />
+                  </Center>
+                )
+                : (
+                  <Tabs defaultValue="wishlist">
+                    <Tabs.List>
+                      <Tabs.Tab
+                        rightSection={
+                          <Badge sx={{ width: 16, height: 16, pointerEvents: 'none' }} variant="filled" size="xs" p={0}>
+                            {wishlist?.length}
+                          </Badge>
+                        }
+                        value="wishlist"
+                      >
+                        Список желаний
+                      </Tabs.Tab>
+                      <Tabs.Tab
+                        rightSection={
+                          <Badge sx={{ width: 16, height: 16, pointerEvents: 'none' }} variant="filled" size="xs" p={0}>
+                            {gifted?.length}
+                          </Badge>
+                        }
+                        value="gifted"
+                      >
+                        Подаренное
+                      </Tabs.Tab>
+                    </Tabs.List>
 
-              <Tabs.Panel value="wishlist" pt="xs">
-                <Grid>
-                  {wishlist.map((gift, index) => (
-                    <Grid.Col xs={6} sm={6} md={4} key={index}>
-                      <GiftCard
-                        gift={gift}
-                        isOwner={props.isOwner}
-                        canEdit={false}
-                      />
-                    </Grid.Col>
-                  ))}
-                </Grid>
-              </Tabs.Panel>
+                    <Tabs.Panel value="wishlist" pt="xs">
+                      <Grid>
+                        {wishlist?.map((gift, index) => (
+                          <Grid.Col xs={6} sm={6} md={4} key={index}>
+                            <GiftCard
+                              gift={gift}
+                              isLoaded={true}
+                              isOwner={props.isOwner}
+                              canEdit={false}
+                            />
+                          </Grid.Col>
+                        ))}
+                      </Grid>
+                    </Tabs.Panel>
 
-              <Tabs.Panel value="gifted" pt="xs">
-                <Grid>
-                  {gifted.map((gift, index) => (
-                    <Grid.Col xs={6} sm={6} md={4} key={index}>
-                      <GiftCard
-                        gift={gift}
-                        isOwner={props.isOwner}
-                        canEdit={false}
-                      />
-                    </Grid.Col>
-                  ))}
-                </Grid>
-              </Tabs.Panel>
-            </Tabs>
+                    <Tabs.Panel value="gifted" pt="xs">
+                      <Grid>
+                        {gifted?.map((gift, index) => (
+                          <Grid.Col xs={6} sm={6} md={4} key={index}>
+                            <GiftCard
+                              gift={gift}
+                              isLoaded={true}
+                              isOwner={props.isOwner}
+                              canEdit={false}
+                            />
+                          </Grid.Col>
+                        ))}
+                      </Grid>
+                    </Tabs.Panel>
+                  </Tabs>
+                )
+            }
           </Grid.Col>
         </Grid>
       </Container>

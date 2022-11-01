@@ -1,6 +1,5 @@
 import { FunctionComponent } from "react";
 
-import { z } from 'zod';
 import InputMask from "react-input-mask";
 
 import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, Select, Group, Grid, Image, Input } from "@mantine/core";
@@ -12,6 +11,7 @@ import { useSession } from "next-auth/react";
 import Router from "next/router";
 
 import Joi from 'joi';
+import { GiveGift, useGift } from "../../api/Gift";
 
 interface IProps {
   gift: IGift,
@@ -65,52 +65,27 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
       console.log(JSON.stringify(transaction));
 
       try {
-        await fetch(`http://localhost:8080/gift_give`, {
-          // await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift_give`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(transaction),
-        }).then((res) => {
-          if (res.ok) {
-            showNotification({
-              title: 'Успешно',
-              message: 'Подарок успешно отправлен',
-              color: 'teal',
-              icon: <IconCheck stroke={1.5} size={24} />,
-            });
-            props.setOpened(false);
-            Router.reload();
-          }
-          else {
-            console.log(res);
-            showNotification({
-              title: 'Ошибка',
-              message: 'Не удалось отправить подарок',
-              color: 'red',
-              icon: <IconX stroke={1.5} size={24} />,
-            });
-          }
+        await GiveGift(transaction);
+
+        showNotification({
+          title: 'Успешно',
+          message: 'Подарок успешно отправлен',
+          color: 'teal',
+          icon: <IconCheck stroke={1.5} size={24} />,
         });
+
+        props.setOpened(false);
+        // Router.reload();
       }
       catch (error) {
         console.error(error);
         showNotification({
           title: 'Ошибка',
-          message: 'Не удалось отправить подарок',
+          message: 'Не удалось добавить подарок',
           color: 'red',
           icon: <IconX stroke={1.5} size={24} />,
         });
       }
-    }
-    else {
-      showNotification({
-        title: 'Ошибка',
-        message: 'Необходимо авторизоваться',
-        color: 'red',
-        icon: <IconX stroke={1.5} size={24} />,
-      });
     }
   }
 
@@ -146,8 +121,19 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
             marginBottom: '20px'
           })}
         >
-          <Image src={props.gift?.imageUrl} />
-          <Box>
+          <Box
+            sx={(theme) => ({
+              width: '50%'
+            })}
+          >
+            <Image src={props.gift?.imageUrl} withPlaceholder />
+          </Box>
+          <Box
+            sx={(theme) => ({
+              width: '50%',
+              textAlign: 'center'
+            })}
+          >
             <Text size="xl">
               {props.gift?.title}
             </Text>
@@ -208,7 +194,7 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
           </Button>
         </form>
       </Box>
-    </Modal>
+    </Modal >
   )
 }
 

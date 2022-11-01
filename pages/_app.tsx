@@ -1,21 +1,13 @@
 import '../styles/globals.css'
-
-import Router from 'next/router';
-import { useEffect } from "react";
 import { AppProps } from 'next/app';
-import { useRouter } from "next/router";
 import { Session } from "next-auth";
 import { SessionProvider } from 'next-auth/react'
-import { useState } from 'react';
-import { MantineProvider, ColorSchemeProvider, ColorScheme, Loader, MantineTheme, MantineThemeOverride, Center, ButtonStylesParams } from '@mantine/core';
+import { MantineProvider, ColorSchemeProvider, ColorScheme, MantineTheme, MantineThemeOverride, ButtonStylesParams } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { NotificationsProvider } from '@mantine/notifications';
-
 import Layout from '../components/Layout';
 import { RouterTransition } from '../components/logics/RouterTransition';
-
-import { Analytics } from '@vercel/analytics/react';
-
+import { ModalsProvider } from '@mantine/modals';
 
 // mantine theme
 export const appTheme: MantineThemeOverride = {
@@ -53,8 +45,6 @@ export const appTheme: MantineThemeOverride = {
 };
 
 const App = ({ Component, pageProps }: AppProps<{ session: Session }>) => {
-
-
   // mantine dark theme
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: 'mantine-app-theme',
@@ -65,19 +55,19 @@ const App = ({ Component, pageProps }: AppProps<{ session: Session }>) => {
     setColorScheme(value || (appTheme.colorScheme === 'dark' ? 'light' : 'dark'));
   appTheme.colorScheme = colorScheme;
 
-
   return (
     <>
       <SessionProvider session={pageProps.session}>
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
           <MantineProvider theme={appTheme} withGlobalStyles withNormalizeCSS>
-            <NotificationsProvider>
-              <Layout>
-                <RouterTransition />
-                <Component {...pageProps} />
-                <Analytics />
-              </Layout>
-            </NotificationsProvider>
+            <ModalsProvider>
+              <NotificationsProvider>
+                <Layout>
+                  <RouterTransition />
+                  <Component {...pageProps} />
+                </Layout>
+              </NotificationsProvider>
+            </ModalsProvider>
           </MantineProvider>
         </ColorSchemeProvider>
       </SessionProvider>

@@ -1,16 +1,8 @@
-import type { GetStaticProps, NextPage } from 'next'
-import Head from 'next/head'
-import { useState } from 'react'
-import Router from "next/router";
+import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { Box, Button, Container, Title, Text, Grid, Anchor } from '@mantine/core';
-
-
-
+import { Box, Container, Title, Text, Anchor } from '@mantine/core';
 import { IconChevronsDown } from '@tabler/icons';
-
-
 import Search from '../components/ui/Search'
 import AppHead from '../components/logics/Head';
 import Link from 'next/link';

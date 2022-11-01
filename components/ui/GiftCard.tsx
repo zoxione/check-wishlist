@@ -1,6 +1,6 @@
 import { IconEye, IconTrash, IconX, IconCheck } from '@tabler/icons';
 import { Card, Text, Group, Center, createStyles, Button, Modal, Box, Input, NumberInput, Skeleton } from '@mantine/core';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { Image } from '@mantine/core';
 
 import { showNotification } from '@mantine/notifications';
@@ -16,6 +16,9 @@ const GiveGiftModal = dynamic(() => import('../logics/GiveGiftModal'), {
 
 interface IProps {
   gift: IGift,
+  gifts?: IGift[],
+  onDeleteGift?: (id: string) => void,
+  isLoaded: boolean,
   isOwner: boolean;
   canEdit: boolean;
 }
@@ -24,51 +27,13 @@ interface IProps {
 const GiftCard: FunctionComponent<IProps> = (props) => {
   const [openedGiveGiftModal, setOpenedGiveGiftModal] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-  Router.events.on('routeChangeStart', () => setLoading(true));
-  Router.events.on('routeChangeComplete', () => setLoading(false));
-
-  const deleteGift = async () => {
-    try {
-      await fetch(`http://localhost:8080/gift/${props.gift?.id}`, {
-        // await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift/${props.gift?.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      }).then((res) => {
-        if (res.ok) {
-          showNotification({
-            title: 'Успешно',
-            message: 'Подарок удален',
-            color: 'green',
-            icon: <IconCheck stroke={1.5} size={24} />,
-          });
-          Router.push('/user');
-        }
-        else {
-          console.log(res);
-          showNotification({
-            title: 'Ошибка',
-            message: 'Не удалось удалить подарок',
-            color: 'red',
-            icon: <IconX stroke={1.5} size={24} />,
-          });
-        }
-      });
-    }
-    catch (error) {
-      console.error(error);
-      showNotification({
-        title: 'Ошибка',
-        message: 'Не удалось удалить подарок',
-        color: 'red',
-        icon: <IconX stroke={1.5} size={24} />,
-      });
+  const handleDeleteGift = () => {
+    if (props.onDeleteGift) {
+      props.onDeleteGift(props.gift.id ? props.gift.id : '');
     }
   }
 
-  if (loading) {
+  if (props.isLoaded === false) {
     return (
       <>
         <Card withBorder p="lg" radius="md">
@@ -90,55 +55,87 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
       </>
     )
   }
-  else {
-    return (
-      <Card withBorder p="lg" radius="md"
-        sx={(theme) => ({
 
-          '&:hover': {
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
-          },
-        })}
-      >
-        <Card.Section mb="sm">
-          <Image src={props.gift?.imageUrl} alt={props.gift?.title} height={250} />
-          {
-            props.isOwner && props.canEdit &&
-            <Button
-              variant="filled"
-              color="red"
-              onClick={() => deleteGift()}
-              style={{ position: 'absolute', top: 0, right: 0, borderRadius: '0 0 0 10px' }}
-            >
-              <IconTrash size={20} />
-            </Button>
-          }
-        </Card.Section>
+  // // Router.events.on('routeChangeStart', () => setLoading(true));
+  // // Router.events.on('routeChangeComplete', () => setLoading(false));
 
-        <Text mt="xs">
-          {props.gift?.title}
-        </Text>
+  // useEffect(() => {
+  //   setLoading(props.isLoading);
+  // }, [props.isLoading]);
 
-        <Text weight={300} >
-          {props.gift?.description}
-        </Text>
+  // const deleteGift = async () => {
+  //   try {
+  //     // DeleteGift(props.gift);
 
-        <Text weight={600} >
-          {props.gift?.price} ₽
-        </Text>
+  //     showNotification({
+  //       title: 'Успешно',
+  //       message: 'Подарок удален',
+  //       color: 'teal',
+  //       icon: <IconCheck stroke={1.5} size={24} />,
+  //     });
 
+  //     // Router.reload();
+  //   }
+  //   catch (error) {
+  //     console.error(error);
+  //     showNotification({
+  //       title: 'Ошибка',
+  //       message: 'Не удалось удалить подарок',
+  //       color: 'red',
+  //       icon: <IconX stroke={1.5} size={24} />,
+  //     });
+  //   }
+  // }
+
+
+  return (
+    <Card withBorder p="lg" radius="md"
+      sx={(theme) => ({
+
+        '&:hover': {
+          backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
+        },
+      })}
+    >
+      <Card.Section mb="sm">
+        <Image src={props.gift?.imageUrl} alt={props.gift?.title} height={250} fit="fill" withPlaceholder />
         {
-          !props.isOwner && !props.gift?.isGifted &&
-          <>
-            <GiveGiftModal gift={props.gift} opened={openedGiveGiftModal} setOpened={setOpenedGiveGiftModal} />
-            <Button variant="light" fullWidth mt="md" radius="md" onClick={() => setOpenedGiveGiftModal(true)}>
-              Подарить
-            </Button>
-          </>
+          props.isOwner && props.canEdit &&
+          <Button
+            variant="filled"
+            color="red"
+            onClick={() => { handleDeleteGift() }}
+            style={{ position: 'absolute', top: 0, right: 0, borderRadius: '0 0 0 10px' }}
+          >
+            <IconTrash size={20} />
+          </Button>
         }
-      </Card>
-    );
-  }
+      </Card.Section>
+
+      <Text mt="xs">
+        {props.gift?.title}
+      </Text>
+
+      <Text weight={300} >
+        {props.gift?.description}
+      </Text>
+
+      <Text weight={600} >
+        {props.gift?.price} ₽
+      </Text>
+
+      {
+        !props.isOwner && !props.gift?.isGifted &&
+        <>
+          <GiveGiftModal gift={props.gift} opened={openedGiveGiftModal} setOpened={setOpenedGiveGiftModal} />
+          <Button variant="light" fullWidth mt="md" radius="md" onClick={() => setOpenedGiveGiftModal(true)}>
+            Подарить
+          </Button>
+        </>
+      }
+    </Card>
+  );
+
 }
 
 export default GiftCard;

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React, { FunctionComponent, useState } from 'react'
 import { GetServerSideProps, NextPage } from 'next';
-import { createStyles, Textarea, Notification, Container, Group, ActionIcon, Footer, Box, Text, Button, PasswordInput, Input, Modal, NumberInput, Grid, Avatar, TextInput, useMantineTheme, Center } from '@mantine/core';
+import { createStyles, Textarea, Notification, Container, Group, ActionIcon, Footer, Box, Text, Button, PasswordInput, Input, Modal, NumberInput, Grid, Avatar, TextInput, useMantineTheme, Center, Loader } from '@mantine/core';
 import { IconTextPlus, IconCode, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons';
 import InfoCard from '../ui/InfoCard';
 
@@ -29,41 +29,84 @@ import Joi from 'joi';
 import { useSession } from 'next-auth/react';
 import { useForm, zodResolver, joiResolver } from '@mantine/form';
 
-import { z } from 'zod';
 import { showNotification } from '@mantine/notifications';
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '../../pages/api/auth/[...nextauth]';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
+import { AddGift, DeleteGift, useGifts } from '../../api/Gift';
+import { UpdateUser } from '../../api/User';
+
 
 const AddGiftModal = dynamic(() => import('../logics/AddGiftModal'), {
   ssr: false,
 });
 
-
-// export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
-//   const session = await unstable_getServerSession(req, res, authOptions)
-
-//   const response = await fetch(`http://localhost:8080/gift`)
-//   if (!response.ok) {
-//     Router.push('/')
-//   }
-//   const gifts: IGift[] = await response.json()
-
-//   return {
-//     props: { gifts },
-//   };
-// };
-
-
 interface IProps {
   user: IUser;
-  gifts: IGift[];
 };
 
 
 const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
   const theme = useMantineTheme();
+
+  const router = useRouter();
+
+  const { gifts, isLoading, mutate, isError } = useGifts(props.user?.id || '');
+  const giftsList: IGift[] = gifts?.filter((gift) => !gift.isGifted)
+
+  const addGiftClient = async (gift: IGift) => {
+    const newData = giftsList.concat(gift);
+
+    await mutate(newData, false);
+
+    try {
+      await AddGift(gift);
+
+      showNotification({
+        title: 'Успешно',
+        message: 'Подарок успешно добавлен',
+        color: 'teal',
+        icon: <IconCheck stroke={1.5} size={24} />,
+      });
+    }
+    catch (error) {
+      console.error(error);
+      showNotification({
+        title: 'Ошибка',
+        message: 'Не удалось добавить подарок',
+        color: 'red',
+        icon: <IconX stroke={1.5} size={24} />,
+      });
+    }
+  }
+
+  const deleteGiftClient = async (id: string) => {
+    const newData = giftsList.filter((gift) => gift.id !== id);
+
+    await mutate(newData, false);
+
+    try {
+      await DeleteGift(id);
+
+      showNotification({
+        title: 'Успешно',
+        message: 'Подарок успешно удален',
+        color: 'teal',
+        icon: <IconCheck stroke={1.5} size={24} />,
+      });
+    }
+    catch (error) {
+      console.error(error);
+      showNotification({
+        title: 'Ошибка',
+        message: 'Не удалось удалить подарок',
+        color: 'red',
+        icon: <IconX stroke={1.5} size={24} />,
+      });
+    }
+  }
+
 
   // Модалка
   const [openedAddGiftModal, setOpenedAddGiftModal] = useState(false);
@@ -167,32 +210,16 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
     console.log(JSON.stringify(user));
 
     try {
-      await fetch(`http://localhost:8080/user/${props.user?.id}`, {
-        // await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user/${props.user?.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(user),
-      }).then((res) => {
-        if (res.ok) {
-          showNotification({
-            title: 'Успешно',
-            message: 'Данные успешно обновлены',
-            color: 'teal',
-            icon: <IconCheck stroke={1.5} size={24} />,
-          });
-        }
-        else {
-          console.log(res);
-          showNotification({
-            title: 'Ошибка',
-            message: 'Ошибка при обновлении данных',
-            color: 'red',
-            icon: <IconX stroke={1.5} size={24} />,
-          });
-        }
+      await UpdateUser(user);
+
+      showNotification({
+        title: 'Успешно',
+        message: 'Данные успешно обновлены',
+        color: 'teal',
+        icon: <IconCheck stroke={1.5} size={24} />,
       });
+
+      router.replace(router.asPath);
     }
     catch (error) {
       console.error(error);
@@ -340,7 +367,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
 
         <InfoCard title="Список желаний">
           <Box>
-            <AddGiftModal opened={openedAddGiftModal} setOpened={setOpenedAddGiftModal} />
+            <AddGiftModal opened={openedAddGiftModal} setOpened={setOpenedAddGiftModal} onAddGift={addGiftClient} />
             <Button
               onClick={() => setOpenedAddGiftModal(true)}
               leftIcon={<IconTextPlus size={18} />}
@@ -349,18 +376,29 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
               Добавить
             </Button>
 
-            <Grid mt={10}>
-              {props.gifts.map((gift, index) => (
-                <Grid.Col xs={6} sm={6} md={4} key={index}>
-                  <GiftCard
-                    gift={gift}
-                    isOwner={true}
-                    canEdit={true}
-                  />
-                </Grid.Col>
-              ))}
-            </Grid>
-
+            {
+              isLoading ?
+                (
+                  <Center>
+                    <Loader variant="dots" />
+                  </Center>
+                )
+                : (
+                  <Grid mt={10}>
+                    {giftsList?.map((gift, index) => (
+                      <Grid.Col xs={6} sm={6} md={4} key={index}>
+                        <GiftCard
+                          gift={gift}
+                          onDeleteGift={deleteGiftClient}
+                          isLoaded={true}
+                          isOwner={true}
+                          canEdit={true}
+                        />
+                      </Grid.Col>
+                    ))}
+                  </Grid>
+                )
+            }
           </Box>
         </InfoCard>
 

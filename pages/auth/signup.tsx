@@ -5,13 +5,12 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import Router from 'next/router';
 
-
 import { IconChevronRight, IconChevronLeft, IconCheck, IconX } from '@tabler/icons';
 import { useState } from 'react';
-import { z } from 'zod';
 import Joi from 'joi';
 
 import { IUser } from '../../types'
+import { AddUser } from '../../api/User';
 
 interface IProps {
 
@@ -143,33 +142,16 @@ const SignUp: NextPage<IProps> = ({ }) => {
       console.log(JSON.stringify(user));
 
       try {
-        await fetch('http://localhost:8080/user', {
-          // await fetch('http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/user', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(user),
-        }).then((res) => {
-          if (res.ok) {
-            showNotification({
-              title: 'Успешно',
-              message: 'Вы успешно зарегистрировались',
-              color: 'teal',
-              icon: <IconCheck stroke={1.5} size={24} />,
-            });
-            Router.push('/auth/signin');
-          }
-          else {
-            console.log(res);
-            showNotification({
-              title: 'Ошибка',
-              message: 'Возникла ошибка при регистрации',
-              color: 'red',
-              icon: <IconX stroke={1.5} size={24} />,
-            });
-          }
+        await AddUser(user);
+
+        showNotification({
+          title: 'Успешно',
+          message: 'Вы успешно зарегистрировались',
+          color: 'teal',
+          icon: <IconCheck stroke={1.5} size={24} />,
         });
+
+        Router.push('/auth/signin');
       }
       catch (error) {
         console.error(error);

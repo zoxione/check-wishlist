@@ -28,7 +28,7 @@ export interface IUser {
   telegramName?: string;
   instagramName?: string;
   createdAt?: Date;
-  updatedAt?: Date;
+  // updatedAt?: Date;
 }
 
 export interface IGift {
@@ -42,7 +42,7 @@ export interface IGift {
   isGifted?: boolean;
   userId: string;
   createdAt?: Date;
-  updatedAt?: Date;
+  // updatedAt?: Date;
 }
 
 export interface ITransaction {
@@ -52,5 +52,5 @@ export interface ITransaction {
   gifterId: string;
   isCompleted?: boolean;
   createdAt?: Date;
-  updatedAt?: Date;
+  // updatedAt?: Date;
 }

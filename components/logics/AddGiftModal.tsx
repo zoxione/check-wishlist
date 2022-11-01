@@ -13,6 +13,7 @@ import Joi from 'joi';
 
 
 interface IProps {
+  onAddGift: (gift: IGift) => void;
   opened: boolean;
   setOpened: (opened: boolean) => void;
 };
@@ -97,45 +98,31 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
     }
     console.log(JSON.stringify(gift));
 
-    try {
-      await fetch(`http://localhost:8080/gift`, {
-        // await fetch(`http://ovz2.j61057165.m7o9p.vps.myjino.ru:49274/gift`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(gift),
-      }).then((res) => {
-        if (res.ok) {
-          showNotification({
-            title: 'Успешно',
-            message: 'Подарок успешно добавлен',
-            color: 'teal',
-            icon: <IconCheck stroke={1.5} size={24} />,
-          });
-          props.setOpened(false);
-          Router.push('/user');
-        }
-        else {
-          console.log(res);
-          showNotification({
-            title: 'Ошибка',
-            message: 'Не удалось добавить подарок',
-            color: 'red',
-            icon: <IconX stroke={1.5} size={24} />,
-          });
-        }
-      });
-    }
-    catch (error) {
-      console.error(error);
-      showNotification({
-        title: 'Ошибка',
-        message: 'Не удалось добавить подарок',
-        color: 'red',
-        icon: <IconX stroke={1.5} size={24} />,
-      });
-    }
+    props.onAddGift(gift);
+    props.setOpened(false);
+    // Router.reload();
+
+    // try {
+    //   AddGift(gift);
+
+    //   showNotification({
+    //     title: 'Успешно',
+    //     message: 'Подарок успешно добавлен',
+    //     color: 'teal',
+    //     icon: <IconCheck stroke={1.5} size={24} />,
+    //   });
+
+
+    // }
+    // catch (error) {
+    //   console.error(error);
+    //   showNotification({
+    //     title: 'Ошибка',
+    //     message: 'Не удалось добавить подарок',
+    //     color: 'red',
+    //     icon: <IconX stroke={1.5} size={24} />,
+    //   });
+    // }
   }
 
 
