@@ -1,15 +1,12 @@
 import { FunctionComponent } from "react";
-
-import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, Select, Group, Grid, Checkbox, NativeSelect } from "@mantine/core";
+import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, NativeSelect } from "@mantine/core";
 import { useForm, joiResolver } from "@mantine/form";
 import { IconCurrencyRubel, IconX, IconCheck } from '@tabler/icons';
 import { showNotification } from "@mantine/notifications";
-import { IGift } from "../../types";
 import { useSession } from "next-auth/react";
-import Router from "next/router";
-
 import Joi from 'joi';
 
+import { IGift } from "../../types";
 
 
 interface IProps {

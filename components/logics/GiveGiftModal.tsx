@@ -1,23 +1,22 @@
 import { FunctionComponent } from "react";
-
 import InputMask from "react-input-mask";
-
-import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, Select, Group, Grid, Image, Input } from "@mantine/core";
+import { Box, Button, Modal, Textarea, Text, Image, Input } from "@mantine/core";
 import { useForm, joiResolver } from "@mantine/form";
-import { IconCurrencyRubel, IconX, IconCheck, IconGift } from '@tabler/icons';
+import { IconX, IconCheck } from '@tabler/icons';
 import { showNotification } from "@mantine/notifications";
-import { IGift, ITransaction } from "../../types";
 import { useSession } from "next-auth/react";
-import Router from "next/router";
-
 import Joi from 'joi';
-import { GiveGift, useGift } from "../../api/Gift";
+
+import { IGift, ITransaction } from "../../types";
+import { GiveGift } from "../../api/Gift";
+
 
 interface IProps {
   gift: IGift,
   opened: boolean;
   setOpened: (opened: boolean) => void;
 };
+
 
 const GiveGiftModal: FunctionComponent<IProps> = (props) => {
   const { data: session, status } = useSession();

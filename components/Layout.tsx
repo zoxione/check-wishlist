@@ -1,10 +1,8 @@
 import React, { FunctionComponent, ReactNode, useState } from 'react'
-
 import { AppShell } from '@mantine/core';
 
-import NavbarContent from './Navbar'
 import HeaderContent from './Header';
-import FooterContent from './Footer';
+//import FooterContent from './Footer';
 
 
 interface IProps {

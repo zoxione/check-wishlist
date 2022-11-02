@@ -1,7 +1,5 @@
-import { IconEye, IconMessageCircle } from '@tabler/icons';
-import { Card, Text, Group, Center, createStyles, Paper, Title } from '@mantine/core';
-import { Children, FunctionComponent, ReactNode } from 'react';
-import { Image } from '@mantine/core';
+import { Paper, Title } from '@mantine/core';
+import { FunctionComponent, ReactNode } from 'react';
 
 
 interface IProps {
@@ -16,14 +14,14 @@ const InfoCard: FunctionComponent<IProps> = ({ children, title }) => {
       sx={(theme) => ({
         padding: '30px',
         borderRadius: theme.radius.lg,
-        boxShadow: theme.colorScheme === 'dark' ? '' : theme.shadows.lg,
+        boxShadow: theme.colorScheme === 'dark' ? '' : '0 0 10px rgba(0, 0, 0, 0.15)',
         border: theme.colorScheme === 'dark' ? '1px solid' : '',
         borderColor: theme.colorScheme === 'dark' ? theme.colors.dark[4] : '',
         maxWidth: '100vw',
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
       })}
     >
-      <Title order={2} size="h2" mb={10}>{title}</Title>
+      <Title order={2} size="h2" mb={30}>{title}</Title>
       {children}
     </Paper>
   );

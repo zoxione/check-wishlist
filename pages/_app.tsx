@@ -2,12 +2,15 @@ import '../styles/globals.css'
 import { AppProps } from 'next/app';
 import { Session } from "next-auth";
 import { SessionProvider } from 'next-auth/react'
-import { MantineProvider, ColorSchemeProvider, ColorScheme, MantineTheme, MantineThemeOverride, ButtonStylesParams } from '@mantine/core';
+import { MantineProvider, ColorSchemeProvider, ColorScheme, MantineThemeOverride, ButtonStylesParams } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { NotificationsProvider } from '@mantine/notifications';
+import { ModalsProvider } from '@mantine/modals';
+
 import Layout from '../components/Layout';
 import { RouterTransition } from '../components/logics/RouterTransition';
-import { ModalsProvider } from '@mantine/modals';
+
+
 
 // mantine theme
 export const appTheme: MantineThemeOverride = {

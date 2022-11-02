@@ -1,4 +1,3 @@
-import { Container } from '@mantine/core';
 import { FunctionComponent } from 'react'
 
 import InfoCard from '../ui/InfoCard';

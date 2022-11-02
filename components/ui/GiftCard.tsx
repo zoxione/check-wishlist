@@ -1,13 +1,9 @@
 import { IconEye, IconTrash, IconX, IconCheck } from '@tabler/icons';
-import { Card, Text, Group, Center, createStyles, Button, Modal, Box, Input, NumberInput, Skeleton } from '@mantine/core';
-import { FunctionComponent, useEffect, useState } from 'react';
-import { Image } from '@mantine/core';
-
-import { showNotification } from '@mantine/notifications';
-import { IGift } from '../../types';
-import Router from 'next/router';
+import { Card, Text, Button, Box, Skeleton, Image, Tooltip } from '@mantine/core';
+import { FunctionComponent, useState } from 'react';
 import dynamic from 'next/dynamic';
 
+import { IGift } from '../../types';
 
 const GiveGiftModal = dynamic(() => import('../logics/GiveGiftModal'), {
   ssr: false,
@@ -89,16 +85,19 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
 
 
   return (
-    <Card withBorder p="lg" radius="md"
+    <Card p="lg" withBorder radius="md"
       sx={(theme) => ({
-
+        cursor: 'pointer',
+        height: '434px',
+        display: 'flex',
+        flexDirection: 'column',
         '&:hover': {
-          backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
+          boxShadow: 'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',
         },
       })}
     >
-      <Card.Section mb="sm">
-        <Image src={props.gift?.imageUrl} alt={props.gift?.title} height={250} fit="fill" withPlaceholder />
+      <Card.Section mb={30}>
+        <Image src={props.gift?.imageUrl} alt={props.gift?.title} height={260} fit="fill" p={10} withPlaceholder />
         {
           props.isOwner && props.canEdit &&
           <Button
@@ -112,27 +111,73 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
         }
       </Card.Section>
 
-      <Text mt="xs">
-        {props.gift?.title}
-      </Text>
+      <Box
+        sx={(theme) => ({
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          height: "100%"
+        })}
+      >
+        <Tooltip label={props.gift?.title} multiline transition="slide-up" transitionDuration={200}>
+          <Box
+            sx={(theme) => ({
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+            })}
+          >
+            <Text>
+              {props.gift?.title}
+            </Text>
+          </Box>
+        </Tooltip>
 
-      <Text weight={300} >
-        {props.gift?.description}
-      </Text>
+        <Tooltip label={props.gift?.description} multiline transition="slide-up" transitionDuration={200}>
+          <Box
+            sx={(theme) => ({
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+            })}
+          >
+            <Text weight={300}>
+              {props.gift?.description}
+            </Text>
+          </Box>
+        </Tooltip>
 
-      <Text weight={600} >
-        {props.gift?.price} ₽
-      </Text>
+        <Text weight={600}>
+          {props.gift?.price} ₽
+        </Text>
 
-      {
-        !props.isOwner && !props.gift?.isGifted &&
-        <>
-          <GiveGiftModal gift={props.gift} opened={openedGiveGiftModal} setOpened={setOpenedGiveGiftModal} />
-          <Button variant="light" fullWidth mt="md" radius="md" onClick={() => setOpenedGiveGiftModal(true)}>
-            Подарить
-          </Button>
-        </>
-      }
+        {
+          props.isOwner && !props.gift?.isGifted &&
+          <>
+            <GiveGiftModal gift={props.gift} opened={openedGiveGiftModal} setOpened={setOpenedGiveGiftModal} />
+            <Button variant="light" fullWidth radius="md" onClick={() => setOpenedGiveGiftModal(true)}>
+              Изменить
+            </Button>
+          </>
+        }
+        {
+          !props.isOwner && !props.gift?.isGifted &&
+          <>
+            <GiveGiftModal gift={props.gift} opened={openedGiveGiftModal} setOpened={setOpenedGiveGiftModal} />
+            <Button variant="outline" fullWidth radius="md" onClick={() => setOpenedGiveGiftModal(true)}>
+              Подарить
+            </Button>
+          </>
+        }
+        {
+          props.gift?.isGifted &&
+          <>
+            <Button variant="default" disabled fullWidth radius="md">
+              Подарен
+            </Button>
+          </>
+        }
+      </Box>
     </Card>
   );
 

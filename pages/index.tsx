@@ -1,11 +1,12 @@
 import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import Image from 'next/image';
 import { Box, Container, Title, Text, Anchor } from '@mantine/core';
 import { IconChevronsDown } from '@tabler/icons';
+
 import Search from '../components/ui/Search'
 import AppHead from '../components/logics/Head';
-import Link from 'next/link';
 
 
 interface Props {

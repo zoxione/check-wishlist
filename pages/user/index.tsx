@@ -1,37 +1,22 @@
-import { Avatar, Paper, createStyles, Notification, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Input, Box, Navbar, UnstyledButton, Tooltip, Stack, Center, Loader, MediaQuery, } from '@mantine/core';
+import { useEffect, useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
+import Router, { useRouter } from 'next/router'
+import { signOut, useSession } from 'next-auth/react';
+import { unstable_getServerSession } from 'next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
-import Router, { useRouter } from 'next/router'
-import { useEffect, useState } from 'react';
+import { Title, Anchor, Box, Navbar, Stack } from '@mantine/core';
+import { IconHome2, IconGauge, IconDeviceDesktopAnalytics, IconUser, IconSettings, IconLogout, IconLayoutList } from '@tabler/icons';
 
-import { signOut, useSession } from 'next-auth/react';
-
-import { IconCheck, IconX, IconTrash } from '@tabler/icons';
-import {
-  TablerIcon,
-  IconHome2,
-  IconGauge,
-  IconDeviceDesktopAnalytics,
-  IconFingerprint,
-  IconCalendarStats,
-  IconUser,
-  IconSettings,
-  IconLogout,
-  IconSwitchHorizontal,
-} from '@tabler/icons';
-
-
-import CardGift from '../../components/ui/GiftCard';
+import { authOptions } from '../api/auth/[...nextauth]';
 import { IGift, ITransaction, IUser } from '../../types';
+import { NavbarLink } from '../../components/ui/NavbarLink';
+import { GetUserFromId } from '../../api/User';
 import UserAccount from '../../components/user-fragments/UserAccount';
 import UserDashboard from '../../components/user-fragments/UserDashboard';
 import UserAnalytics from '../../components/user-fragments/UserAnalytics';
 import UserSettings from '../../components/user-fragments/UserSettings';
-import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]';
-import { NavbarLink } from '../../components/ui/NavbarLink';
-import { GetUserFromId } from '../../api/User';
+import UserWishlist from '../../components/user-fragments/UserWishlist';
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params, query }) => {
@@ -66,9 +51,10 @@ const User: NextPage<IProps> = (props: IProps) => {
   const [activeFragment, setActiveFragment] = useState(props.activeFragment);
   const fragmentsList = [
     <UserAccount key={1} user={props.user} />,
-    <UserDashboard key={2} />,
-    <UserAnalytics key={3} />,
-    <UserSettings key={4} user={props.user} />,
+    <UserWishlist key={2} user={props.user} />,
+    <UserDashboard key={3} />,
+    <UserAnalytics key={4} />,
+    <UserSettings key={5} user={props.user} />,
   ];
   useEffect(() => {
     setActiveFragment(props.activeFragment)
@@ -120,9 +106,10 @@ const User: NextPage<IProps> = (props: IProps) => {
           <Stack justify="center" spacing={10}>
             <NavbarLink icon={IconHome2} label="Мой профиль" onClick={() => Router.push(`${props.user?.username}`)} />
             <NavbarLink icon={IconUser} label="Аккаунт" active={activeFragment === 0} onClick={() => setActiveFragment(0)} />
-            <NavbarLink icon={IconGauge} label="Приборная панель" active={activeFragment === 1} onClick={() => setActiveFragment(1)} />
-            <NavbarLink icon={IconDeviceDesktopAnalytics} label="Аналитика" active={activeFragment === 2} onClick={() => setActiveFragment(2)} />
-            <NavbarLink icon={IconSettings} label="Настройки" active={activeFragment === 3} onClick={() => setActiveFragment(3)} />
+            <NavbarLink icon={IconLayoutList} label="Список желаний" active={activeFragment === 1} onClick={() => setActiveFragment(1)} />
+            <NavbarLink icon={IconGauge} label="Приборная панель" active={activeFragment === 2} onClick={() => setActiveFragment(2)} />
+            <NavbarLink icon={IconDeviceDesktopAnalytics} label="Аналитика" active={activeFragment === 3} onClick={() => setActiveFragment(3)} />
+            <NavbarLink icon={IconSettings} label="Настройки" active={activeFragment === 4} onClick={() => setActiveFragment(4)} />
           </Stack>
         </Navbar.Section>
         <Navbar.Section>

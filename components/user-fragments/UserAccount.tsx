@@ -1,46 +1,16 @@
-import Link from 'next/link';
-import React, { FunctionComponent, useState } from 'react'
-import { GetServerSideProps, NextPage } from 'next';
-import { createStyles, Textarea, Notification, Container, Group, ActionIcon, Footer, Box, Text, Button, PasswordInput, Input, Modal, NumberInput, Grid, Avatar, TextInput, useMantineTheme, Center, Loader } from '@mantine/core';
-import { IconTextPlus, IconCode, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons';
-import InfoCard from '../ui/InfoCard';
-
-import {
-  TablerIcon,
-  IconHome2,
-  IconGauge,
-  IconDeviceDesktopAnalytics,
-  IconFingerprint,
-  IconCalendarStats,
-  IconUser,
-  IconSettings,
-  IconLogout,
-  IconSwitchHorizontal,
-  IconCheck,
-  IconX,
-  IconTrash
-} from '@tabler/icons';
-import { IGift, IUser } from '../../types';
-import GiftCard from '../ui/GiftCard';
-import UserFragmentLayout from './UserFragmentLayout';
-
+import React, { FunctionComponent } from 'react'
+import { useRouter } from 'next/router';
 import Joi from 'joi';
-
-import { useSession } from 'next-auth/react';
-import { useForm, zodResolver, joiResolver } from '@mantine/form';
-
+import { Textarea, Container, Box, Button, PasswordInput, Avatar, TextInput, useMantineTheme, Center } from '@mantine/core';
+import { IconCheck, IconX, IconTrash } from '@tabler/icons';
+import { useForm, joiResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import { unstable_getServerSession } from 'next-auth';
-import { authOptions } from '../../pages/api/auth/[...nextauth]';
-import Router, { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
-import { AddGift, DeleteGift, useGifts } from '../../api/Gift';
+
+import UserFragmentLayout from './UserFragmentLayout';
+import InfoCard from '../ui/InfoCard';
+import { IUser } from '../../types';
 import { UpdateUser } from '../../api/User';
 
-
-const AddGiftModal = dynamic(() => import('../logics/AddGiftModal'), {
-  ssr: false,
-});
 
 interface IProps {
   user: IUser;
@@ -49,67 +19,7 @@ interface IProps {
 
 const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
   const theme = useMantineTheme();
-
   const router = useRouter();
-
-  const { gifts, isLoading, mutate, isError } = useGifts(props.user?.id || '');
-  const giftsList: IGift[] = gifts?.filter((gift) => !gift.isGifted)
-
-  const addGiftClient = async (gift: IGift) => {
-    const newData = giftsList.concat(gift);
-
-    await mutate(newData, false);
-
-    try {
-      await AddGift(gift);
-
-      showNotification({
-        title: 'Успешно',
-        message: 'Подарок успешно добавлен',
-        color: 'teal',
-        icon: <IconCheck stroke={1.5} size={24} />,
-      });
-    }
-    catch (error) {
-      console.error(error);
-      showNotification({
-        title: 'Ошибка',
-        message: 'Не удалось добавить подарок',
-        color: 'red',
-        icon: <IconX stroke={1.5} size={24} />,
-      });
-    }
-  }
-
-  const deleteGiftClient = async (id: string) => {
-    const newData = giftsList.filter((gift) => gift.id !== id);
-
-    await mutate(newData, false);
-
-    try {
-      await DeleteGift(id);
-
-      showNotification({
-        title: 'Успешно',
-        message: 'Подарок успешно удален',
-        color: 'teal',
-        icon: <IconCheck stroke={1.5} size={24} />,
-      });
-    }
-    catch (error) {
-      console.error(error);
-      showNotification({
-        title: 'Ошибка',
-        message: 'Не удалось удалить подарок',
-        color: 'red',
-        icon: <IconX stroke={1.5} size={24} />,
-      });
-    }
-  }
-
-
-  // Модалка
-  const [openedAddGiftModal, setOpenedAddGiftModal] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -364,44 +274,6 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
             </form>
           </Box>
         </InfoCard>
-
-        <InfoCard title="Список желаний">
-          <Box>
-            <AddGiftModal opened={openedAddGiftModal} setOpened={setOpenedAddGiftModal} onAddGift={addGiftClient} />
-            <Button
-              onClick={() => setOpenedAddGiftModal(true)}
-              leftIcon={<IconTextPlus size={18} />}
-              variant="gradient"
-            >
-              Добавить
-            </Button>
-
-            {
-              isLoading ?
-                (
-                  <Center>
-                    <Loader variant="dots" />
-                  </Center>
-                )
-                : (
-                  <Grid mt={10}>
-                    {giftsList?.map((gift, index) => (
-                      <Grid.Col xs={6} sm={6} md={4} key={index}>
-                        <GiftCard
-                          gift={gift}
-                          onDeleteGift={deleteGiftClient}
-                          isLoaded={true}
-                          isOwner={true}
-                          canEdit={true}
-                        />
-                      </Grid.Col>
-                    ))}
-                  </Grid>
-                )
-            }
-          </Box>
-        </InfoCard>
-
       </UserFragmentLayout >
     </>
   )

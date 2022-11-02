@@ -1,22 +1,15 @@
-import { Anchor, Box, Card, Checkbox, Container, Loader, Skeleton } from '@mantine/core';
-import { FunctionComponent, useEffect, useState } from 'react'
-
-import InfoCard from '../ui/InfoCard';
-import UserFragmentLayout from './UserFragmentLayout';
-
-import { createStyles, Text } from '@mantine/core';
+import { FunctionComponent, useEffect } from 'react'
+import Router from "next/router";
+import { Anchor, Box, Checkbox, Skeleton } from '@mantine/core';
+import { Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { IconGripVertical, IconArrowNarrowRight } from '@tabler/icons';
-import { GetStaticProps } from 'next';
-import { ITransaction } from '../../types';
 
-import useSWR from 'swr'
-import Router from "next/router";
+import UserFragmentLayout from './UserFragmentLayout';
+import InfoCard from '../ui/InfoCard';
 import { useTransactions } from '../../api/Transaction';
 import { CompleteTransaction } from '../../api/Transaction';
-import { useUser } from '../../api/User';
-import { useGift } from '../../api/Gift';
 
 
 interface IProps {

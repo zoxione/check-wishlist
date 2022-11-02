@@ -1,13 +1,13 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import Router from 'next/router';
-
 import { useForm, joiResolver } from '@mantine/form';
 import { IconX, IconCheck } from '@tabler/icons';
 import { Paper, TextInput, PasswordInput, Button, Title, Text, Anchor, Box, } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import Joi from 'joi';
+
 
 interface IProps {
 

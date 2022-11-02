@@ -1,16 +1,16 @@
-import { Paper, createStyles, TextInput, PasswordInput, Checkbox, Button, Title, Text, Anchor, Box, Input, ScrollArea, Group, } from '@mantine/core';
-import { useForm, joiResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
 import { NextPage } from 'next';
 import Link from 'next/link';
 import Router from 'next/router';
-
-import { IconChevronRight, IconChevronLeft, IconCheck, IconX } from '@tabler/icons';
 import { useState } from 'react';
+import { Paper, TextInput, PasswordInput, Button, Title, Text, Anchor, Box, Input } from '@mantine/core';
+import { useForm, joiResolver } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { IconChevronRight, IconChevronLeft, IconCheck, IconX } from '@tabler/icons';
 import Joi from 'joi';
 
 import { IUser } from '../../types'
 import { AddUser } from '../../api/User';
+
 
 interface IProps {
 
@@ -32,6 +32,10 @@ const SignUp: NextPage<IProps> = ({ }) => {
           'string.empty': 'Имя не может быть пустым',
           'string.min': 'Имя должно быть больше 2 символов',
           'string.max': 'Имя должно быть меньше 14 символов',
+          // 'string.base': '',
+          // 'string.empty': '',
+          // 'string.min': '',
+          // 'string.max': '',
         }),
         email: Joi.string().email({ tlds: { allow: false } }).messages({
           'string.base': 'Email должен быть строкой',
@@ -122,6 +126,8 @@ const SignUp: NextPage<IProps> = ({ }) => {
   });
 
   const handleSubmit = async () => {
+
+
     if (step === 2) {
       const user: IUser = {
         username: form1.values.username,
@@ -185,11 +191,12 @@ const SignUp: NextPage<IProps> = ({ }) => {
 
   const formList = [
     <form key={1} onSubmit={form1.onSubmit(() => handleStep("next"))}>
-
       <Box
-
       >
-        <Input.Wrapper>
+        <Input.Wrapper
+          size="md"
+          error={form1.errors.username}
+        >
           <Input.Label size="md" required>Ваш никнейм</Input.Label>
           <Box
             sx={(theme) => ({
@@ -221,6 +228,11 @@ const SignUp: NextPage<IProps> = ({ }) => {
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
                 },
+                "[role=alert]": {
+                  backgroundColor: theme.colors.yellow[6],
+                  color: theme.colors.yellow[9],
+                  display: 'none'
+                },
                 width: '100%',
               })}
               placeholder="Nagibator228"
@@ -247,7 +259,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
         {...form1.getInputProps('password')}
       />
       <PasswordInput
-        label="Еще раз, чтобы не забыть 😜"
+        label="Повторите пароль"
         placeholder="qwerty123"
         mt={10}
         size="md"
@@ -263,9 +275,6 @@ const SignUp: NextPage<IProps> = ({ }) => {
           marginTop: theme.spacing.md,
         })}
       >
-        <Button variant="gradient" onClick={() => handleStep("prev")}>
-          <IconChevronLeft size={18} />
-        </Button>
         <Button type="submit" variant="gradient">
           <IconChevronRight size={18} />
         </Button>

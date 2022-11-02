@@ -1,5 +1,5 @@
-import { Container } from '@mantine/core';
 import { FunctionComponent } from 'react'
+import { Container } from '@mantine/core';
 
 
 interface IProps {
@@ -19,7 +19,6 @@ const UserFragmentLayout: FunctionComponent<IProps> = ({ children }) => {
           flexDirection: 'column',
           gap: '20px',
           paddingBottom: '30px',
-
         })}
       >
         {children}

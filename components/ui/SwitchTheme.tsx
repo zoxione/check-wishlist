@@ -8,13 +8,16 @@ interface IProps {
 
 const SwitchTheme: FunctionComponent<IProps> = ({ }) => {
   const theme = useMantineTheme();
-
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const dark = colorScheme === 'dark';
 
   return (
     <Group position="center">
       <Switch
+        sx={(theme) => ({
+          'label': {
+            cursor: 'pointer',
+          }
+        })}
         size="md"
         color={theme.colorScheme === 'dark' ? 'gray' : 'dark'}
         onLabel={<IconSun size={16} stroke={2.5} color={theme.colors.yellow[4]} />}

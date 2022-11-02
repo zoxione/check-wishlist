@@ -1,7 +1,6 @@
-import { createStyles, Image, Container, Title, Text, Button, SimpleGrid, Box } from '@mantine/core';
+import { Image, Container, Title, Text, Button, SimpleGrid, Box } from '@mantine/core';
 import { NextPage } from 'next';
 import Link from 'next/link';
-
 
 
 interface IProps {
@@ -9,7 +8,7 @@ interface IProps {
 }
 
 
-const Error: NextPage<IProps> = (props) => {
+const Error404: NextPage<IProps> = (props) => {
   return (
     <Container
       sx={(theme) => ({
@@ -18,6 +17,7 @@ const Error: NextPage<IProps> = (props) => {
         height: '100%',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
       })}
     >
       <SimpleGrid spacing={80} cols={2} breakpoints={[{ maxWidth: 'sm', cols: 1, spacing: 40 }]}>
@@ -69,4 +69,4 @@ const Error: NextPage<IProps> = (props) => {
   );
 }
 
-export default Error;
+export default Error404;

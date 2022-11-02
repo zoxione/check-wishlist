@@ -1,7 +1,7 @@
-import { Box, Button, Container, Divider, Group, PasswordInput, Text } from '@mantine/core';
+import { Box, PasswordInput, Text } from '@mantine/core';
 import { FunctionComponent } from 'react'
 import Joi from 'joi';
-import { useForm, zodResolver, joiResolver } from '@mantine/form';
+import { useForm, joiResolver } from '@mantine/form';
 import InfoCard from '../ui/InfoCard';
 import UserFragmentLayout from './UserFragmentLayout';
 import SettingsSection from '../ui/SettingsSection';

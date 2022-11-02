@@ -1,7 +1,5 @@
 import { Tooltip, UnstyledButton } from '@mantine/core';
-import {
-  TablerIcon,
-} from '@tabler/icons';
+import { TablerIcon } from '@tabler/icons';
 
 
 interface NavbarLinkProps {

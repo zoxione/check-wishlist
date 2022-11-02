@@ -1,5 +1,5 @@
 import { TextInput, TextInputProps, ActionIcon, useMantineTheme } from '@mantine/core';
-import { IconSearch, IconArrowRight, IconArrowLeft } from '@tabler/icons';
+import { IconSearch, IconArrowRight } from '@tabler/icons';
 import Router from 'next/router'
 import { FunctionComponent, useState } from 'react';
 
@@ -26,6 +26,11 @@ const Search: FunctionComponent<TextInputProps> = ({ }) => {
       rightSectionWidth={60}
       value={search}
       onChange={(e) => setSearch(e.currentTarget.value)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          handleSearch();
+        }
+      }}
     />
   );
 }
