@@ -61,10 +61,10 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
     rightMenuMobile = (
       <>
         <Link href="/auth/signin" passHref>
-          <Button variant="default" onClick={() => closeDrawer()} >Войти</Button>
+          <Button variant="default" onClick={() => closeDrawer()}>Войти</Button>
         </Link>
         <Link href="/auth/signup" passHref>
-          <Button variant="gradient" onClick={() => closeDrawer()} >Зарегистрироваться</Button>
+          <Button variant="gradient" onClick={() => closeDrawer()}>Зарегистрироваться</Button>
         </Link>
       </>
     )
@@ -143,34 +143,45 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
           </Group>
         }
         sx={(theme) => ({
+          '.mantine-Drawer-drawer': {
+            padding: '0 40px 40px 40px',
+          },
+          '.mantine-Drawer-header': {
+            height: '80px',
+            margin: '0',
+          },
+          '.mantine-Drawer-closeButton': {
+            // right: '22px',
+            // top: '8px',
+          },
+
           [theme.fn.largerThan('sm')]: {
             display: 'none',
           },
         })}
         zIndex={1000000}
       >
-        <ScrollArea sx={{ height: 'calc(100vh - 80px)' }} mx="-md">
-          <Group position="center" grow px="md">
+        <ScrollArea sx={{ height: 'calc(100vh - 80px)' }}>
+          <Divider mb={10} />
+          <Group position="center" grow>
             {rightMenuMobile}
           </Group>
           {session &&
             <>
-              <Divider my="sm" />
               <Box
                 sx={(theme) => ({
-                  padding: '0px 16px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '16px',
+                  marginTop: '40px',
                 })}
               >
-                <HeaderLink icon={IconUser} label='Аккаунт' href={'/user'} activeFragment={0} />
-                <HeaderLink icon={IconGauge} label='Приборная панель' href={'/user'} activeFragment={1} />
-                <HeaderLink icon={IconDeviceDesktopAnalytics} label='Аналитика' href={'/user'} activeFragment={2} />
-                <HeaderLink icon={IconSettings} label='Настройки' href={'/user'} activeFragment={3} />
-                <Divider />
+                <HeaderLink icon={IconUser} label='Аккаунт' href={'/user'} activeFragment={0} onClick={() => closeDrawer()} />
+                <HeaderLink icon={IconGauge} label='Приборная панель' href={'/user'} activeFragment={1} onClick={() => closeDrawer()} />
+                <HeaderLink icon={IconDeviceDesktopAnalytics} label='Аналитика' href={'/user'} activeFragment={2} onClick={() => closeDrawer()} />
+                <HeaderLink icon={IconSettings} label='Настройки' href={'/user'} activeFragment={3} onClick={() => closeDrawer()} />
                 <HeaderLink icon={IconLogout} label='Выйти' onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
               </Box>
             </>

@@ -10,6 +10,7 @@ import { IconCheck, IconX, IconTextPlus } from '@tabler/icons';
 
 import InfoCard from '../ui/InfoCard';
 import UserFragmentLayout from './UserFragmentLayout';
+import { timeout } from '../../pages/dev';
 
 const AddGiftModal = dynamic(() => import('../logics/AddGiftModal'), {
   ssr: false,
@@ -22,8 +23,9 @@ interface IProps {
 
 const UserWishlist: FunctionComponent<IProps> = ((props: IProps) => {
   const theme = useMantineTheme();
-
   const router = useRouter();
+
+  const [openedAddGiftModal, setOpenedAddGiftModal] = useState(false);
 
   const { gifts, isLoading, mutate, isError } = useGifts(props.user?.id || '');
   const giftsList: IGift[] = gifts?.filter((gift) => !gift.isGifted)
@@ -35,6 +37,7 @@ const UserWishlist: FunctionComponent<IProps> = ((props: IProps) => {
 
     try {
       await AddGift(gift);
+
 
       showNotification({
         title: 'Успешно',
@@ -81,20 +84,12 @@ const UserWishlist: FunctionComponent<IProps> = ((props: IProps) => {
   }
 
 
-  // Модалка
-  const [openedAddGiftModal, setOpenedAddGiftModal] = useState(false);
-
-
   return (
     <UserFragmentLayout>
       <InfoCard title="Список желаний">
         <Box>
-          <AddGiftModal opened={openedAddGiftModal} setOpened={setOpenedAddGiftModal} onAddGift={addGiftClient} />
-          <Button
-            onClick={() => setOpenedAddGiftModal(true)}
-            leftIcon={<IconTextPlus size={18} />}
-            variant="gradient"
-          >
+          <AddGiftModal opened={openedAddGiftModal} setOpened={setOpenedAddGiftModal} />
+          <Button onClick={() => setOpenedAddGiftModal(true)} leftIcon={<IconTextPlus size={18} />} variant="gradient">
             Добавить
           </Button>
 
@@ -111,7 +106,6 @@ const UserWishlist: FunctionComponent<IProps> = ((props: IProps) => {
                     <Grid.Col xs={6} sm={6} md={4} key={index}>
                       <GiftCard
                         gift={gift}
-                        onDeleteGift={deleteGiftClient}
                         isLoaded={true}
                         isOwner={true}
                         canEdit={true}

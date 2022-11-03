@@ -4,6 +4,11 @@ import { FunctionComponent, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 import { IGift } from '../../types';
+import UpdateGiftModal from '../logics/UpdateGiftModal';
+import { openConfirmModal } from '@mantine/modals';
+import { DeleteGift } from '../../api/Gift';
+import { showNotification } from '@mantine/notifications';
+import DeleteGiftModal from '../logics/DeleteGiftModal';
 
 const GiveGiftModal = dynamic(() => import('../logics/GiveGiftModal'), {
   ssr: false,
@@ -13,7 +18,6 @@ const GiveGiftModal = dynamic(() => import('../logics/GiveGiftModal'), {
 interface IProps {
   gift: IGift,
   gifts?: IGift[],
-  onDeleteGift?: (id: string) => void,
   isLoaded: boolean,
   isOwner: boolean;
   canEdit: boolean;
@@ -22,12 +26,8 @@ interface IProps {
 
 const GiftCard: FunctionComponent<IProps> = (props) => {
   const [openedGiveGiftModal, setOpenedGiveGiftModal] = useState(false);
-
-  const handleDeleteGift = () => {
-    if (props.onDeleteGift) {
-      props.onDeleteGift(props.gift.id ? props.gift.id : '');
-    }
-  }
+  const [openedUpdateGiftModal, setOpenedUpdateGiftModal] = useState(false);
+  const [openedDeleteGiftModal, setOpenedDeleteGiftModal] = useState(false);
 
   if (props.isLoaded === false) {
     return (
@@ -98,17 +98,6 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
     >
       <Card.Section mb={30}>
         <Image src={props.gift?.imageUrl} alt={props.gift?.title} height={260} fit="fill" p={10} withPlaceholder />
-        {
-          props.isOwner && props.canEdit &&
-          <Button
-            variant="filled"
-            color="red"
-            onClick={() => { handleDeleteGift() }}
-            style={{ position: 'absolute', top: 0, right: 0, borderRadius: '0 0 0 10px' }}
-          >
-            <IconTrash size={20} />
-          </Button>
-        }
       </Card.Section>
 
       <Box
@@ -154,10 +143,23 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
         {
           props.isOwner && !props.gift?.isGifted &&
           <>
-            <GiveGiftModal gift={props.gift} opened={openedGiveGiftModal} setOpened={setOpenedGiveGiftModal} />
-            <Button variant="light" fullWidth radius="md" onClick={() => setOpenedGiveGiftModal(true)}>
-              Изменить
-            </Button>
+            <Box
+              mt={20}
+              sx={(theme) => ({
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: '10px',
+              })}
+            >
+              <UpdateGiftModal gift={props.gift} opened={openedUpdateGiftModal} setOpened={setOpenedUpdateGiftModal} />
+              <Button variant="light" radius="md" fullWidth onClick={() => setOpenedUpdateGiftModal(true)}>
+                Изменить
+              </Button>
+              <DeleteGiftModal gift={props.gift} opened={openedDeleteGiftModal} setOpened={setOpenedDeleteGiftModal} />
+              <Button variant="filled" color="red" onClick={() => { setOpenedDeleteGiftModal(true) }}>
+                <IconTrash size={20} />
+              </Button>
+            </Box>
           </>
         }
         {

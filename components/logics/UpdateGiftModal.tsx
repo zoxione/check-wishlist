@@ -1,22 +1,24 @@
 import { FunctionComponent, useState } from "react";
-import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, NativeSelect } from "@mantine/core";
+import InputMask from "react-input-mask";
+import { Box, Button, Modal, Textarea, Text, Image, Input, NumberInput, TextInput, NativeSelect } from "@mantine/core";
 import { useForm, joiResolver } from "@mantine/form";
-import { IconCurrencyRubel, IconX, IconCheck } from '@tabler/icons';
+import { IconX, IconCheck, IconCurrencyRubel } from '@tabler/icons';
 import { showNotification } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
 import Joi from 'joi';
 
-import { IGift } from "../../types";
-import { AddGift } from "../../api/Gift";
-import { timeout } from "../../pages/dev";
+import { IGift, ITransaction } from "../../types";
+import { GiveGift, UpdateGift } from "../../api/Gift";
 
 
 interface IProps {
+  gift: IGift,
   opened: boolean;
   setOpened: (opened: boolean) => void;
 };
 
-const AddGiftModal: FunctionComponent<IProps> = (props) => {
+
+const UpdateGiftModal: FunctionComponent<IProps> = (props) => {
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -24,7 +26,7 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
     initialValues: {
       title: '',
       description: '',
-      shopName: 'dns',
+      shopName: '',
       shopUrl: '',
       price: 0,
       imageUrl: '',
@@ -32,7 +34,7 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
 
     validate: joiResolver(
       Joi.object({
-        title: Joi.string().min(3).max(29).messages({
+        title: Joi.string().min(3).max(29).allow('').messages({
           'string.base': 'Название должно быть строкой',
           'string.empty': 'Название не может быть пустым',
           'string.min': 'Название должно быть больше 2 символов',
@@ -43,12 +45,12 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
           'string.max': 'Описание должно быть меньше 80 символов',
         }),
         shopName: Joi.allow(''),
-        shopUrl: Joi.string().uri().messages({
+        shopUrl: Joi.string().uri().allow('').messages({
           'string.base': 'Ссылка должна быть строкой',
           'string.empty': 'Ссылка не может быть пустой',
           'string.uri': 'Ссылка должна быть валидной',
         }),
-        price: Joi.number().positive().messages({
+        price: Joi.number().positive().allow('').messages({
           'number.base': 'Цена должна быть числом',
           'number.empty': 'Цена не может быть пустой',
           'number.positive': 'Цена должна быть больше 0',
@@ -64,57 +66,32 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
   const handleSubmit = async () => {
     setIsLoading(true);
 
-    // switch (form.values.shopName) {
-    //   case 'dns':
-    //     let regex = /https:\/\/www\.dns-shop\.ru\/product\/[A-Za-z0-9]+\/([A-Za-z0-9]+(-[A-Za-z0-9]+)+)\//i
-    //     let match = form.values.shopUrl.match(regex);
-
-    //     if (match) {
-    //       // парсим сайт
-    //     }
-    //     else {
-    //       showNotification({
-    //         title: 'Ошибка',
-    //         message: 'Ссылка должна быть на товар DNS',
-    //         color: 'red',
-    //         icon: <IconX stroke={1.5} size={24} />,
-    //       });
-    //       return;
-    //     }
-    //     break;
-    //   case 'regard':
-    //     break;
-    //   default:
-    //     break;
-    // }
-
     try {
-      const gift: IGift = {
-        title: form.values.title,
-        description: form.values.description,
-        shopName: form.values.shopName,
-        shopUrl: form.values.shopUrl,
-        price: form.values.price,
-        imageUrl: form.values.imageUrl,
-        userId: session?.user?.id ? session.user.id : '',
-      }
+      let gift: IGift = props.gift;
+      gift.title = form.values.title;
+      gift.description = form.values.description;
+      gift.shopName = form.values.shopName;
+      gift.shopUrl = form.values.shopUrl;
+      gift.price = form.values.price;
+      gift.imageUrl = form.values.imageUrl;
 
-      await AddGift(gift);
+      await UpdateGift(gift);
 
       showNotification({
         title: 'Успешно',
-        message: 'Подарок успешно добавлен',
+        message: 'Подарок успешно обновлен',
         color: 'teal',
         icon: <IconCheck stroke={1.5} size={24} />,
       });
 
+      form.reset();
       props.setOpened(false);
     }
     catch (error) {
       console.error(error);
       showNotification({
         title: 'Ошибка',
-        message: 'Не удалось добавить подарок',
+        message: 'Не удалось обновить подарок',
         color: 'red',
         icon: <IconX stroke={1.5} size={24} />,
       });
@@ -130,7 +107,7 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
       onClose={() => props.setOpened(false)}
       title={
         <Text size="xl" weight={500}>
-          Добавить подарок
+          Изменить подарок
         </Text>
       }
       centered
@@ -145,6 +122,39 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
           margin: '0 auto',
         })}
       >
+        <Box
+          sx={(theme) => ({
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            marginBottom: '20px'
+          })}
+        >
+          <Box
+            sx={(theme) => ({
+              width: '50%'
+            })}
+          >
+            <Image src={props.gift?.imageUrl} withPlaceholder />
+          </Box>
+          <Box
+            sx={(theme) => ({
+              width: '50%',
+              textAlign: 'center'
+            })}
+          >
+            <Text size="xl">
+              {props.gift?.title}
+            </Text>
+            <Text size="md" weight={500}>
+              {props.gift?.price} ₽
+            </Text>
+          </Box>
+        </Box>
+
+
         <form onSubmit={form.onSubmit(() => handleSubmit())}>
           <TextInput
             label="Название"
@@ -207,12 +217,12 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
           />
 
           <Button type="submit" loading={isLoading} mt={20} fullWidth variant="outline">
-            Добавить
+            Изменить
           </Button>
         </form>
       </Box>
-    </Modal>
+    </Modal >
   )
 }
 
-export default AddGiftModal;
+export default UpdateGiftModal;

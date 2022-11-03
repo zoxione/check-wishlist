@@ -17,6 +17,7 @@ import UserDashboard from '../../components/user-fragments/UserDashboard';
 import UserAnalytics from '../../components/user-fragments/UserAnalytics';
 import UserSettings from '../../components/user-fragments/UserSettings';
 import UserWishlist from '../../components/user-fragments/UserWishlist';
+import AppHead from '../../components/logics/Head';
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params, query }) => {
@@ -88,6 +89,8 @@ const User: NextPage<IProps> = (props: IProps) => {
 
   return (
     <>
+      <AppHead />
+
       <Navbar height={750} p="md"
         sx={(theme) => ({
           position: 'fixed',

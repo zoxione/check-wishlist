@@ -113,6 +113,26 @@ export const GiveGift = async (transaction: ITransaction) => {
   });
 }
 
+export const UpdateGift = async (gift: IGift) => {
+  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?id=eq.${gift.id}`, {
+    method: 'PATCH',
+    headers: {
+      'apikey': process.env.SUPABASE_API_KEY || '',
+      'Authorization': process.env.SUPABASE_API_KEY || '',
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify(gift),
+  }).then((res) => {
+    if (res.ok) {
+
+    }
+    else {
+      throw new Error("Error updating gift");
+    }
+  });
+}
+
 
 export const DeleteGift = async (id: string) => {
   await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?id=eq.${id}`, {

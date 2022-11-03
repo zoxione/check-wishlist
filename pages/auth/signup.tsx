@@ -10,6 +10,7 @@ import Joi from 'joi';
 
 import { IUser } from '../../types'
 import { AddUser } from '../../api/User';
+import AppHead from '../../components/logics/Head';
 
 
 interface IProps {
@@ -389,48 +390,52 @@ const SignUp: NextPage<IProps> = ({ }) => {
   ]
 
   return (
-    <Box
-      sx={(theme) => ({
-        height: '100%',
-        backgroundSize: 'cover',
-        backgroundColor: theme.fn.primaryColor(),
-      })}
-    >
-      <Paper
-        radius={0} p={30}
+    <>
+      <AppHead title="Авторизация" />
+
+      <Box
         sx={(theme) => ({
-          borderRight: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[3]}`,
-          minHeight: '100%',
-          maxWidth: 450,
-          paddingTop: 80,
-          [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-            maxWidth: '100%',
-          },
+          height: '100%',
+          backgroundSize: 'cover',
+          backgroundColor: theme.fn.primaryColor(),
         })}
       >
-        <Title order={2} align="center" mt="md" mb={50}
+        <Paper
+          radius={0} p={30}
           sx={(theme) => ({
-            color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+            borderRight: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[3]}`,
+            minHeight: '100%',
+            maxWidth: 450,
+            paddingTop: 80,
+            [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+              maxWidth: '100%',
+            },
           })}
         >
-          Присоединиться к нам
-        </Title>
+          <Title order={2} align="center" mt="md" mb={50}
+            sx={(theme) => ({
+              color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+              fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+            })}
+          >
+            Присоединиться к нам
+          </Title>
 
-        {
-          formList[step]
-        }
+          {
+            formList[step]
+          }
 
-        <Text align="center" mt="md">
-          Уже есть аккаунт? {' '}
-          <Link href="/auth/signin" passHref>
-            <Anchor<'a'> href="#" weight={700}>
-              Войти
-            </Anchor>
-          </Link>
-        </Text>
-      </Paper>
-    </Box>
+          <Text align="center" mt="md">
+            Уже есть аккаунт? {' '}
+            <Link href="/auth/signin" passHref>
+              <Anchor<'a'> href="#" weight={700}>
+                Войти
+              </Anchor>
+            </Link>
+          </Text>
+        </Paper>
+      </Box>
+    </>
   );
 }
 

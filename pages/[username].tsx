@@ -9,6 +9,7 @@ import GiftCard from '../components/ui/GiftCard';
 import { IGift, IUser } from '../types';
 import { useGifts } from '../api/Gift';
 import { GetUserFromUsername } from '../api/User';
+import AppHead from '../components/logics/Head';
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
@@ -124,6 +125,8 @@ const Profile: NextPage<IProps> = (props: IProps) => {
 
   return (
     <>
+      <AppHead title={props.user.username} />
+
       <Container
         sx={(theme) => ({
           height: '210px',

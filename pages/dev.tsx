@@ -6,6 +6,10 @@ interface IProps {
 
 }
 
+export function timeout(delay: number) {
+  return new Promise(res => setTimeout(res, delay));
+}
+
 const Dev: NextPage<IProps> = (props: IProps) => {
   return (
     <>
