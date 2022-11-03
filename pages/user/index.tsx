@@ -7,17 +7,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Title, Anchor, Box, Navbar, Stack } from '@mantine/core';
 import { IconHome2, IconGauge, IconDeviceDesktopAnalytics, IconUser, IconSettings, IconLogout, IconLayoutList } from '@tabler/icons';
+import AppHead from '../../components/logics/Head';
+import dynamic from 'next/dynamic';
 
 import { authOptions } from '../api/auth/[...nextauth]';
 import { IGift, ITransaction, IUser } from '../../types';
 import { NavbarLink } from '../../components/ui/NavbarLink';
 import { GetUserFromId } from '../../api/User';
-import UserAccount from '../../components/user-fragments/UserAccount';
-import UserDashboard from '../../components/user-fragments/UserDashboard';
-import UserAnalytics from '../../components/user-fragments/UserAnalytics';
-import UserSettings from '../../components/user-fragments/UserSettings';
-import UserWishlist from '../../components/user-fragments/UserWishlist';
-import AppHead from '../../components/logics/Head';
+const UserAccount = dynamic(() => import('../../components/user-fragments/UserAccount'))
+const UserDashboard = dynamic(() => import('../../components/user-fragments/UserDashboard'))
+const UserAnalytics = dynamic(() => import('../../components/user-fragments/UserAnalytics'))
+const UserSettings = dynamic(() => import('../../components/user-fragments/UserSettings'))
+const UserWishlist = dynamic(() => import('../../components/user-fragments/UserWishlist'))
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params, query }) => {
