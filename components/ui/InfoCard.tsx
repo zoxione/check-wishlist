@@ -21,7 +21,10 @@ const InfoCard: FunctionComponent<IProps> = ({ children, title }) => {
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
       })}
     >
-      <Title order={2} size="h2" mb={30}>{title}</Title>
+      {title && (
+        <Title order={2} size="h2" mb={30}>{title}</Title>
+      )}
+
       {children}
     </Paper>
   );

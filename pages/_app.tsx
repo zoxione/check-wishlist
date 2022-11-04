@@ -47,6 +47,7 @@ export const appTheme: MantineThemeOverride = {
   }
 };
 
+
 const App = ({ Component, pageProps }: AppProps<{ session: Session }>) => {
   // mantine dark theme
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({

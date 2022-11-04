@@ -137,7 +137,7 @@ const UpdateGiftModal: FunctionComponent<IProps> = (props) => {
               width: '50%'
             })}
           >
-            <Image src={props.gift?.imageUrl} withPlaceholder />
+            <Image src={props.gift?.imageUrl} alt={props.gift?.title} withPlaceholder />
           </Box>
           <Box
             sx={(theme) => ({

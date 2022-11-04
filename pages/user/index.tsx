@@ -123,7 +123,16 @@ const User: NextPage<IProps> = (props: IProps) => {
         </Navbar.Section>
       </Navbar>
 
-      {fragmentsList[activeFragment]}
+      <Box
+        sx={(theme) => ({
+          marginLeft: '80px',
+          [theme.fn.smallerThan('sm')]: {
+            marginLeft: 0,
+          },
+        })}
+      >
+        {fragmentsList[activeFragment]}
+      </Box>
     </>
   );
 }

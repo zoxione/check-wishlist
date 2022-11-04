@@ -31,7 +31,7 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
 
   useEffect(() => {
     handlers.setState(transactions);
-  }, [transactions]);
+  }, [transactions, handlers]);
 
 
   return (

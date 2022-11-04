@@ -1,16 +1,18 @@
 import React, { FunctionComponent } from 'react'
 import { useRouter } from 'next/router';
 import Joi from 'joi';
-import { Textarea, Container, Box, Button, PasswordInput, Avatar, TextInput, useMantineTheme, Center } from '@mantine/core';
+import { Textarea, Container, Box, Button, PasswordInput, Avatar, TextInput, useMantineTheme, Center, Text, Image, SimpleGrid } from '@mantine/core';
 import { IconCheck, IconX, IconTrash } from '@tabler/icons';
 import { useForm, joiResolver } from '@mantine/form';
+import { useState } from 'react';
+import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { showNotification } from '@mantine/notifications';
 
 import UserFragmentLayout from './UserFragmentLayout';
 import InfoCard from '../ui/InfoCard';
 import { IUser } from '../../types';
 import { UpdateUser } from '../../api/User';
-
+import { storageClient } from '../../api';
 
 interface IProps {
   user: IUser;
@@ -20,6 +22,10 @@ interface IProps {
 const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
   const theme = useMantineTheme();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [files, setFiles] = useState<FileWithPath[]>([]);
+  const [avatar, setAvatar] = useState(props.user.imageUrl);
+
 
   const form = useForm({
     initialValues: {
@@ -102,6 +108,8 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
   });
 
   const handleSubmit = async () => {
+    setIsLoading(true);
+
     const user: IUser = {
       username: form.values.username,
       fullname: form.values.fullname,
@@ -117,9 +125,20 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
       telegramName: form.values.telegramName,
       instagramName: form.values.instagramName,
     }
-    console.log(JSON.stringify(user));
 
     try {
+      if (files.length > 0) {
+        const { data, error } = await storageClient
+          .from('check')
+          .upload(`/users/avatars/${user.username}.${files[0].type.split('/').pop()}`, files[0], { cacheControl: '3600', upsert: true });
+        if (error) {
+          throw error;
+        }
+        console.log(data)
+        user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/${user.username}.${files[0].type.split('/').pop()}`;
+        console.log(user.imageUrl)
+      }
+
       await UpdateUser(user);
 
       showNotification({
@@ -140,7 +159,12 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
         icon: <IconX stroke={1.5} size={24} />,
       });
     }
+
+    setIsLoading(false);
   }
+
+
+
 
   return (
     <>
@@ -167,24 +191,43 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
             })}
           >
             <form onSubmit={form.onSubmit(() => handleSubmit())}>
-              <Center>
-                <Avatar
-                  src={props.user?.imageUrl}
-                  color={theme.fn.primaryColor()}
-                  sx={(theme) => ({
-                    width: '180px',
-                    height: '180px',
-                    borderRadius: '50%',
-                  })}
-                />
-              </Center>
+              <Dropzone
+                accept={IMAGE_MIME_TYPE}
+                onDrop={(files) => { setFiles(files); setAvatar(URL.createObjectURL(files[0])) }}
+                maxFiles={1}
+                sx={(theme) => ({
+                  width: '250px',
+                  height: '250px',
+                  borderRadius: '50%',
+                  margin: '0 auto',
+                  padding: '0',
+                  border: 'none',
+                  '&:hover': {
+                    filter: 'brightness(0.5)',
+                  },
+                })}
+              >
+                <Center>
+                  <Avatar
+                    src={avatar}
+                    color={theme.fn.primaryColor()}
+                    alt={props.user?.username}
+                    sx={(theme) => ({
+                      width: '250px',
+                      height: '250px',
+                      borderRadius: '50%',
+                    })}
+                  />
+                </Center>
+              </Dropzone>
+
               <TextInput
                 label="Имя"
                 mt={20}
                 size="md"
                 {...form.getInputProps('username')}
               />
-              <TextInput
+              {/* <TextInput
                 label="ФИО"
                 mt={10}
                 size="md"
@@ -201,7 +244,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                 mt={10}
                 size="md"
                 {...form.getInputProps('password')}
-              />
+              /> */}
               <Textarea
                 label="Описание"
                 mt={10}
@@ -220,12 +263,12 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                 size="md"
                 {...form.getInputProps('backgroundUrl')}
               />
-              <TextInput
+              {/* <TextInput
                 label="Адрес доставки"
                 mt={10}
                 size="md"
                 {...form.getInputProps('address')}
-              />
+              /> */}
               <TextInput
                 label="ТикТок"
                 mt={10}
@@ -264,7 +307,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                   gap: '20px',
                 })}
               >
-                <Button type="submit" fullWidth variant="outline" color="teal">
+                <Button type="submit" loading={isLoading} fullWidth variant="outline" color="teal">
                   Сохранить
                 </Button>
                 <Button onClick={() => { form.reset() }} variant="filled" color="red">

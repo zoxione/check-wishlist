@@ -11,6 +11,7 @@ import Joi from 'joi';
 import { IUser } from '../../types'
 import { AddUser } from '../../api/User';
 import AppHead from '../../components/logics/Head';
+import AuthLayout from '../../components/AuthLayout';
 
 
 interface IProps {
@@ -19,6 +20,8 @@ interface IProps {
 
 
 const SignUp: NextPage<IProps> = ({ }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const form1 = useForm({
     initialValues: {
       username: '',
@@ -127,9 +130,9 @@ const SignUp: NextPage<IProps> = ({ }) => {
   });
 
   const handleSubmit = async () => {
-
-
     if (step === 2) {
+      setIsLoading(true);
+
       const user: IUser = {
         username: form1.values.username,
         fullname: form2.values.fullname,
@@ -169,6 +172,8 @@ const SignUp: NextPage<IProps> = ({ }) => {
           icon: <IconX stroke={1.5} size={24} />,
         });
       }
+
+      setIsLoading(false);
     }
     else {
       handleStep("next");
@@ -338,34 +343,34 @@ const SignUp: NextPage<IProps> = ({ }) => {
     <form key={3} onSubmit={form3.onSubmit(() => handleSubmit())}>
       <TextInput
         label="ТикТок"
-        placeholder="candyyy_giiirl"
+        placeholder="pushkin"
         size="md"
         {...form3.getInputProps('tiktokName')}
       />
       <TextInput
         label="Твиттер"
-        placeholder="candyyy_giiirl"
+        placeholder="pushkin"
         mt={10}
         size="md"
         {...form3.getInputProps('twitterName')}
       />
       <TextInput
         label="ВКонтакте"
-        placeholder="candyyy_giiirl"
+        placeholder="pushkin"
         mt={10}
         size="md"
         {...form3.getInputProps('vkName')}
       />
       <TextInput
         label="Телеграм"
-        placeholder="candyyy_giiirl"
+        placeholder="pushkin"
         mt={10}
         size="md"
         {...form3.getInputProps('telegramName')}
       />
       <TextInput
         label="Инстаграм"
-        placeholder="candyyy_giiirl"
+        placeholder="pushkin"
         mt={10}
         size="md"
         {...form3.getInputProps('instagramName')}
@@ -382,7 +387,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
         <Button variant="gradient" onClick={() => handleStep("prev")}>
           <IconChevronLeft size={18} />
         </Button>
-        <Button type="submit" variant="gradient">
+        <Button type="submit" loading={isLoading} variant="gradient">
           <IconCheck size={18} />
         </Button>
       </Box>
@@ -391,50 +396,31 @@ const SignUp: NextPage<IProps> = ({ }) => {
 
   return (
     <>
-      <AppHead title="Авторизация" />
+      <AppHead title="Регистрация" />
 
-      <Box
-        sx={(theme) => ({
-          height: '100%',
-          backgroundSize: 'cover',
-          backgroundColor: theme.fn.primaryColor(),
-        })}
-      >
-        <Paper
-          radius={0} p={30}
+      <AuthLayout>
+        <Title order={2} align="center" mt="md" mb={50}
           sx={(theme) => ({
-            borderRight: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[3]}`,
-            minHeight: '100%',
-            maxWidth: 450,
-            paddingTop: 80,
-            [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-              maxWidth: '100%',
-            },
+            color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+            fontFamily: `Greycliff CF, ${theme.fontFamily}`,
           })}
         >
-          <Title order={2} align="center" mt="md" mb={50}
-            sx={(theme) => ({
-              color: theme.colorScheme === 'dark' ? theme.white : theme.black,
-              fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-            })}
-          >
-            Присоединиться к нам
-          </Title>
+          Присоединиться к нам
+        </Title>
 
-          {
-            formList[step]
-          }
+        {
+          formList[step]
+        }
 
-          <Text align="center" mt="md">
-            Уже есть аккаунт? {' '}
-            <Link href="/auth/signin" passHref>
-              <Anchor<'a'> href="#" weight={700}>
-                Войти
-              </Anchor>
-            </Link>
-          </Text>
-        </Paper>
-      </Box>
+        <Text align="center" mt="md">
+          Уже есть аккаунт? {' '}
+          <Link href="/auth/signin" passHref>
+            <Anchor<'a'> href="#" weight={700}>
+              Войти
+            </Anchor>
+          </Link>
+        </Text>
+      </AuthLayout>
     </>
   );
 }

@@ -89,6 +89,8 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
       sx={(theme) => ({
         cursor: 'pointer',
         height: '434px',
+        maxWidth: '300px',
+        margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',
         '&:hover': {

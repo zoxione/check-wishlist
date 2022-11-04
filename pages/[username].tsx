@@ -121,6 +121,15 @@ const Profile: NextPage<IProps> = (props: IProps) => {
       </Button>
     )
   }
+  if (props.isOwner) {
+    linkList.push(
+      <Link href={`/user`} passHref>
+        <Button key={7} variant="outline" component='a' fullWidth leftIcon={<IconPencil size={18} />}>
+          Изменить профиль
+        </Button>
+      </Link>
+    )
+  }
 
 
   return (
@@ -228,7 +237,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                     </Tabs.List>
 
                     <Tabs.Panel value="wishlist" pt={16}>
-                      <Grid>
+                      <Grid justify="center" align="center">
                         {wishlist?.length === 0 ?
                           (
                             <Grid.Col span={12}>
