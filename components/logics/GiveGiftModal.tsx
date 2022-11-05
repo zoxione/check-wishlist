@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import InputMask from "react-input-mask";
 import { Box, Button, Modal, Textarea, Text, Image, Input } from "@mantine/core";
 import { useForm, joiResolver } from "@mantine/form";
@@ -20,6 +20,7 @@ interface IProps {
 
 const GiveGiftModal: FunctionComponent<IProps> = (props) => {
   const { data: session, status } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -55,6 +56,8 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
   });
 
   const handleSubmit = async () => {
+    setIsLoading(true);
+
     if (status === 'authenticated') {
       const transaction: ITransaction = {
         giftId: props.gift?.id ? props.gift.id : '',
@@ -86,6 +89,16 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
         });
       }
     }
+    else {
+      showNotification({
+        title: 'Ошибка',
+        message: 'Необходимо авторизоваться',
+        color: 'red',
+        icon: <IconX stroke={1.5} size={24} />,
+      });
+    }
+
+    setIsLoading(false);
   }
 
 
@@ -188,7 +201,7 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
             {...form.getInputProps('description')}
           />
 
-          <Button type="submit" mt={20} fullWidth variant="outline">
+          <Button type="submit" loading={isLoading} mt={20} fullWidth variant="outline">
             Подарить
           </Button>
         </form>
