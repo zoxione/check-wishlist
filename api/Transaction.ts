@@ -1,12 +1,20 @@
 import useSWR from 'swr'
+import { supabaseClient } from '.';
 import { ITransaction } from "../types";
 import { fetcher } from './User';
 
 // хук для получения списка транзакций
 export function useTransactions() {
-  const { data, error } = useSWR(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?select=*`, fetcher)
+  const { data, error } = useSWR(
+    `https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?select=
+    *,
+    Gift(*),
+    Gifter:gifterId(*),
+    User:userId(*)`,
+    fetcher
+  )
 
-  const transactions: ITransaction[] = data
+  const transactions: any[] = data
 
   return {
     transactions: transactions,
@@ -15,8 +23,39 @@ export function useTransactions() {
   }
 }
 
+export const GetTransactionsData = async () => {
+  const { data, error, status } = await supabaseClient
+    .from('Transaction')
+    .select(`
+      id,
+      createdAt,
+      Gift (
+        title,
+        shopUrl,
+        price
+      ),
+      Gifter:gifterId(
+        username
+      ),
+      User:userId(
+        username
+      )
+    `)
+
+  if (error && status !== 406) {
+    throw new Error("Error fetching data in transactions")
+  }
+
+  let transactionsData = []
+
+
+  if (data) {
+    return data
+  }
+}
+
 export const CompleteTransaction = async (id: string) => {
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?=eq.${id}`, {
+  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?id=eq.${id}`, {
     method: 'PATCH',
     headers: {
       'apikey': process.env.SUPABASE_API_KEY || '',

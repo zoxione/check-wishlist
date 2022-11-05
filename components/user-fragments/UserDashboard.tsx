@@ -8,8 +8,9 @@ import { IconGripVertical, IconArrowNarrowRight } from '@tabler/icons';
 
 import UserFragmentLayout from './UserFragmentLayout';
 import InfoCard from '../ui/InfoCard';
-import { useTransactions } from '../../api/Transaction';
+import { GetTransactionsData, useTransactions } from '../../api/Transaction';
 import { CompleteTransaction } from '../../api/Transaction';
+import Link from 'next/link';
 
 
 interface IProps {
@@ -18,6 +19,19 @@ interface IProps {
 
 const UserDashboard: FunctionComponent<IProps> = (props) => {
   const { transactions, isLoading } = useTransactions();
+
+  console.log(transactions);
+
+  let transactionsList = [];
+
+  // const data = GetTransactionsData();
+  // data.then((data) => {
+  //   if (data) {
+  //     transactionsList = data;
+  //   }
+  //   console.log(data);
+  // });
+
 
   // if (transactions && transactions.length > 0) {
   //   for (let i = 0; i < transactions.length; i++) {
@@ -111,7 +125,7 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                                     },
                                   })}
                                 >
-                                  <Text weight={500}>{item.giftId}</Text>
+                                  <Text weight={500}>{item.Gift.title}</Text>
                                   <Box
                                     sx={(theme) => ({
                                       display: 'flex',
@@ -125,16 +139,20 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                                       },
                                     })}
                                   >
-                                    <Anchor href="#">
-                                      {item.gifterId}
-                                    </Anchor>
+                                    <Link href={`/${item.Gifter.username}`} passHref>
+                                      <Anchor>
+                                        {item.Gifter.username}
+                                      </Anchor>
+                                    </Link>
                                     <IconArrowNarrowRight size={20} />
-                                    <Anchor href="#">
-                                      {item.userId}
-                                    </Anchor>
+                                    <Link href={`/${item.User.username}`} passHref>
+                                      <Anchor href="#">
+                                        {item.User.username}
+                                      </Anchor>
+                                    </Link>
                                   </Box>
                                   <Text color="dimmed" size="sm">
-                                    Дата создания: {item.createdAt?.toString()}
+                                    Дата создания: {item.createdAt.slice(0, 10)}
                                   </Text>
                                 </Box>
                                 {
@@ -150,8 +168,7 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                                       <Checkbox
                                         defaultChecked={item.isCompleted}
                                         onChange={(event) => {
-                                          CompleteTransaction(item.id ? item.id : '');
-
+                                          CompleteTransaction(item.id);
                                           Router.reload()
                                         }}
                                         label="Выполнен"

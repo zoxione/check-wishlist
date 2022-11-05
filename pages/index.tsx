@@ -255,7 +255,7 @@ const Home: NextPage<Props> = (props) => {
             </Box>
           </InfoCard>
 
-          <Text>
+          <Text align="center">
             Создано {' '}
             <Anchor
               href="https://github.com/zoxione"

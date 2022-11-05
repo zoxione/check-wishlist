@@ -19,7 +19,6 @@ const SettingsSection: FunctionComponent<IProps> = (props) => {
         gap: '15px',
         [theme.fn.largerThan('xs')]: {
           flexDirection: 'row',
-          alignItems: 'flex-start',
         },
       })}
     >

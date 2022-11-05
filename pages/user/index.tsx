@@ -50,7 +50,7 @@ const User: NextPage<IProps> = (props: IProps) => {
   const { data: session, status } = useSession();
   console.log(props)
 
-  const [activeFragment, setActiveFragment] = useState(props.activeFragment);
+  // const [activeFragment, setActiveFragment] = useState(props.activeFragment);
   const fragmentsList = [
     <UserAccount key={1} user={props.user} />,
     <UserWishlist key={2} user={props.user} />,
@@ -58,9 +58,9 @@ const User: NextPage<IProps> = (props: IProps) => {
     <UserAnalytics key={4} />,
     <UserSettings key={5} user={props.user} />,
   ];
-  useEffect(() => {
-    setActiveFragment(props.activeFragment)
-  }, [props.activeFragment]);
+  // useEffect(() => {
+  //   setActiveFragment(props.activeFragment)
+  // }, [props.activeFragment]);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -109,11 +109,12 @@ const User: NextPage<IProps> = (props: IProps) => {
         <Navbar.Section grow mt={80}>
           <Stack justify="center" spacing={10}>
             <NavbarLink icon={IconHome2} label="Мой профиль" onClick={() => Router.push(`${props.user?.username}`)} />
-            <NavbarLink icon={IconUser} label="Аккаунт" active={activeFragment === 0} onClick={() => setActiveFragment(0)} />
-            <NavbarLink icon={IconLayoutList} label="Список желаний" active={activeFragment === 1} onClick={() => setActiveFragment(1)} />
-            <NavbarLink icon={IconGauge} label="Приборная панель" active={activeFragment === 2} onClick={() => setActiveFragment(2)} />
-            <NavbarLink icon={IconDeviceDesktopAnalytics} label="Аналитика" active={activeFragment === 3} onClick={() => setActiveFragment(3)} />
-            <NavbarLink icon={IconSettings} label="Настройки" active={activeFragment === 4} onClick={() => setActiveFragment(4)} />
+
+            <NavbarLink icon={IconUser} label="Аккаунт" activeFragment={0} active={props.activeFragment == 0} />
+            <NavbarLink icon={IconLayoutList} label="Список желаний" activeFragment={1} active={props.activeFragment == 1} />
+            <NavbarLink icon={IconGauge} label="Приборная панель" activeFragment={2} active={props.activeFragment == 2} />
+            <NavbarLink icon={IconDeviceDesktopAnalytics} label="Аналитика" activeFragment={3} active={props.activeFragment == 3} />
+            <NavbarLink icon={IconSettings} label="Настройки" activeFragment={4} active={props.activeFragment == 4} />
           </Stack>
         </Navbar.Section>
         <Navbar.Section>
@@ -131,7 +132,7 @@ const User: NextPage<IProps> = (props: IProps) => {
           },
         })}
       >
-        {fragmentsList[activeFragment]}
+        {fragmentsList[props.activeFragment]}
       </Box>
     </>
   );

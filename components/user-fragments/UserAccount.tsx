@@ -183,7 +183,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
       </Container>
 
       <UserFragmentLayout>
-        <InfoCard title="Основная информация">
+        <InfoCard title="Редактирование профиля">
           <Box
             sx={(theme) => ({
               maxWidth: '350px',

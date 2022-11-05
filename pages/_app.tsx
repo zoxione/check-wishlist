@@ -18,6 +18,13 @@ export const appTheme: MantineThemeOverride = {
   colorScheme: 'light',
   defaultRadius: 'md',
   components: {
+    Title: {
+      styles: (theme) => ({
+        root: {
+          color: theme.colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors.gray[9],
+        },
+      }),
+    },
     ActionIcon: {
       styles: (theme, params: ButtonStylesParams) => ({
         root: {

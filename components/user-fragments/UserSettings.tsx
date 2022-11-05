@@ -1,4 +1,4 @@
-import { Box, PasswordInput, Text } from '@mantine/core';
+import { Box, Button, Divider, PasswordInput, Text } from '@mantine/core';
 import { FunctionComponent } from 'react'
 import Joi from 'joi';
 import { useForm, joiResolver } from '@mantine/form';
@@ -205,22 +205,68 @@ const UserSettings: FunctionComponent<IProps> = (props) => {
 
   return (
     <UserFragmentLayout>
+      <InfoCard title="Аккаунт">
+        <Box
+          sx={(theme) => ({
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '5px',
+          })}
+        >
+
+          <SettingsSection
+            desc="Изменить фамилию и имя"
+            btnText="Изменить ФИО"
+            onClick={changePasswordModal}
+          />
+          <Divider my="xs" />
+
+          <SettingsSection
+            desc="Изменить электронную почту"
+            btnText="Изменить почту"
+            onClick={changePasswordModal}
+          />
+          <Divider my="xs" />
+
+          <SettingsSection
+            desc="Изменить пароль для входа в аккаунт"
+            btnText="Изменить пароль"
+            onClick={changePasswordModal}
+          />
+          <Divider my="xs" />
+
+          <SettingsSection
+            desc="Изменить адрес доставки"
+            btnText="Изменить адрес"
+            onClick={changePasswordModal}
+          />
+          <Divider my="xs" />
+
+          <SettingsSection
+            desc="Удалить аккаунт (восстановить невозможно)"
+            btnText="Удалить аккаунт"
+            onClick={deleteAccountModal}
+          />
+        </Box>
+      </InfoCard >
+
       <InfoCard title="Настройки">
         <Box
           sx={(theme) => ({
             display: 'flex',
             flexDirection: 'column',
             gap: '5px',
-            marginTop: '50px',
           })}
         >
 
-          {/* <SettingsSection
+
+
+          <SettingsSection
             desc="Очистить список подаренных подарков"
             btnText="Очистить"
             onClick={clearGiftedModal}
           />
-          <Divider my="sm" /> */}
+          <Divider my="sm" />
 
           {/* <SettingsSection
             desc="Очистить список желаемых подарков"
@@ -229,22 +275,10 @@ const UserSettings: FunctionComponent<IProps> = (props) => {
           />
           <Divider my="sm" /> */}
 
-          {/* <SettingsSection
-            desc="Изменить пароль для входа в аккаунт"
-            btnText="Изменить пароль"
-            onClick={changePasswordModal}
-          />
-          <Divider my="sm" /> */}
 
-
-          <SettingsSection
-            desc="Удалить аккаунт и все данные о нем с сервера (восстановить невозможно)"
-            btnText="Удалить аккаунт"
-            onClick={deleteAccountModal}
-          />
         </Box>
       </InfoCard>
-    </UserFragmentLayout>
+    </UserFragmentLayout >
   )
 }
 

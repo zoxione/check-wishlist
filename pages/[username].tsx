@@ -123,8 +123,8 @@ const Profile: NextPage<IProps> = (props: IProps) => {
   }
   if (props.isOwner) {
     linkList.push(
-      <Link href={`/user`} passHref>
-        <Button key={7} variant="outline" component='a' fullWidth leftIcon={<IconPencil size={18} />}>
+      <Link key={7} href={`/user`} passHref>
+        <Button variant="outline" component='a' fullWidth leftIcon={<IconPencil size={18} />}>
           Изменить профиль
         </Button>
       </Link>
@@ -191,9 +191,9 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                   <Avatar src={props.user?.imageUrl} size={120} radius={120} mx="auto" color={theme.fn.primaryColor()} />
                 }
               </Group>
-              <Text align="center" size="lg" weight={500} mt="md">
+              <Title align="center" size={20} weight={500} mt={15}>
                 {props.user?.username}
-              </Text>
+              </Title>
               <Text align="center" color="dimmed" size="sm">
                 {props.user?.about}
               </Text>

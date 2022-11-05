@@ -52,41 +52,11 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
     )
   }
 
-  // // Router.events.on('routeChangeStart', () => setLoading(true));
-  // // Router.events.on('routeChangeComplete', () => setLoading(false));
-
-  // useEffect(() => {
-  //   setLoading(props.isLoading);
-  // }, [props.isLoading]);
-
-  // const deleteGift = async () => {
-  //   try {
-  //     // DeleteGift(props.gift);
-
-  //     showNotification({
-  //       title: 'Успешно',
-  //       message: 'Подарок удален',
-  //       color: 'teal',
-  //       icon: <IconCheck stroke={1.5} size={24} />,
-  //     });
-
-  //     // Router.reload();
-  //   }
-  //   catch (error) {
-  //     console.error(error);
-  //     showNotification({
-  //       title: 'Ошибка',
-  //       message: 'Не удалось удалить подарок',
-  //       color: 'red',
-  //       icon: <IconX stroke={1.5} size={24} />,
-  //     });
-  //   }
-  // }
-
 
   return (
     <Card p="lg" withBorder radius="md"
       sx={(theme) => ({
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
         cursor: 'pointer',
         height: '434px',
         maxWidth: '300px',

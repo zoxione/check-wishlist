@@ -94,6 +94,13 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
               <Title
                 order={3}
                 weight={700}
+                sx={(theme) => ({
+                  cursor: 'pointer',
+                  transition: 'color 0.2s ease',
+                  '&:hover': {
+                    color: theme.fn.primaryColor(),
+                  },
+                })}
               >
                 Wishlist
               </Title>
