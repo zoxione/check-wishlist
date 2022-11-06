@@ -48,6 +48,9 @@ export const appTheme: MantineThemeOverride = {
                 ? theme.colors[params.color || theme.primaryColor][0]
                 : undefined,
           },
+          '&:active': {
+            transform: 'scale(0.98)',
+          }
         },
       }),
     },
