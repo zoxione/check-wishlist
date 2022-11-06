@@ -14,7 +14,7 @@ import { IconCheck, IconX, IconTrash } from '@tabler/icons';
 import { DeleteGiftedGifts, DeleteWishlistGifts } from '../../api/Gift';
 import Router from 'next/router';
 
-import ChangePasswordModal from '../logics/changePasswordModal';
+import { ChangePasswordModal } from '../logics/changePasswordModal';
 import ChangePersonalDataModal from '../logics/ChangePersonalDataModal';
 import ChangeEmailModal from '../logics/ChangeEmailModal';
 
