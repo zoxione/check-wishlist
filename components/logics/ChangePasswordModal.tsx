@@ -14,7 +14,7 @@ interface IProps {
   user: IUser;
 };
 
-export const ChangePasswordModal: FunctionComponent<IProps> = (props) => {
+const ChangePasswordModal: FunctionComponent<IProps> = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
@@ -128,3 +128,5 @@ export const ChangePasswordModal: FunctionComponent<IProps> = (props) => {
   )
 }
 
+
+export default ChangePasswordModal;
