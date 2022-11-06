@@ -7,7 +7,7 @@ const nextConfig = {
   // reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['i.imgur.com'],
+    domains: ['i.imgur.com', 'cserfwfqoxxsyqezqezy.supabase.co'],
   },
   env: {
     // NEXTAUTH_URL: process.env.NEXTAUTH_URL,

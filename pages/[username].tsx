@@ -1,5 +1,6 @@
 import { Avatar, Paper, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Badge, useMantineTheme, Indicator, CopyButton, Loader, Center, } from '@mantine/core';
 import { GetServerSideProps, NextPage } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { IconX, IconPlus, IconCheck, IconMail, IconPencil, IconBrandTiktok, IconBrandTwitter, IconBrandVk, IconBrandTelegram, IconBrandInstagram } from '@tabler/icons';
 import { unstable_getServerSession } from 'next-auth';
@@ -138,6 +139,44 @@ const Profile: NextPage<IProps> = (props: IProps) => {
 
       <Container
         sx={(theme) => ({
+          position: 'relative',
+          height: '210px',
+          maxWidth: '100vw',
+          padding: '0',
+          margin: '0',
+          // backgroundSize: 'cover',
+          // backgroundPosition: 'center',
+          // backgroundImage: `url(${props.user?.backgroundUrl ? props.user.backgroundUrl : ''})`,
+          // backgroundColor: props.user?.backgroundUrl ? '' : theme.colors.gray[4],
+        })}
+      >
+        {
+          props.isOwner &&
+          <Group position="right" p={20}>
+            <Link href="/user">
+              <Button
+                variant="white"
+                leftIcon={<IconPencil size={18} />}
+                sx={(theme) => ({
+                  zIndex: 1,
+                })}
+              >
+                Изменить
+              </Button>
+            </Link>
+          </Group>
+        }
+        <Image
+          src={props.user?.backgroundUrl ? props.user.backgroundUrl : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder.png'}
+          alt="Background image"
+          layout="fill"
+          objectFit="cover"
+          style={{ zIndex: -100 }}
+        />
+      </Container>
+
+      {/* <Container
+        sx={(theme) => ({
           height: '210px',
           maxWidth: '100vw',
           padding: '0',
@@ -158,7 +197,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
             </Link>
           </Group>
         }
-      </Container>
+      </Container> */}
 
       <Container
         sx={(theme) => ({
@@ -182,13 +221,29 @@ const Profile: NextPage<IProps> = (props: IProps) => {
               <Group position="center">
                 {
                   props.user?.isVerified === true &&
-                  <Indicator position="bottom-end" color="cyan" offset={15} size={24} zIndex={10} label={<IconCheck size={14} />}>
-                    <Avatar src={props.user?.imageUrl} size={120} radius={120} mx="auto" color={theme.fn.primaryColor()} />
+                  <Indicator position="bottom-end" color="cyan" offset={20} size={24} zIndex={10} label={<IconCheck size={14} />}>
+                    {/* <Avatar src={props.user?.imageUrl} size={120} radius={120} mx="auto" color={theme.fn.primaryColor()} /> */}
+                    <Image
+                      src={props.user?.imageUrl ? props.user.imageUrl : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder.png'}
+                      alt="Avatar image"
+                      height={120}
+                      width={120}
+                      objectFit="cover"
+                      style={{ borderRadius: '50%' }}
+                    />
                   </Indicator>
                 }
                 {
                   props.user?.isVerified === false &&
-                  <Avatar src={props.user?.imageUrl} size={120} radius={120} mx="auto" color={theme.fn.primaryColor()} />
+                  <Image
+                    src={props.user?.imageUrl ? props.user.imageUrl : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder.png'}
+                    alt="Avatar image"
+                    height={120}
+                    width={120}
+                    objectFit="cover"
+                    style={{ borderRadius: '50%' }}
+                  />
+                  // <Avatar src={props.user?.imageUrl} size={120} radius={120} mx="auto" color={theme.fn.primaryColor()} />
                 }
               </Group>
               <Title align="center" size={20} weight={500} mt={15}>

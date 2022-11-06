@@ -109,8 +109,41 @@ export const UpdateUser = async (user: IUser) => {
   });
 }
 
-
 export const DeleteUser = async (id: string) => {
+  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?userId=eq.${id}`, {
+    method: 'DELETE',
+    headers: {
+      'apikey': process.env.SUPABASE_API_KEY || '',
+      'Authorization': process.env.SUPABASE_API_KEY || '',
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+  }).then((res) => {
+    if (res.ok) {
+      console.log(res.json())
+    }
+    else {
+      throw new Error("Error deleting transactions");
+    }
+  });
+
+  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?gifterId=eq.${id}`, {
+    method: 'DELETE',
+    headers: {
+      'apikey': process.env.SUPABASE_API_KEY || '',
+      'Authorization': process.env.SUPABASE_API_KEY || '',
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+  }).then((res) => {
+    if (res.ok) {
+      console.log(res.json())
+    }
+    else {
+      throw new Error("Error deleting transactions");
+    }
+  });
+
   await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?id=eq.${id}`, {
     method: 'DELETE',
     headers: {
@@ -121,7 +154,6 @@ export const DeleteUser = async (id: string) => {
     },
   }).then((res) => {
     if (res.ok) {
-
     }
     else {
       throw new Error("Error deleting user");

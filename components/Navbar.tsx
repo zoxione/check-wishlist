@@ -11,8 +11,11 @@ import {
   IconSettings,
   IconLogout,
   IconSwitchHorizontal,
+  IconLayoutList
 } from '@tabler/icons';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
+import Router, { useRouter } from 'next/router';
 
 const useStyles = createStyles((theme) => ({
   active: {
@@ -37,74 +40,91 @@ const navbarData = [
 interface NavbarLinkProps {
   icon: TablerIcon;
   label: string;
-  href: string;
+  href?: string;
+  isBlank?: boolean;
+  activeFragment?: number;
   active?: boolean;
   onClick?(): void;
 }
 
-function NavbarLink({ icon: Icon, label, href, active, onClick }: NavbarLinkProps) {
-  const { classes, cx } = useStyles();
+
+export function NavbarLink(props: NavbarLinkProps) {
+  const router = useRouter()
+
+  const handleClick = () => {
+    if (props.activeFragment) {
+      router.push({
+        pathname: props.href,
+        query: { activeFragment: props.activeFragment }
+      });
+    }
+    else {
+      router.push({
+        pathname: props.href,
+      });
+    }
+  }
 
   return (
-    <Tooltip label={label} position="right" transitionDuration={0}>
-      <Link href={`${href}`}>
-        <UnstyledButton
-          component="a"
-          onClick={onClick}
-          sx={(theme) => ({
-            width: 50,
-            height: 50,
-            borderRadius: theme.radius.md,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
-            '&:hover': {
-              backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
-            },
-          })}
-          className={cx({ [classes.active]: active })}
-        >
-          <Icon stroke={1.5} />
-        </UnstyledButton>
-      </Link>
+    <Tooltip label={props.label} position="right" transitionDuration={0}>
+      <UnstyledButton
+        component="a"
+        onClick={handleClick}
+        sx={(theme) => ({
+          width: 50,
+          height: 50,
+          borderRadius: theme.radius.md,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          '&:hover': {
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
+          },
+          backgroundColor: props.active ? theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background : 'transparent',
+          color: props.active ? theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color : theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
+        })}
+      >
+        <props.icon stroke={1.5} />
+      </UnstyledButton>
     </Tooltip>
   );
 }
 
-interface IProps { }
 
-const NavbarContent: FunctionComponent<IProps> = ({ }) => {
-  const [active, setActive] = useState(1);
+interface IProps {
+  activeFragment: number;
+  username: string;
+}
 
+const NavbarContent: FunctionComponent<IProps> = (props: IProps) => {
   return (
-    <Navbar height={750} width={{ base: 80 }} p="md"
+    <Navbar height={750} p="md"
       sx={(theme) => ({
         position: 'fixed',
         top: 0,
         left: 0,
         zIndex: 10,
         height: '100vh',
+        width: '80px',
+        [theme.fn.smallerThan('sm')]: {
+          display: 'none',
+          width: 0,
+        },
       })}
     >
-      <Center>
-
-      </Center>
-      <Navbar.Section grow mt={50}>
-        <Stack justify="center" spacing={0}>
-          {navbarData.map((link, index) => (
-            <NavbarLink
-              {...link}
-              key={link.label}
-              active={index === active}
-              onClick={() => setActive(index)}
-            />
-          ))}
+      <Navbar.Section grow mt={80}>
+        <Stack justify="center" spacing={10}>
+          <NavbarLink icon={IconHome2} label="Мой профиль" href={`/${props.username}`} />
+          <NavbarLink icon={IconUser} label="Аккаунт" activeFragment={0} active={props.activeFragment == 0} />
+          <NavbarLink icon={IconLayoutList} label="Список желаний" activeFragment={1} active={props.activeFragment == 1} />
+          <NavbarLink icon={IconGauge} label="Приборная панель" activeFragment={2} active={props.activeFragment == 2} />
+          <NavbarLink icon={IconDeviceDesktopAnalytics} label="Аналитика" activeFragment={3} active={props.activeFragment == 3} />
+          <NavbarLink icon={IconSettings} label="Настройки" activeFragment={4} active={props.activeFragment == 4} />
         </Stack>
       </Navbar.Section>
       <Navbar.Section>
         <Stack justify="center" spacing={0}>
-          <NavbarLink icon={IconLogout} label="Logout" href="/" />
+          <NavbarLink icon={IconLogout} label="Выйти" onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
         </Stack>
       </Navbar.Section>
     </Navbar>

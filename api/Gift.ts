@@ -152,10 +152,8 @@ export const DeleteGift = async (id: string) => {
   });
 }
 
-export const DeleteGiftedGifts = async (userId: string) => {
-  let gifts = GetGifts(userId);
-
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?isGifted=eq.true`, {
+export const DeleteWishlistGifts = async (userId: string) => {
+  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?userId=eq.${userId}&isGifted=eq.false`, {
     method: 'DELETE',
     headers: {
       'apikey': process.env.SUPABASE_API_KEY || '',
@@ -165,6 +163,45 @@ export const DeleteGiftedGifts = async (userId: string) => {
     },
   }).then((res) => {
     if (res.ok) {
+      console.log(res.json())
+    }
+    else {
+      throw new Error("Error deleting gifts");
+    }
+  });
+}
+
+// АБУЗ ЕСТЬ 
+// НЕ ИСПОЛЬЗОВАТЬ
+export const DeleteGiftedGifts = async (userId: string) => {
+  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?userId=eq.${userId}`, {
+    method: 'DELETE',
+    headers: {
+      'apikey': process.env.SUPABASE_API_KEY || '',
+      'Authorization': process.env.SUPABASE_API_KEY || '',
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+  }).then((res) => {
+    if (res.ok) {
+      console.log(res.json())
+    }
+    else {
+      throw new Error("Error deleting transactions");
+    }
+  });
+
+  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?userId=eq.${userId}&isGifted=eq.true`, {
+    method: 'DELETE',
+    headers: {
+      'apikey': process.env.SUPABASE_API_KEY || '',
+      'Authorization': process.env.SUPABASE_API_KEY || '',
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+  }).then((res) => {
+    if (res.ok) {
+      console.log(res.json())
     }
     else {
       throw new Error("Error deleting gift");

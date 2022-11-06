@@ -69,7 +69,7 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
       })}
     >
       <Card.Section mb={30}>
-        <Image src={props.gift?.imageUrl} alt={props.gift?.title} height={260} fit="fill" p={10} withPlaceholder />
+        <Image src={props.gift?.imageUrl} alt={props.gift?.title} height={260} fit="contain" p={10} withPlaceholder />
       </Card.Section>
 
       <Box

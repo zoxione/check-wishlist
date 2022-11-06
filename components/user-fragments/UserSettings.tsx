@@ -1,7 +1,6 @@
 import { Box, Button, Divider, PasswordInput, Text } from '@mantine/core';
-import { FunctionComponent } from 'react'
-import Joi from 'joi';
-import { useForm, joiResolver } from '@mantine/form';
+import { FunctionComponent, useState } from 'react'
+
 import InfoCard from '../ui/InfoCard';
 import UserFragmentLayout from './UserFragmentLayout';
 import SettingsSection from '../ui/SettingsSection';
@@ -11,13 +10,13 @@ import { signOut, useSession } from 'next-auth/react';
 import { IUser } from '../../types';
 import { showNotification } from '@mantine/notifications';
 import router from 'next/router';
-import {
-  IconCheck,
-  IconX,
-  IconTrash
-} from '@tabler/icons';
-import { DeleteGiftedGifts } from '../../api/Gift';
+import { IconCheck, IconX, IconTrash } from '@tabler/icons';
+import { DeleteGiftedGifts, DeleteWishlistGifts } from '../../api/Gift';
 import Router from 'next/router';
+
+import ChangePasswordModal from '../logics/changePasswordModal';
+import ChangePersonalDataModal from '../logics/ChangePersonalDataModal';
+import ChangeEmailModal from '../logics/ChangeEmailModal';
 
 
 interface IProps {
@@ -27,156 +26,9 @@ interface IProps {
 
 const UserSettings: FunctionComponent<IProps> = (props) => {
   const { data: session, status } = useSession();
-
-  const changePasswordForm = useForm({
-    initialValues: {
-      password: props.user?.password,
-      passwordConfirm: props.user?.password,
-    },
-
-    validate: joiResolver(
-      Joi.object({
-        password: Joi.string().min(6).max(19).messages({
-          'string.base': 'Пароль должен быть строкой',
-          'string.empty': 'Пароль не может быть пустым',
-          'string.min': 'Пароль должен быть больше 5 символов',
-          'string.max': 'Пароль должен быть меньше 20 символов',
-        }),
-        passwordConfirm: Joi.string().valid(Joi.ref('password')).messages({
-          'string.base': 'Пароль должен быть строкой',
-          'string.empty': 'Пароль не может быть пустым',
-          'any.only': 'Пароли должны совпадать',
-        }),
-      })
-    ),
-  });
-
-  const handleChangePasswordSubmit = async () => {
-    const user: IUser = props.user;
-    user.password = changePasswordForm.values.password;
-
-    try {
-      await UpdateUser(user);
-
-      showNotification({
-        title: 'Успешно',
-        message: 'Пароль успешно изменен',
-        color: 'teal',
-        icon: <IconCheck stroke={1.5} size={24} />,
-      });
-
-      router.replace(router.asPath);
-    }
-    catch (error) {
-      console.error(error);
-      showNotification({
-        title: 'Ошибка',
-        message: 'Не удалось изменить пароль',
-        color: 'red',
-        icon: <IconX stroke={1.5} size={24} />,
-      });
-    }
-  }
-
-  const changePasswordModal = () =>
-    openConfirmModal({
-      title: (
-        <Text size="xl" weight={500}>
-          Изменить пароль
-        </Text>
-      ),
-      centered: true,
-      children: (
-        <Box>
-          <Text>
-            Введите новый пароль и подтвердите его в поле ниже. Пароль должен быть не менее 6 символов.
-          </Text>
-          <form onSubmit={changePasswordForm.onSubmit(() => handleChangePasswordSubmit())}>
-            <PasswordInput
-              mt={10}
-              {...changePasswordForm.getInputProps('password')}
-            />
-          </form>
-        </Box>
-      ),
-      labels: { confirm: 'Изменить пароль', cancel: 'Отмена' },
-      confirmProps: { color: 'red' },
-      onConfirm: async () => await DeleteUser(session?.user?.id ? session.user.id : ''),
-    });
-
-  const clearGiftedModal = () =>
-    openConfirmModal({
-      title: (
-        <Text size="xl" weight={500}>
-          Очистить список
-        </Text>
-      ),
-      centered: true,
-      children: (
-        <Text>
-          Вы уверены, что хотите очистить список подарков?
-        </Text>
-      ),
-      labels: { confirm: 'Очистить', cancel: 'Отмена' },
-      confirmProps: { color: 'red' },
-      onConfirm: async () => {
-        try {
-          await DeleteGiftedGifts(session?.user?.id ? session.user.id : '')
-          showNotification({
-            title: 'Успешно',
-            message: 'Список подарков успешно очищен',
-            color: 'teal',
-            icon: <IconCheck stroke={1.5} size={24} />,
-          });
-        }
-        catch (error) {
-          console.error(error);
-          showNotification({
-            title: 'Ошибка',
-            message: 'Не удалось очистить список',
-            color: 'red',
-            icon: <IconX stroke={1.5} size={24} />,
-          });
-        }
-      }
-    });
-
-  // const clearWishlistModal = () =>
-  //   openConfirmModal({
-  //     title: (
-  //       <Text size="xl" weight={500}>
-  //         Очистить список
-  //       </Text>
-  //     ),
-  //     centered: true,
-  //     children: (
-  //       <Text>
-  //         Вы уверены, что хотите очистить список желаний?
-  //       </Text>
-  //     ),
-  //     labels: { confirm: 'Очистить', cancel: 'Отмена' },
-  //     confirmProps: { color: 'red' },
-  //     onConfirm: async () => {
-  //       try {
-  //         await DeleteWishlistGifts(session?.user?.id ? session.user.id : '')
-  //         showNotification({
-  //           title: 'Успешно',
-  //           message: 'Список желаний успешно очищен',
-  //           color: 'teal',
-  //           icon: <IconCheck stroke={1.5} size={24} />,
-  //         });
-  //       }
-  //       catch (error) {
-  //         console.error(error);
-  //         showNotification({
-  //           title: 'Ошибка',
-  //           message: 'Не удалось очистить список',
-  //           color: 'red',
-  //           icon: <IconX stroke={1.5} size={24} />,
-  //         });
-  //       }
-  //     }
-  //   });
+  const [openedChangePasswordModal, setOpenedChangePasswordModal] = useState(false);
+  const [openedChangePersonalDataModal, setOpenedChangePersonalDataModal] = useState(false);
+  const [openedChangeEmailModal, setOpenedChangeEmailModal] = useState(false);
 
   const deleteAccountModal = () =>
     openConfirmModal({
@@ -195,13 +47,106 @@ const UserSettings: FunctionComponent<IProps> = (props) => {
       labels: { confirm: 'Удалить аккаунт', cancel: "Нет, не удаляй" },
       confirmProps: { color: 'red' },
       onConfirm: async () => {
-        await DeleteUser(session?.user?.id ? session.user.id : '')
+        try {
+          await DeleteUser(session?.user?.id ? session.user.id : '')
+          showNotification({
+            title: 'Успешно',
+            message: 'Аккаунт успешно удален',
+            color: 'teal',
+            icon: <IconCheck stroke={1.5} size={24} />,
+          });
 
-        signOut();
-
-        Router.push('/');
+          signOut();
+          Router.push('/');
+        }
+        catch (error) {
+          console.error(error);
+          showNotification({
+            title: 'Ошибка',
+            message: 'Не удалось удалить аккаунт',
+            color: 'red',
+            icon: <IconX stroke={1.5} size={24} />,
+          });
+        }
       }
     });
+
+
+  const clearWishlistModal = () =>
+    openConfirmModal({
+      title: (
+        <Text size="xl" weight={500}>
+          Очистить список желаний
+        </Text>
+      ),
+      centered: true,
+      children: (
+        <Text>
+          Вы уверены, что хотите очистить список желаний?
+        </Text>
+      ),
+      labels: { confirm: 'Очистить', cancel: 'Отмена' },
+      confirmProps: { color: 'red' },
+      onConfirm: async () => {
+        try {
+          await DeleteWishlistGifts(session?.user?.id ? session.user.id : '')
+          showNotification({
+            title: 'Успешно',
+            message: 'Список желаний успешно очищен',
+            color: 'teal',
+            icon: <IconCheck stroke={1.5} size={24} />,
+          });
+        }
+        catch (error) {
+          console.error(error);
+          showNotification({
+            title: 'Ошибка',
+            message: 'Не удалось очистить список',
+            color: 'red',
+            icon: <IconX stroke={1.5} size={24} />,
+          });
+        }
+      }
+    });
+
+
+  const clearGiftedModal = () =>
+    openConfirmModal({
+      title: (
+        <Text size="xl" weight={500}>
+          Очистить список подаренных подарков
+        </Text>
+      ),
+      centered: true,
+      children: (
+        <Text>
+          Вы уверены, что хотите очистить список подаренных подарков?
+        </Text>
+      ),
+      labels: { confirm: 'Очистить', cancel: 'Отмена' },
+      confirmProps: { color: 'red' },
+      onConfirm: async () => {
+        try {
+          await DeleteGiftedGifts(session?.user?.id ? session.user.id : '')
+          showNotification({
+            title: 'Успешно',
+            message: 'Список подаренных подарков успешно очищен',
+            color: 'teal',
+            icon: <IconCheck stroke={1.5} size={24} />,
+          });
+        }
+        catch (error) {
+          console.error(error);
+          showNotification({
+            title: 'Ошибка',
+            message: 'Не удалось очистить список',
+            color: 'red',
+            icon: <IconX stroke={1.5} size={24} />,
+          });
+        }
+      }
+    });
+
 
   return (
     <UserFragmentLayout>
@@ -210,43 +155,42 @@ const UserSettings: FunctionComponent<IProps> = (props) => {
           sx={(theme) => ({
             display: 'flex',
             flexDirection: 'column',
-            gap: '5px',
+            gap: '15px',
           })}
         >
+          <SettingsSection title="Изменить личные данные">
+            <Text>Изменить фамилию, имя, отчество и адрес</Text>
+            <ChangePersonalDataModal user={props.user} opened={openedChangePersonalDataModal} setOpened={setOpenedChangePersonalDataModal} />
+            <Button variant="gradient" onClick={() => setOpenedChangePersonalDataModal(true)}>
+              Изменить
+            </Button>
+          </SettingsSection>
 
-          <SettingsSection
-            desc="Изменить фамилию и имя"
-            btnText="Изменить ФИО"
-            onClick={changePasswordModal}
-          />
           <Divider my="xs" />
+          <SettingsSection title="Изменить пароль">
+            <Text>Изменить пароль для входа в аккаунт</Text>
+            <ChangePasswordModal user={props.user} opened={openedChangePasswordModal} setOpened={setOpenedChangePasswordModal} />
+            <Button variant="gradient" onClick={() => setOpenedChangePasswordModal(true)}>
+              Изменить
+            </Button>
+          </SettingsSection>
 
-          <SettingsSection
-            desc="Изменить электронную почту"
-            btnText="Изменить почту"
-            onClick={changePasswordModal}
-          />
           <Divider my="xs" />
+          <SettingsSection title="Изменить почту">
+            <Text>Изменить электронную почту для входа в аккаунт</Text>
+            <ChangeEmailModal user={props.user} opened={openedChangeEmailModal} setOpened={setOpenedChangeEmailModal} />
+            <Button variant="gradient" onClick={() => setOpenedChangeEmailModal(true)}>
+              Изменить
+            </Button>
+          </SettingsSection>
 
-          <SettingsSection
-            desc="Изменить пароль для входа в аккаунт"
-            btnText="Изменить пароль"
-            onClick={changePasswordModal}
-          />
           <Divider my="xs" />
-
-          <SettingsSection
-            desc="Изменить адрес доставки"
-            btnText="Изменить адрес"
-            onClick={changePasswordModal}
-          />
-          <Divider my="xs" />
-
-          <SettingsSection
-            desc="Удалить аккаунт (восстановить невозможно)"
-            btnText="Удалить аккаунт"
-            onClick={deleteAccountModal}
-          />
+          <SettingsSection title="Удалить аккаунт">
+            <Text>Удалить аккаунт и все данные (восстановить невозможно)</Text>
+            <Button variant="outline" color="red" onClick={deleteAccountModal}>
+              Удалить
+            </Button>
+          </SettingsSection>
         </Box>
       </InfoCard >
 
@@ -258,24 +202,20 @@ const UserSettings: FunctionComponent<IProps> = (props) => {
             gap: '5px',
           })}
         >
+          <SettingsSection title="Очистить список желаний">
+            <Text>Удалить все товары из списка желаний. Это действие необратимо.</Text>
+            <Button variant="outline" color="red" onClick={clearWishlistModal}>
+              Очистить
+            </Button>
+          </SettingsSection>
 
-
-
-          <SettingsSection
-            desc="Очистить список подаренных подарков"
-            btnText="Очистить"
-            onClick={clearGiftedModal}
-          />
-          <Divider my="sm" />
-
-          {/* <SettingsSection
-            desc="Очистить список желаемых подарков"
-            btnText="Очистить"
-            onClick={clearWishlistModal}
-          />
-          <Divider my="sm" /> */}
-
-
+          <Divider my="xs" />
+          <SettingsSection title="Очистить список подаренных подарков">
+            <Text>Удалить все товары из списка подаренных подарков. Это действие необратимо.</Text>
+            <Button variant="outline" color="red" onClick={clearGiftedModal}>
+              Очистить
+            </Button>
+          </SettingsSection>
         </Box>
       </InfoCard>
     </UserFragmentLayout >

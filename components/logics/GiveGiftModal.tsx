@@ -206,7 +206,7 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
           </Button>
         </form>
       </Box>
-    </Modal >
+    </Modal>
   )
 }
 

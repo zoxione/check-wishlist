@@ -5,20 +5,23 @@ import { signOut, useSession } from 'next-auth/react';
 import { unstable_getServerSession } from 'next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Title, Anchor, Box, Navbar, Stack } from '@mantine/core';
+import { Title, Anchor, Box } from '@mantine/core';
 import { IconHome2, IconGauge, IconDeviceDesktopAnalytics, IconUser, IconSettings, IconLogout, IconLayoutList } from '@tabler/icons';
 import AppHead from '../../components/logics/Head';
 import dynamic from 'next/dynamic';
 
 import { authOptions } from '../api/auth/[...nextauth]';
 import { IGift, ITransaction, IUser } from '../../types';
-import { NavbarLink } from '../../components/ui/NavbarLink';
 import { GetUserFromId } from '../../api/User';
+import NavbarContent from '../../components/Navbar';
 const UserAccount = dynamic(() => import('../../components/user-fragments/UserAccount'))
 const UserDashboard = dynamic(() => import('../../components/user-fragments/UserDashboard'))
 const UserAnalytics = dynamic(() => import('../../components/user-fragments/UserAnalytics'))
 const UserSettings = dynamic(() => import('../../components/user-fragments/UserSettings'))
 const UserWishlist = dynamic(() => import('../../components/user-fragments/UserWishlist'))
+
+
+
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params, query }) => {
@@ -49,6 +52,15 @@ interface IProps {
 const User: NextPage<IProps> = (props: IProps) => {
   const { data: session, status } = useSession();
   console.log(props)
+
+  const NavbarLinkList = [
+    { label: "Мой профиль", icon: IconHome2, href: props.user?.username },
+    { label: "Аккаунт", icon: IconUser, href: "/user", activeFragment: 0 },
+    { label: "Список желаний", icon: IconLayoutList, href: "/user", activeFragment: 1 },
+    { label: "Приборная панель", icon: IconGauge, href: "/user", activeFragment: 2 },
+    { label: "Аналитика", icon: IconDeviceDesktopAnalytics, href: "/user", activeFragment: 3 },
+    { label: "Настройки", icon: IconSettings, href: "/user", activeFragment: 4 },
+  ];
 
   // const [activeFragment, setActiveFragment] = useState(props.activeFragment);
   const fragmentsList = [
@@ -92,37 +104,10 @@ const User: NextPage<IProps> = (props: IProps) => {
     <>
       <AppHead />
 
-      <Navbar height={750} p="md"
-        sx={(theme) => ({
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          zIndex: 10,
-          height: '100vh',
-          width: '80px',
-          [theme.fn.smallerThan('sm')]: {
-            display: 'none',
-            width: 0,
-          },
-        })}
-      >
-        <Navbar.Section grow mt={80}>
-          <Stack justify="center" spacing={10}>
-            <NavbarLink icon={IconHome2} label="Мой профиль" onClick={() => Router.push(`${props.user?.username}`)} />
-
-            <NavbarLink icon={IconUser} label="Аккаунт" activeFragment={0} active={props.activeFragment == 0} />
-            <NavbarLink icon={IconLayoutList} label="Список желаний" activeFragment={1} active={props.activeFragment == 1} />
-            <NavbarLink icon={IconGauge} label="Приборная панель" activeFragment={2} active={props.activeFragment == 2} />
-            <NavbarLink icon={IconDeviceDesktopAnalytics} label="Аналитика" activeFragment={3} active={props.activeFragment == 3} />
-            <NavbarLink icon={IconSettings} label="Настройки" activeFragment={4} active={props.activeFragment == 4} />
-          </Stack>
-        </Navbar.Section>
-        <Navbar.Section>
-          <Stack justify="center" spacing={0}>
-            <NavbarLink icon={IconLogout} label="Выйти" onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
-          </Stack>
-        </Navbar.Section>
-      </Navbar>
+      <NavbarContent
+        activeFragment={props.activeFragment}
+        username={props.user.username}
+      />
 
       <Box
         sx={(theme) => ({

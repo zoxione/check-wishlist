@@ -8,7 +8,7 @@ import { IconGripVertical, IconArrowNarrowRight } from '@tabler/icons';
 
 import UserFragmentLayout from './UserFragmentLayout';
 import InfoCard from '../ui/InfoCard';
-import { GetTransactionsData, useTransactions } from '../../api/Transaction';
+import { useTransactions } from '../../api/Transaction';
 import { CompleteTransaction } from '../../api/Transaction';
 import Link from 'next/link';
 
@@ -19,27 +19,7 @@ interface IProps {
 
 const UserDashboard: FunctionComponent<IProps> = (props) => {
   const { transactions, isLoading } = useTransactions();
-
   console.log(transactions);
-
-  let transactionsList = [];
-
-  // const data = GetTransactionsData();
-  // data.then((data) => {
-  //   if (data) {
-  //     transactionsList = data;
-  //   }
-  //   console.log(data);
-  // });
-
-
-  // if (transactions && transactions.length > 0) {
-  //   for (let i = 0; i < transactions.length; i++) {
-  //     const { user } = useUser(transactions[i].userId);
-  //     const { user: gifter } = useUser(transactions[i].gifterId);
-  //     const { gift } = useGift(transactions[i].giftId);
-  //   }
-  // }
 
   const [state, handlers] = useListState(transactions);
 

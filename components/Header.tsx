@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'react';
 import Link from 'next/link';
-import { Header, Group, Button, UnstyledButton, Divider, Box, Burger, Drawer, ScrollArea, Title } from '@mantine/core';
+import { Header, Group, Button, UnstyledButton, Divider, Box, Burger, Drawer, ScrollArea, Title, Skeleton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconGauge, IconDeviceDesktopAnalytics, IconSettings, IconLogout, IconUser } from '@tabler/icons';
+import { IconGauge, IconDeviceDesktopAnalytics, IconSettings, IconLogout, IconUser, IconLayoutList } from '@tabler/icons';
 import { signOut, useSession } from 'next-auth/react';
 
 import SwitchTheme from '../components/ui/SwitchTheme';
@@ -44,6 +44,14 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
       </>
     )
   }
+  else if (status === "loading") {
+    rightMenu = (
+      <>
+        <SwitchTheme />
+        <Skeleton width={150} height={35} />
+      </>
+    )
+  }
 
   let rightMenuMobile;
   if (status === "authenticated") {
@@ -66,6 +74,13 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
         <Link href="/auth/signup" passHref>
           <Button variant="gradient" onClick={() => closeDrawer()}>Зарегистрироваться</Button>
         </Link>
+      </>
+    )
+  }
+  else if (status === "loading") {
+    rightMenu = (
+      <>
+        <Skeleton width={150} height={35} />
       </>
     )
   }
@@ -185,10 +200,14 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
                   marginTop: '40px',
                 })}
               >
+
+                {/* <NavbarLink icon={IconUser} label="Аккаунт" activeFragment={0} active={props.activeFragment == 0} /> */}
+
                 <HeaderLink icon={IconUser} label='Аккаунт' href={'/user'} activeFragment={0} onClick={() => closeDrawer()} />
-                <HeaderLink icon={IconGauge} label='Приборная панель' href={'/user'} activeFragment={1} onClick={() => closeDrawer()} />
-                <HeaderLink icon={IconDeviceDesktopAnalytics} label='Аналитика' href={'/user'} activeFragment={2} onClick={() => closeDrawer()} />
-                <HeaderLink icon={IconSettings} label='Настройки' href={'/user'} activeFragment={3} onClick={() => closeDrawer()} />
+                <HeaderLink icon={IconLayoutList} label='Список желаний' href={'/user'} activeFragment={1} onClick={() => closeDrawer()} />
+                <HeaderLink icon={IconGauge} label='Приборная панель' href={'/user'} activeFragment={2} onClick={() => closeDrawer()} />
+                <HeaderLink icon={IconDeviceDesktopAnalytics} label='Аналитика' href={'/user'} activeFragment={3} onClick={() => closeDrawer()} />
+                <HeaderLink icon={IconSettings} label='Настройки' href={'/user'} activeFragment={4} onClick={() => closeDrawer()} />
                 <HeaderLink icon={IconLogout} label='Выйти' onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
               </Box>
             </>

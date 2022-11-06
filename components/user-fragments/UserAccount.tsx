@@ -1,12 +1,13 @@
 import React, { FunctionComponent } from 'react'
 import { useRouter } from 'next/router';
 import Joi from 'joi';
-import { Textarea, Container, Box, Button, PasswordInput, Avatar, TextInput, useMantineTheme, Center, Text, Image, SimpleGrid } from '@mantine/core';
+import { Textarea, Container, Box, Button, PasswordInput, Avatar, TextInput, useMantineTheme, Center, Text, SimpleGrid } from '@mantine/core';
 import { IconCheck, IconX, IconTrash } from '@tabler/icons';
 import { useForm, joiResolver } from '@mantine/form';
 import { useState } from 'react';
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { showNotification } from '@mantine/notifications';
+import Image from 'next/image'
 
 import UserFragmentLayout from './UserFragmentLayout';
 import InfoCard from '../ui/InfoCard';
@@ -23,8 +24,8 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
   const theme = useMantineTheme();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [files, setFiles] = useState<FileWithPath[]>([]);
-  const [avatar, setAvatar] = useState(props.user.imageUrl);
+  const [avatars, setAvatars] = useState<FileWithPath[]>([]);
+  const [backgrounds, setBackgrounds] = useState<FileWithPath[]>([]);
 
 
   const form = useForm({
@@ -127,16 +128,32 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
     }
 
     try {
-      if (files.length > 0) {
+      let date = new Date().getTime()
+
+      if (avatars.length > 0) {
+        const avatarUrl = `/users/avatars/${user.username}_${date}.${avatars[0].type.split('/').pop()}`;
+
         const { data, error } = await storageClient
           .from('check')
-          .upload(`/users/avatars/${user.username}.${files[0].type.split('/').pop()}`, files[0], { cacheControl: '3600', upsert: true });
+          .upload(avatarUrl, avatars[0], { cacheControl: '3600', upsert: true });
         if (error) {
           throw error;
         }
-        console.log(data)
-        user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/${user.username}.${files[0].type.split('/').pop()}`;
-        console.log(user.imageUrl)
+
+        user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check${avatarUrl}`;
+      }
+
+      if (backgrounds.length > 0) {
+        const backgroundUrl = `/users/backgrounds/${user.username}_${date}.${backgrounds[0].type.split('/').pop()}`;
+
+        const { data, error } = await storageClient
+          .from('check')
+          .upload(backgroundUrl, backgrounds[0], { cacheControl: '3600', upsert: true });
+        if (error) {
+          throw error;
+        }
+
+        user.backgroundUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check${backgroundUrl}`;
       }
 
       await UpdateUser(user);
@@ -164,23 +181,42 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
   }
 
 
-
-
   return (
     <>
-      <Container
+      <Dropzone
+        accept={IMAGE_MIME_TYPE}
+        onDrop={(files) => { setBackgrounds(files) }}
+        maxFiles={1}
         sx={(theme) => ({
-          height: '210px',
-          maxWidth: '100vw',
+          margin: '0 auto',
           padding: '0',
-          margin: '0',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundImage: `url(${props.user?.backgroundUrl ? props.user.backgroundUrl : ''})`,
-          backgroundColor: props.user?.backgroundUrl ? '' : theme.colors.gray[4],
+          border: 'none',
+          '&:hover': {
+            filter: 'brightness(0.7)',
+          },
         })}
       >
-      </Container>
+        <Container
+          sx={(theme) => ({
+            position: 'relative',
+            height: '210px',
+            maxWidth: '100vw',
+            padding: '0',
+            margin: '0',
+            // backgroundSize: 'cover',
+            // backgroundPosition: 'center',
+            // backgroundImage: `url(${props.user?.backgroundUrl ? props.user.backgroundUrl : ''})`,
+            // backgroundColor: props.user?.backgroundUrl ? '' : theme.colors.gray[4],
+          })}
+        >
+          <Image
+            src={backgrounds[0] ? URL.createObjectURL(backgrounds[0]) : props.user?.backgroundUrl ? props.user.backgroundUrl : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder.png'}
+            alt="Background image"
+            layout="fill"
+            objectFit="cover"
+          />
+        </Container>
+      </Dropzone>
 
       <UserFragmentLayout>
         <InfoCard title="Редактирование профиля">
@@ -193,7 +229,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
             <form onSubmit={form.onSubmit(() => handleSubmit())}>
               <Dropzone
                 accept={IMAGE_MIME_TYPE}
-                onDrop={(files) => { setFiles(files); setAvatar(URL.createObjectURL(files[0])) }}
+                onDrop={(files) => { setAvatars(files); }}
                 maxFiles={1}
                 sx={(theme) => ({
                   width: '250px',
@@ -203,13 +239,20 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                   padding: '0',
                   border: 'none',
                   '&:hover': {
-                    filter: 'brightness(0.5)',
+                    filter: 'brightness(0.7)',
                   },
                 })}
               >
                 <Center>
-                  <Avatar
-                    src={avatar}
+                  <Image
+                    src={avatars[0] ? URL.createObjectURL(avatars[0]) : props.user?.imageUrl ? props.user.imageUrl : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder.png'}
+                    alt="Avatar image"
+                    layout="fill"
+                    objectFit="cover"
+                    style={{ borderRadius: '50%' }}
+                  />
+                  {/* <Avatar
+                    src={avatars[0] ? URL.createObjectURL(avatars[0]) : props.user?.imageUrl ? props.user.imageUrl : ''}
                     color={theme.fn.primaryColor()}
                     alt={props.user?.username}
                     sx={(theme) => ({
@@ -217,7 +260,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                       height: '250px',
                       borderRadius: '50%',
                     })}
-                  />
+                  /> */}
                 </Center>
               </Dropzone>
 
@@ -227,31 +270,13 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                 size="md"
                 {...form.getInputProps('username')}
               />
-              {/* <TextInput
-                label="ФИО"
-                mt={10}
-                size="md"
-                {...form.getInputProps('fullname')}
-              />
-              <TextInput
-                label="Почта"
-                mt={10}
-                size="md"
-                {...form.getInputProps('email')}
-              />
-              <PasswordInput
-                label="Пароль"
-                mt={10}
-                size="md"
-                {...form.getInputProps('password')}
-              /> */}
               <Textarea
                 label="Описание"
                 mt={10}
                 size="md"
                 {...form.getInputProps('about')}
               />
-              <TextInput
+              {/* <TextInput
                 label="Ссылка на аватарку"
                 mt={10}
                 size="md"
@@ -262,16 +287,10 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                 mt={10}
                 size="md"
                 {...form.getInputProps('backgroundUrl')}
-              />
-              {/* <TextInput
-                label="Адрес доставки"
-                mt={10}
-                size="md"
-                {...form.getInputProps('address')}
               /> */}
               <TextInput
                 label="ТикТок"
-                mt={10}
+                mt={20}
                 size="md"
                 {...form.getInputProps('tiktokName')}
               />
@@ -300,7 +319,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                 {...form.getInputProps('instagramName')}
               />
               <Box
-                mt={20}
+                mt={30}
                 sx={(theme) => ({
                   display: 'flex',
                   justifyContent: 'space-between',
