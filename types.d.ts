@@ -17,8 +17,8 @@ export interface IUser {
   email?: string;
   password: string;
   about?: string;
-  imageUrl?: string;
-  backgroundUrl?: string;
+  imageUrl: string;
+  backgroundUrl: string;
   address?: string;
   isVerified?: boolean;
   role?: string;

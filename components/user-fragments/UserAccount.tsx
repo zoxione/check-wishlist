@@ -128,32 +128,28 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
     }
 
     try {
-      let date = new Date().getTime()
+      let timestamp = new Date().getTime()
 
       if (avatars.length > 0) {
-        const avatarUrl = `/users/avatars/${user.username}_${date}.${avatars[0].type.split('/').pop()}`;
+        const { data, error } = await storageClient.from('check').upload(`/users/avatars/${user.username}_${timestamp}`, avatars[0], { cacheControl: '3600', upsert: true });
 
-        const { data, error } = await storageClient
-          .from('check')
-          .upload(avatarUrl, avatars[0], { cacheControl: '3600', upsert: true });
         if (error) {
-          throw error;
+          throw new Error('Ошибка загрузки аватара');
         }
 
-        user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check${avatarUrl}`;
+        //storageClient.from('check').remove([user.imageUrl.slice(71)]);
+        user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/${user.username}_${timestamp}`;
       }
 
       if (backgrounds.length > 0) {
-        const backgroundUrl = `/users/backgrounds/${user.username}_${date}.${backgrounds[0].type.split('/').pop()}`;
+        const { data, error } = await storageClient.from('check').upload(`/users/backgrounds/${user.username}_${timestamp}`, backgrounds[0], { cacheControl: '3600', upsert: true });
 
-        const { data, error } = await storageClient
-          .from('check')
-          .upload(backgroundUrl, backgrounds[0], { cacheControl: '3600', upsert: true });
         if (error) {
-          throw error;
+          throw new Error('Ошибка загрузки обложки');
         }
 
-        user.backgroundUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check${backgroundUrl}`;
+        //storageClient.from('check').remove([user.backgroundUrl.slice(71)]);
+        user.backgroundUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/${user.username}_${timestamp}`;
       }
 
       await UpdateUser(user);
@@ -203,14 +199,10 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
             maxWidth: '100vw',
             padding: '0',
             margin: '0',
-            // backgroundSize: 'cover',
-            // backgroundPosition: 'center',
-            // backgroundImage: `url(${props.user?.backgroundUrl ? props.user.backgroundUrl : ''})`,
-            // backgroundColor: props.user?.backgroundUrl ? '' : theme.colors.gray[4],
           })}
         >
           <Image
-            src={backgrounds[0] ? URL.createObjectURL(backgrounds[0]) : props.user?.backgroundUrl ? props.user.backgroundUrl : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder.png'}
+            src={backgrounds[0] ? URL.createObjectURL(backgrounds[0]) : props.user?.backgroundUrl}
             alt="Background image"
             layout="fill"
             objectFit="cover"
@@ -245,22 +237,12 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
               >
                 <Center>
                   <Image
-                    src={avatars[0] ? URL.createObjectURL(avatars[0]) : props.user?.imageUrl ? props.user.imageUrl : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder.png'}
+                    src={avatars[0] ? URL.createObjectURL(avatars[0]) : props.user?.imageUrl}
                     alt="Avatar image"
                     layout="fill"
                     objectFit="cover"
                     style={{ borderRadius: '50%' }}
                   />
-                  {/* <Avatar
-                    src={avatars[0] ? URL.createObjectURL(avatars[0]) : props.user?.imageUrl ? props.user.imageUrl : ''}
-                    color={theme.fn.primaryColor()}
-                    alt={props.user?.username}
-                    sx={(theme) => ({
-                      width: '250px',
-                      height: '250px',
-                      borderRadius: '50%',
-                    })}
-                  /> */}
                 </Center>
               </Dropzone>
 

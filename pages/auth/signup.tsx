@@ -1,5 +1,6 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import Router from 'next/router';
 import { useState } from 'react';
 import { Paper, TextInput, PasswordInput, Button, Title, Text, Anchor, Box, Input } from '@mantine/core';
@@ -12,6 +13,8 @@ import { IUser } from '../../types'
 import { AddUser } from '../../api/User';
 import AppHead from '../../components/logics/Head';
 import AuthLayout from '../../components/AuthLayout';
+import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { storageClient } from '../../api';
 
 
 interface IProps {
@@ -21,6 +24,7 @@ interface IProps {
 
 const SignUp: NextPage<IProps> = ({ }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [avatars, setAvatars] = useState<FileWithPath[]>([]);
 
   const form1 = useForm({
     initialValues: {
@@ -31,15 +35,12 @@ const SignUp: NextPage<IProps> = ({ }) => {
     },
     validate: joiResolver(
       Joi.object({
-        username: Joi.string().min(3).max(13).messages({
+        username: Joi.string().regex(/^[a-z0-9]+$/).min(3).max(13).messages({
+          'string.pattern.base': 'Имя пользователя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.empty': 'Имя не может быть пустым',
           'string.min': 'Имя должно быть больше 2 символов',
           'string.max': 'Имя должно быть меньше 14 символов',
-          // 'string.base': '',
-          // 'string.empty': '',
-          // 'string.min': '',
-          // 'string.max': '',
         }),
         email: Joi.string().email({ tlds: { allow: false } }).messages({
           'string.base': 'Email должен быть строкой',
@@ -133,14 +134,15 @@ const SignUp: NextPage<IProps> = ({ }) => {
     if (step === 2) {
       setIsLoading(true);
 
+
       const user: IUser = {
         username: form1.values.username,
         fullname: form2.values.fullname,
         email: form1.values.email,
         password: form1.values.password,
         about: form2.values.about,
-        imageUrl: form2.values.imageUrl,
-        backgroundUrl: form2.values.backgroundUrl,
+        imageUrl: `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/placeholder`,
+        backgroundUrl: `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder`,
         address: form2.values.address,
         isVerified: false,
         tiktokName: form3.values.tiktokName,
@@ -149,9 +151,27 @@ const SignUp: NextPage<IProps> = ({ }) => {
         telegramName: form3.values.telegramName,
         instagramName: form3.values.instagramName,
       }
-      console.log(JSON.stringify(user));
+
+      console.log(user);
 
       try {
+        if (avatars[0]) {
+          user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/${user.username}`;
+
+          const { data, error } = await storageClient.from('check').upload(`/users/avatars/${user.username}`, avatars[0], { cacheControl: '3600', upsert: true });
+
+          if (error) {
+            showNotification({
+              title: 'Ошибка',
+              message: 'Не удалось загрузить аватар',
+              color: 'red',
+              icon: <IconX stroke={1.5} size={24} />,
+            });
+
+            throw error;
+          }
+        }
+
         await AddUser(user);
 
         showNotification({
@@ -226,7 +246,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
               })}
               size="md"
               readOnly
-              value={`check-wishlist.ru/${form1.values.username}`}
+              value="wishlist.ictis.ru/"
             />
             <TextInput
               sx={(theme) => ({
@@ -287,11 +307,46 @@ const SignUp: NextPage<IProps> = ({ }) => {
       </Box>
     </form>,
     <form key={2} onSubmit={form2.onSubmit(() => handleStep("next"))}>
+      <Text
+        sx={(theme) => ({
+          fontSize: "16px",
+          fontWeight: 500,
+          color: "#212529",
+          marginBottom: "6px"
+        })}
+      >
+        Ваша аватарка
+      </Text>
+      <Dropzone
+        accept={IMAGE_MIME_TYPE}
+        onDrop={(files) => { setAvatars(files); }}
+        maxFiles={1}
+        sx={(theme) => ({
+          width: '250px',
+          height: '250px',
+          borderRadius: '50%',
+          margin: '0 auto',
+          padding: '0',
+          border: 'none',
+          '&:hover': {
+            filter: 'brightness(0.7)',
+          },
+        })}
+      >
+        <Image
+          src={avatars[0] ? URL.createObjectURL(avatars[0]) : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/placeholder'}
+          alt="Avatar image"
+          layout="fill"
+          objectFit="cover"
+          style={{ borderRadius: '50%' }}
+        />
+      </Dropzone>
       <TextInput
         label="Как вы хотите, чтобы вас звали?"
         placeholder="Александр Пушкин"
         type="text"
         size="md"
+        mt={20}
         required
         {...form2.getInputProps('fullname')}
       />
@@ -302,7 +357,8 @@ const SignUp: NextPage<IProps> = ({ }) => {
         size="md"
         {...form2.getInputProps('about')}
       />
-      <TextInput
+
+      {/* <TextInput
         label="Ссылка на аватарку"
         placeholder="https://example.com/photo.jpg"
         mt={10}
@@ -315,7 +371,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
         mt={10}
         size="md"
         {...form2.getInputProps('backgroundUrl')}
-      />
+      /> */}
       <TextInput
         label="Адрес доставки"
         placeholder="Москва, ул. Ленина, д. 1"
@@ -384,7 +440,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
           marginTop: theme.spacing.md,
         })}
       >
-        <Button variant="gradient" onClick={() => handleStep("prev")}>
+        <Button variant="gradient" loading={isLoading} onClick={() => handleStep("prev")}>
           <IconChevronLeft size={18} />
         </Button>
         <Button type="submit" loading={isLoading} variant="gradient">

@@ -145,8 +145,9 @@ const Home: NextPage<Props> = (props) => {
                 <Image
                   src="/add_gifts.png"
                   alt="add gifts"
-                  width={290}
-                  height={410}
+                  width={280}
+                  height={290}
+                  quality={100}
                 />
               </Box>
             </Box>
@@ -179,8 +180,9 @@ const Home: NextPage<Props> = (props) => {
                 <Image
                   src="/give_gifts.png"
                   alt="give gifts"
-                  width={320}
-                  height={420}
+                  width={280}
+                  height={290}
+                  quality={100}
                 />
               </Box>
               <Box
@@ -262,6 +264,7 @@ const Home: NextPage<Props> = (props) => {
                   alt="delivery gifts"
                   width={280}
                   height={290}
+                  quality={100}
                 />
               </Box>
             </Box>
