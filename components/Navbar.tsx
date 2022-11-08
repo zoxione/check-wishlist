@@ -69,7 +69,7 @@ export function NavbarLink(props: NavbarLinkProps) {
     <Tooltip label={props.label} position="right" transitionDuration={0}>
       <UnstyledButton
         component="a"
-        onClick={handleClick}
+        onClick={props.onClick ? props.onClick : handleClick}
         sx={(theme) => ({
           width: 50,
           height: 50,

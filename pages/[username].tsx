@@ -292,7 +292,15 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                     </Tabs.List>
 
                     <Tabs.Panel value="wishlist" pt={16}>
-                      <Grid justify="center" align="center">
+                      <Grid
+                        sx={(theme) => ({
+                          justifyContent: 'flex-start',
+                          alignItems: 'center',
+                          [theme.fn.smallerThan('xs')]: {
+                            justifyContent: 'center'
+                          }
+                        })}
+                      >
                         {wishlist?.length === 0 ?
                           (
                             <Grid.Col span={12}>
@@ -327,7 +335,15 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                     </Tabs.Panel>
 
                     <Tabs.Panel value="gifted" pt={16}>
-                      <Grid>
+                      <Grid
+                        sx={(theme) => ({
+                          justifyContent: 'flex-start',
+                          alignItems: 'center',
+                          [theme.fn.smallerThan('xs')]: {
+                            justifyContent: 'center'
+                          }
+                        })}
+                      >
                         {gifted?.length === 0 ?
                           (
                             <Grid.Col span={12}>

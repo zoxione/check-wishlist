@@ -282,7 +282,7 @@ const Home: NextPage<Props> = (props) => {
             </Anchor>
             {' '} и {' '}
             <Anchor
-              href="https://github.com/zoxione"
+              href="https://github.com/GromSergey"
               target="_blank"
               sx={(theme) => ({
                 color: theme.fn.primaryColor(),
@@ -290,7 +290,7 @@ const Home: NextPage<Props> = (props) => {
                 fontSize: 18,
               })}
             >
-              @grom
+              @GromSergey
             </Anchor>
             {' '} в рамках проекта, 2022
           </Text>
