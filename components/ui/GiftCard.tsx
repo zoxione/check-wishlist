@@ -9,6 +9,7 @@ import { openConfirmModal } from '@mantine/modals';
 import { DeleteGift } from '../../api/Gift';
 import { showNotification } from '@mantine/notifications';
 import DeleteGiftModal from '../logics/DeleteGiftModal';
+import Link from 'next/link';
 
 const GiveGiftModal = dynamic(() => import('../logics/GiveGiftModal'), {
   ssr: false,
@@ -113,7 +114,26 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
         </Text>
 
         {
-          props.isOwner && !props.gift?.isGifted &&
+          !props.canEdit && props.isOwner && !props.gift?.isGifted &&
+          <>
+            <Box
+              mt={20}
+              sx={(theme) => ({
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: '10px',
+              })}
+            >
+              <Link href="/user" passHref>
+                <Button variant="light" radius="md" fullWidth>
+                  Изменить
+                </Button>
+              </Link>
+            </Box>
+          </>
+        }
+        {
+          props.canEdit && props.isOwner && !props.gift?.isGifted &&
           <>
             <Box
               mt={20}

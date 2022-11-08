@@ -1,8 +1,9 @@
 import { FunctionComponent } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Header, Group, Button, UnstyledButton, Divider, Box, Burger, Drawer, ScrollArea, Title, Skeleton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconGauge, IconDeviceDesktopAnalytics, IconSettings, IconLogout, IconUser, IconLayoutList } from '@tabler/icons';
+import { IconGauge, IconDeviceDesktopAnalytics, IconSettings, IconLogout, IconUser, IconLayoutList, IconPlus } from '@tabler/icons';
 import { signOut, useSession } from 'next-auth/react';
 
 import SwitchTheme from '../components/ui/SwitchTheme';
@@ -23,6 +24,11 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
     rightMenu = (
       <>
         <SwitchTheme />
+        <Link href={{ pathname: '/user', query: { activeFragment: 1 } }} passHref>
+          <Button variant="outline" leftIcon={<IconPlus size={18} />}>
+            Добавить
+          </Button>
+        </Link>
         <Link href={`${session.user?.name}`} passHref>
           <Button variant="gradient" leftIcon={<IconUser size={18} />}>
             {session.user?.name}
@@ -57,6 +63,11 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
   if (status === "authenticated") {
     rightMenuMobile = (
       <>
+        <Link href={{ pathname: '/user', query: { activeFragment: 1 } }} passHref>
+          <Button variant="outline" onClick={() => closeDrawer()} leftIcon={<IconPlus size={18} />}>
+            Добавить
+          </Button>
+        </Link>
         <Link href={`${session.user?.name}`} passHref>
           <Button variant="gradient" onClick={() => closeDrawer()} leftIcon={<IconUser size={18} />}>
             {session.user?.name}
@@ -110,14 +121,25 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
                 order={3}
                 weight={700}
                 sx={(theme) => ({
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
                   cursor: 'pointer',
                   transition: 'color 0.2s ease',
+                  letterSpacing: '1px',
                   '&:hover': {
                     color: theme.fn.primaryColor(),
                   },
                 })}
               >
-                Wishlist
+                <Image
+                  src="/wishlist.png"
+                  alt="Logo"
+                  width={30}
+                  height={30}
+                />
+                {/* <Logo /> */}
+                ishlist
               </Title>
             </Link>
           </UnstyledButton>

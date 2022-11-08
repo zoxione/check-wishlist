@@ -333,6 +333,9 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                   <IconTrash size={18} />
                 </Button>
               </Box>
+              <Text mt={10} align="justify" size="sm" color="dimmed">
+                * для изменения аватарки и обложки, нажмите на соответствующую картинку
+              </Text>
             </form>
           </Box>
         </InfoCard>

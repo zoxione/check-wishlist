@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Box, Container, Title, Text, Anchor } from '@mantine/core';
+import { Box, Container, Title, Text, Anchor, Accordion } from '@mantine/core';
 import { IconChevronsDown } from '@tabler/icons';
 
 import Search from '../components/ui/Search'
@@ -93,7 +93,7 @@ const Home: NextPage<Props> = (props) => {
             marginBottom: '80px',
           })}
         >
-          <Title mb={10} order={1}>Как это работает?</Title>
+          <Title order={1} align="center">Как это работает?</Title>
 
           <InfoCard>
             <Box
@@ -267,7 +267,52 @@ const Home: NextPage<Props> = (props) => {
             </Box>
           </InfoCard>
 
-          <Text align="center">
+
+          <Title mt={40} order={1} align="center">Часто задаваемые вопросы</Title>
+
+          <Accordion variant="separated"
+            sx={(theme) => ({
+              width: '100%',
+              '.mantine-Accordion-item': {
+                width: '100%',
+                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
+                '&:hover': {
+                  border: theme.colorScheme === 'dark' ? '1px solid #373A40' : '1px solid #DEE2E6',
+                }
+              },
+              '.mantine-Accordion-label': {
+                fontSize: 18,
+                fontWeight: 500,
+              },
+            })}
+          >
+            <Accordion.Item value="customization">
+              <Accordion.Control>Сколько это стоит?</Accordion.Control>
+              <Accordion.Panel>
+                На данный момент сервис бесплатный. Мы не взимаем комиссию за покупку подарков. Все, что мы хотим, это помочь вам собрать подарки на свой день рождения или праздник.
+              </Accordion.Panel>
+            </Accordion.Item>
+
+            <Accordion.Item value="flexibility">
+              <Accordion.Control>
+                Как я могу оплатить подарки?
+              </Accordion.Control>
+              <Accordion.Panel>
+                Вы можете оплатить подарки, купленные вашими друзьями или подписчиками, любым удобным способом. Мы не взимаем комиссию за покупку подарков.
+              </Accordion.Panel>
+            </Accordion.Item>
+
+            <Accordion.Item value="focus-ring">
+              <Accordion.Control>
+                Как я могу получить подарки?
+              </Accordion.Control>
+              <Accordion.Panel>
+                Мы отправляем подарки, купленные вашими друзьями или подписчиками, прямо на ваш адрес. Процесс заказа полностью отделен от покупки подарка вашим поклонником, чтобы обеспечить 100% конфиденциальность.
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+
+          <Text align="center" mt={60}>
             Создано {' '}
             <Anchor
               href="https://github.com/zoxione"

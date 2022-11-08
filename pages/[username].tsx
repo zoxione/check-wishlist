@@ -221,13 +221,13 @@ const Profile: NextPage<IProps> = (props: IProps) => {
               <Group position="center">
                 {
                   props.user?.isVerified === true &&
-                  <Indicator position="bottom-end" color="cyan" offset={20} size={24} zIndex={10} label={<IconCheck size={14} />}>
+                  <Indicator position="bottom-end" withBorder offset={25} size={30} zIndex={10} label={<IconCheck size={16} />}>
                     {/* <Avatar src={props.user?.imageUrl} size={120} radius={120} mx="auto" color={theme.fn.primaryColor()} /> */}
                     <Image
                       src={props.user?.imageUrl ? props.user.imageUrl : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder.png'}
                       alt="Avatar image"
-                      height={120}
-                      width={120}
+                      height={160}
+                      width={160}
                       objectFit="cover"
                       style={{ borderRadius: '50%' }}
                     />
