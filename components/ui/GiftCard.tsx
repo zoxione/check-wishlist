@@ -124,7 +124,7 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
                 gap: '10px',
               })}
             >
-              <Link href="/user" passHref>
+              <Link href={{ pathname: '/user', query: { activeFragment: 1 } }} passHref>
                 <Button variant="light" radius="md" fullWidth>
                   Изменить
                 </Button>

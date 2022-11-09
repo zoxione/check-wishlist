@@ -311,7 +311,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
         sx={(theme) => ({
           fontSize: "16px",
           fontWeight: 500,
-          color: "#212529",
+          color: theme.colorScheme === "dark" ? "#C1C2C5" : "#212529",
           marginBottom: "6px"
         })}
       >

@@ -155,7 +155,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
           <Group position="right" p={20}>
             <Link href="/user">
               <Button
-                variant="white"
+                variant="outline"
                 leftIcon={<IconPencil size={18} />}
                 sx={(theme) => ({
                   zIndex: 1,
