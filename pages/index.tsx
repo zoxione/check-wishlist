@@ -44,7 +44,6 @@ const Home: NextPage<Props> = (props) => {
             список желаний
           </Box>
           {' '} друга
-          https://capu.st/wishlist.ictis.ru
         </Title>
         <Search />
       </Container>
