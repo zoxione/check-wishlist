@@ -1,9 +1,10 @@
-import { Avatar, Paper, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Badge, useMantineTheme, Indicator, CopyButton, Loader, Center, } from '@mantine/core';
+import { Avatar, Paper, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Badge, useMantineTheme, Indicator, CopyButton, Loader, Center, Popover, Box, } from '@mantine/core';
 import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { IconX, IconUserCircle, IconPlus, IconCheck, IconMail, IconPencil, IconBrandTiktok, IconBrandTwitter, IconBrandVk, IconBrandTelegram, IconBrandInstagram } from '@tabler/icons';
 import { unstable_getServerSession } from 'next-auth';
+import QRCode from "react-qr-code";
 
 import { authOptions } from './api/auth/[...nextauth]';
 import GiftCard from '../components/ui/GiftCard';
@@ -123,13 +124,33 @@ const Profile: NextPage<IProps> = (props: IProps) => {
     )
   }
   linkList.push(
-    <CopyButton key={1} value={`https://wishlist.ictis.ru/${props.user?.username}`}>
-      {({ copied, copy }) => (
-        <Button onClick={copy} variant="outline" fullWidth leftIcon={<IconUserCircle size={18} />}>
-          {copied ? "Скопировано" : 'Ссылка на профиль'}
-        </Button>
-      )}
-    </CopyButton>
+    <Popover width={200} position="bottom" withArrow shadow="md">
+      <Popover.Target>
+        <Box sx={{ width: '100%' }}>
+          <CopyButton key={1} value={`https://wishlist.ictis.ru/${props.user?.username}`}>
+            {({ copied, copy }) => (
+              <Button onClick={copy} variant="outline" fullWidth leftIcon={<IconUserCircle size={18} />}>
+                {copied ? "Скопировано" : 'Ссылка на профиль'}
+              </Button>
+            )}
+          </CopyButton>
+        </Box>
+      </Popover.Target>
+      <Popover.Dropdown
+        sx={(theme) => ({
+          maxHeight: '300px',
+          maxWidth: '300px',
+        })}
+      >
+        <QRCode
+          value={`https://wishlist.ictis.ru/${props.user?.username}`}
+          style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+          size={256}
+          viewBox={`0 0 256 256`}
+        />
+        Отсканируйте QR-код
+      </Popover.Dropdown>
+    </Popover>
   )
   if (props.isOwner) {
     linkList.push(
