@@ -14,7 +14,16 @@ const nextConfig = {
     // NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     SUPABASE_API_URL: process.env.SUPABASE_API_URL,
     SUPABASE_API_KEY: process.env.SUPABASE_API_KEY,
-  }
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: ['@svgr/webpack'],
+    })
+
+    return config
+  },
 }
 
 module.exports = withBundleAnalyzer(nextConfig)

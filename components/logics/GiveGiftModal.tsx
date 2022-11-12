@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from "react";
 import InputMask from "react-input-mask";
-import { Box, Button, Modal, Textarea, Text, Image, Input } from "@mantine/core";
+import { Box, Button, Modal, Textarea, Text, Image, Input, Tooltip } from "@mantine/core";
 import { useForm, joiResolver } from "@mantine/form";
 import { IconX, IconCheck } from '@tabler/icons';
 import { showNotification } from "@mantine/notifications";
@@ -126,38 +126,40 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
         <Box
           sx={(theme) => ({
             display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            marginBottom: '20px'
+            flexDirection: 'column',
+            gap: '20px',
           })}
         >
-          <Box
-            sx={(theme) => ({
-              width: '50%'
-            })}
-          >
-            <Image src={props.gift?.imageUrl} alt={props.gift?.title} withPlaceholder />
-          </Box>
-          <Box
-            sx={(theme) => ({
-              width: '50%',
-              textAlign: 'center'
-            })}
-          >
-            <Text size="xl">
-              {props.gift?.title}
-            </Text>
-            <Text size="md" weight={500}>
+          <Image
+            src={props.gift?.imageUrl}
+            alt={props.gift?.title}
+            fit="contain"
+            withPlaceholder
+            height={200}
+            px={20}
+          />
+          <Box>
+            <Tooltip label={props.gift?.title} multiline transition="slide-up" transitionDuration={200}>
+              <Box
+                sx={(theme) => ({
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                })}
+              >
+                <Text>
+                  {props.gift?.title}
+                </Text>
+              </Box>
+            </Tooltip>
+            <Text weight={600}>
               {props.gift?.price} ₽
             </Text>
           </Box>
         </Box>
 
-
         <form onSubmit={form.onSubmit(() => handleSubmit())}>
-          <Input.Wrapper label="Детали карты" required>
+          <Input.Wrapper label="Детали карты" size="md" mt={10} required>
             <Input
               component={InputMask}
               mask="9999 9999 9999 9999"

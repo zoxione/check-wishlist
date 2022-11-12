@@ -37,7 +37,7 @@ export interface IGift {
   description?: string;
   shopName: string;
   shopUrl: string;
-  price: number;
+  price: float;
   imageUrl?: string;
   isGifted?: boolean;
   userId: string;

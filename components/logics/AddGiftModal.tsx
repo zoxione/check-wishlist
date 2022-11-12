@@ -1,13 +1,13 @@
 import { FunctionComponent, useState } from "react";
-import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, NativeSelect } from "@mantine/core";
+import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, NativeSelect, Input, LoadingOverlay } from "@mantine/core";
 import { useForm, joiResolver } from "@mantine/form";
-import { IconCurrencyRubel, IconX, IconCheck } from '@tabler/icons';
+import { IconCurrencyRubel, IconX, IconCheck, IconExclamationMark } from '@tabler/icons';
 import { showNotification } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
 import Joi from 'joi';
 
 import { IGift } from "../../types";
-import { AddGift } from "../../api/Gift";
+import { AddGift, ParseGift } from "../../api/Gift";
 import { timeout } from "../../pages/dev";
 
 
@@ -19,44 +19,45 @@ interface IProps {
 const AddGiftModal: FunctionComponent<IProps> = (props) => {
   const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
+  const [shopNameSelect, setShopNameSelect] = useState("");
 
   const form = useForm({
     initialValues: {
-      title: '',
+      //title: '',
       description: '',
-      shopName: 'dns',
+      //shopName: 'dns',
       shopUrl: '',
-      price: 0,
-      imageUrl: '',
+      //price: 0,
+      //imageUrl: '',
     },
 
     validate: joiResolver(
       Joi.object({
-        title: Joi.string().min(3).max(29).messages({
-          'string.base': 'Название должно быть строкой',
-          'string.empty': 'Название не может быть пустым',
-          'string.min': 'Название должно быть больше 2 символов',
-          'string.max': 'Название должно быть меньше 30 символов',
-        }),
+        // title: Joi.string().min(3).max(29).messages({
+        //   'string.base': 'Название должно быть строкой',
+        //   'string.empty': 'Название не может быть пустым',
+        //   'string.min': 'Название должно быть больше 2 символов',
+        //   'string.max': 'Название должно быть меньше 30 символов',
+        // }),
         description: Joi.string().max(79).allow('').messages({
           'string.base': 'Описание должно быть строкой',
           'string.max': 'Описание должно быть меньше 80 символов',
         }),
-        shopName: Joi.allow(''),
+        // shopName: Joi.allow(''),
         shopUrl: Joi.string().uri().messages({
           'string.base': 'Ссылка должна быть строкой',
           'string.empty': 'Ссылка не может быть пустой',
           'string.uri': 'Ссылка должна быть валидной',
         }),
-        price: Joi.number().positive().messages({
-          'number.base': 'Цена должна быть числом',
-          'number.empty': 'Цена не может быть пустой',
-          'number.positive': 'Цена должна быть больше 0',
-        }),
-        imageUrl: Joi.string().uri().allow('').messages({
-          'string.base': 'Ссылка должна быть строкой',
-          'string.uri': 'Ссылка должна быть валидной',
-        }),
+        // price: Joi.number().positive().messages({
+        //   'number.base': 'Цена должна быть числом',
+        //   'number.empty': 'Цена не может быть пустой',
+        //   'number.positive': 'Цена должна быть больше 0',
+        // }),
+        // imageUrl: Joi.string().uri().allow('').messages({
+        //   'string.base': 'Ссылка должна быть строкой',
+        //   'string.uri': 'Ссылка должна быть валидной',
+        // }),
       })
     ),
   });
@@ -64,40 +65,31 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
   const handleSubmit = async () => {
     setIsLoading(true);
 
-    // switch (form.values.shopName) {
-    //   case 'dns':
-    //     let regex = /https:\/\/www\.dns-shop\.ru\/product\/[A-Za-z0-9]+\/([A-Za-z0-9]+(-[A-Za-z0-9]+)+)\//i
-    //     let match = form.values.shopUrl.match(regex);
-
-    //     if (match) {
-    //       // парсим сайт
-    //     }
-    //     else {
-    //       showNotification({
-    //         title: 'Ошибка',
-    //         message: 'Ссылка должна быть на товар DNS',
-    //         color: 'red',
-    //         icon: <IconX stroke={1.5} size={24} />,
-    //       });
-    //       return;
-    //     }
-    //     break;
-    //   case 'regard':
-    //     break;
-    //   default:
-    //     break;
-    // }
+    showNotification({
+      title: 'Подождите',
+      message: 'Добавление подарка займет немного времени',
+      color: 'yellow',
+      icon: <IconExclamationMark stroke={1.5} size={24} />,
+    });
 
     try {
+      let parseData = await ParseGift(shopNameSelect, form.values.shopUrl);
+
+      if (!parseData) {
+        throw new Error("Не удалось получить данные с сайта");
+      }
+
       const gift: IGift = {
-        title: form.values.title,
+        title: parseData.title,
         description: form.values.description,
-        shopName: form.values.shopName,
+        shopName: shopNameSelect,
         shopUrl: form.values.shopUrl,
-        price: form.values.price,
-        imageUrl: form.values.imageUrl,
+        price: parseData.price,
+        imageUrl: parseData.imageUrl,
         userId: session?.user?.id ? session.user.id : '',
       }
+
+      console.log(gift);
 
       await AddGift(gift);
 
@@ -137,7 +129,9 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
       overlayOpacity={0.55}
       overlayBlur={3}
       overflow="inside"
-      closeOnClickOutside={true}
+      closeOnClickOutside={false}
+      closeOnEscape={false}
+      withCloseButton={isLoading ? false : true}
     >
       <Box
         sx={(theme) => ({
@@ -145,14 +139,15 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
           margin: '0 auto',
         })}
       >
+        <LoadingOverlay visible={isLoading} overlayBlur={2} />
         <form onSubmit={form.onSubmit(() => handleSubmit())}>
-          <TextInput
+          {/* <TextInput
             label="Название"
             size="md"
             required
             placeholder="Наушники"
             {...form.getInputProps('title')}
-          />
+          /> */}
           <Textarea
             label="Описание"
             size="md"
@@ -161,7 +156,41 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
             {...form.getInputProps('description')}
           />
 
+          <Input.Wrapper
+            label="Выберите магазин"
+            required
+            size="md"
+            mt={10}
+          >
+          </Input.Wrapper>
+          <Button.Group orientation="vertical">
+            <Button
+              variant="default"
+              onClick={() => { setShopNameSelect("aliexpress"); form.setValues({ shopUrl: '' }) }}
+              disabled={shopNameSelect === "aliexpress"}
+            >
+              aliexpress.ru
+            </Button>
+            <Button
+              variant="default"
+              onClick={() => { setShopNameSelect("wildberries"); form.setValues({ shopUrl: '' }) }}
+              disabled={shopNameSelect === "wildberries"}
+            >
+              wildberries.ru
+            </Button>
+          </Button.Group>
+
           <TextInput
+            label="Ссылка на товар"
+            size="md"
+            mt={10}
+            required
+            placeholder="https://www.wildberries.ru/catalog/30967922/detail.aspx?targetUrl=MI"
+            disabled={shopNameSelect !== "wildberries" && shopNameSelect !== "aliexpress"}
+            {...form.getInputProps("shopUrl")}
+          />
+
+          {/* <TextInput
             label="Ссылка"
             size="md"
             mt={10}
@@ -204,7 +233,7 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
             mt={10}
             required
             {...form.getInputProps('price')}
-          />
+          /> */}
 
           <Button type="submit" loading={isLoading} mt={20} fullWidth variant="outline">
             Добавить

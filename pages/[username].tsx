@@ -2,7 +2,7 @@ import { Avatar, Paper, Button, Title, Text, Anchor, Container, Grid, Tabs, Grou
 import { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { IconX, IconPlus, IconCheck, IconMail, IconPencil, IconBrandTiktok, IconBrandTwitter, IconBrandVk, IconBrandTelegram, IconBrandInstagram } from '@tabler/icons';
+import { IconX, IconUserCircle, IconPlus, IconCheck, IconMail, IconPencil, IconBrandTiktok, IconBrandTwitter, IconBrandVk, IconBrandTelegram, IconBrandInstagram } from '@tabler/icons';
 import { unstable_getServerSession } from 'next-auth';
 
 import { authOptions } from './api/auth/[...nextauth]';
@@ -122,6 +122,15 @@ const Profile: NextPage<IProps> = (props: IProps) => {
       </Button>
     )
   }
+  linkList.push(
+    <CopyButton key={1} value={`https://wishlist.ictis.ru/${props.user?.username}`}>
+      {({ copied, copy }) => (
+        <Button onClick={copy} variant="outline" fullWidth leftIcon={<IconUserCircle size={18} />}>
+          {copied ? "Скопировано" : 'Ссылка на профиль'}
+        </Button>
+      )}
+    </CopyButton>
+  )
   if (props.isOwner) {
     linkList.push(
       <Link key={7} href={`/user`} passHref>
@@ -144,10 +153,6 @@ const Profile: NextPage<IProps> = (props: IProps) => {
           maxWidth: '100vw',
           padding: '0',
           margin: '0',
-          // backgroundSize: 'cover',
-          // backgroundPosition: 'center',
-          // backgroundImage: `url(${props.user?.backgroundUrl ? props.user.backgroundUrl : ''})`,
-          // backgroundColor: props.user?.backgroundUrl ? '' : theme.colors.gray[4],
         })}
       >
         {
@@ -155,7 +160,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
           <Group position="right" p={20}>
             <Link href="/user">
               <Button
-                variant="outline"
+                variant="default"
                 leftIcon={<IconPencil size={18} />}
                 sx={(theme) => ({
                   zIndex: 1,
@@ -170,34 +175,11 @@ const Profile: NextPage<IProps> = (props: IProps) => {
           src={props.user?.backgroundUrl ? props.user.backgroundUrl : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder.png'}
           alt="Background image"
           layout="fill"
+          priority={true}
           objectFit="cover"
           style={{ zIndex: -100 }}
         />
       </Container>
-
-      {/* <Container
-        sx={(theme) => ({
-          height: '210px',
-          maxWidth: '100vw',
-          padding: '0',
-          margin: '0',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundImage: `url(${props.user?.backgroundUrl ? props.user?.backgroundUrl : ''})`,
-          backgroundColor: props.user?.backgroundUrl ? '' : theme.colors.gray[4],
-        })}
-      >
-        {
-          props.isOwner &&
-          <Group position="right" p={20}>
-            <Link href="/user">
-              <Button variant="white" leftIcon={<IconPencil size={18} />}>
-                Изменить
-              </Button>
-            </Link>
-          </Group>
-        }
-      </Container> */}
 
       <Container
         sx={(theme) => ({
@@ -228,6 +210,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                       alt="Avatar image"
                       height={160}
                       width={160}
+                      priority={true}
                       objectFit="cover"
                       style={{ borderRadius: '50%' }}
                     />
@@ -238,8 +221,9 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                   <Image
                     src={props.user?.imageUrl}
                     alt="Avatar image"
-                    height={120}
-                    width={120}
+                    height={160}
+                    width={160}
+                    priority={true}
                     objectFit="cover"
                     style={{ borderRadius: '50%' }}
                   />

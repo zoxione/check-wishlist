@@ -110,7 +110,6 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                                     sx={(theme) => ({
                                       display: 'flex',
                                       alignItems: 'center',
-                                      justifyContent: 'space-between',
                                       gap: '10px',
                                       marginTop: 5,
                                       [theme.fn.smallerThan('sm')]: {
@@ -147,12 +146,17 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                                     : (
                                       <Checkbox
                                         defaultChecked={item.isCompleted}
+                                        label="Выполнен"
+                                        ml="auto"
+                                        sx={(theme) => ({
+                                          '.mantine-Checkbox-input': {
+                                            cursor: 'pointer',
+                                          }
+                                        })}
                                         onChange={(event) => {
                                           CompleteTransaction(item.id);
                                           Router.reload()
                                         }}
-                                        label="Выполнен"
-                                        ml="auto"
                                       />
                                     )
                                 }

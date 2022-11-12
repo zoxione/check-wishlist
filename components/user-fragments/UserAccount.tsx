@@ -205,6 +205,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
             src={backgrounds[0] ? URL.createObjectURL(backgrounds[0]) : props.user?.backgroundUrl}
             alt="Background image"
             layout="fill"
+            priority={true}
             objectFit="cover"
           />
         </Container>
@@ -240,6 +241,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                     src={avatars[0] ? URL.createObjectURL(avatars[0]) : props.user?.imageUrl}
                     alt="Avatar image"
                     layout="fill"
+                    priority={true}
                     objectFit="cover"
                     style={{ borderRadius: '50%' }}
                   />

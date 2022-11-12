@@ -1,6 +1,5 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Header, Group, Button, UnstyledButton, Divider, Box, Burger, Drawer, ScrollArea, Title, Skeleton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconGauge, IconDeviceDesktopAnalytics, IconSettings, IconLogout, IconUser, IconLayoutList, IconPlus } from '@tabler/icons';
@@ -8,7 +7,7 @@ import { signOut, useSession } from 'next-auth/react';
 
 import SwitchTheme from '../components/ui/SwitchTheme';
 import { HeaderLink } from './ui/HeaderLink';
-
+import Logo from '../public/favicon.svg';
 
 interface IProps {
 
@@ -20,6 +19,8 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
 
   let rightMenu;
+  let rightMenuMobile;
+
   if (status === "authenticated") {
     rightMenu = (
       <>
@@ -59,7 +60,6 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
     )
   }
 
-  let rightMenuMobile;
   if (status === "authenticated") {
     rightMenuMobile = (
       <>
@@ -95,6 +95,7 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
       </>
     )
   }
+
 
   return (
     <Box>
@@ -132,13 +133,7 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
                   },
                 })}
               >
-                <Image
-                  src="/wishlist.png"
-                  alt="Logo"
-                  width={30}
-                  height={30}
-                />
-                {/* <Logo /> */}
+                <Logo />
                 ishlist
               </Title>
             </Link>
@@ -222,9 +217,6 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
                   marginTop: '40px',
                 })}
               >
-
-                {/* <NavbarLink icon={IconUser} label="Аккаунт" activeFragment={0} active={props.activeFragment == 0} /> */}
-
                 <HeaderLink icon={IconUser} label='Аккаунт' href={'/user'} activeFragment={0} onClick={() => closeDrawer()} />
                 <HeaderLink icon={IconLayoutList} label='Список желаний' href={'/user'} activeFragment={1} onClick={() => closeDrawer()} />
                 <HeaderLink icon={IconGauge} label='Приборная панель' href={'/user'} activeFragment={2} onClick={() => closeDrawer()} />

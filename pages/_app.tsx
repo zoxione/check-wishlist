@@ -70,22 +70,20 @@ const App = ({ Component, pageProps }: AppProps<{ session: Session }>) => {
   appTheme.colorScheme = colorScheme;
 
   return (
-    <>
-      <SessionProvider session={pageProps.session}>
-        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-          <MantineProvider theme={appTheme} withGlobalStyles withNormalizeCSS>
-            <ModalsProvider>
-              <NotificationsProvider>
-                <Layout>
-                  <RouterTransition />
-                  <Component {...pageProps} />
-                </Layout>
-              </NotificationsProvider>
-            </ModalsProvider>
-          </MantineProvider>
-        </ColorSchemeProvider>
-      </SessionProvider>
-    </>
+    <SessionProvider session={pageProps.session}>
+      <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+        <MantineProvider theme={appTheme} withGlobalStyles withNormalizeCSS>
+          <ModalsProvider>
+            <NotificationsProvider limit={5}>
+              <Layout>
+                <RouterTransition />
+                <Component {...pageProps} />
+              </Layout>
+            </NotificationsProvider>
+          </ModalsProvider>
+        </MantineProvider>
+      </ColorSchemeProvider>
+    </SessionProvider>
   )
 }
 

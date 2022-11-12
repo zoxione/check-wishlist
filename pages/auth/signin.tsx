@@ -49,7 +49,7 @@ const SignIn: NextPage<IProps> = (props) => {
     const res = await signIn('credentials', {
       email: form.values.email,
       password: form.values.password,
-      redirect: false,
+      redirect: true,
       callbackUrl: "/"
     });
     console.log(res);
@@ -69,7 +69,6 @@ const SignIn: NextPage<IProps> = (props) => {
         color: 'teal',
         icon: <IconCheck stroke={1.5} size={24} />,
       });
-      Router.push("/");
     }
 
     setIsLoading(false);

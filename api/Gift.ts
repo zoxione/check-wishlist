@@ -54,6 +54,18 @@ export const GetGifts = async (userId: string) => {
   });
 }
 
+export const ParseGift = async (shopName: string, shopUrl: string) => {
+  const parseResponse = await fetch(`https://fastapi-parser.herokuapp.com/${shopName}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ shopUrl: shopUrl }),
+  }).then(res => res.json());
+
+  return parseResponse;
+}
+
 export const AddGift = async (gift: IGift) => {
   await fetch('https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift', {
     method: 'POST',
