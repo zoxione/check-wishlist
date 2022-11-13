@@ -1,4 +1,5 @@
 import { Anchor, Badge, Box, Button, Center, Container, CopyButton, Grid, Group, Indicator, Loader, Paper, Popover, Tabs, Text, Title, useMantineTheme } from '@mantine/core';
+import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';
 import { IconBrandInstagram, IconBrandTelegram, IconBrandTiktok, IconBrandTwitter, IconBrandVk, IconCheck, IconMail, IconPencil, IconPlus, IconUserCircle } from '@tabler/icons';
 import { GetServerSideProps, NextPage } from 'next';
 import { unstable_getServerSession } from 'next-auth';
@@ -75,6 +76,47 @@ const Profile: NextPage<IProps> = (props: IProps) => {
   const wishlist: IGift[] = gifts?.filter((gift) => !gift.isGifted)
   const gifted: IGift[] = gifts?.filter((gift) => gift.isGifted)
 
+  const showQrCodeModal = () =>
+    openModal({
+      title: (
+        <Text size="xl" weight={500}>
+          Поделиться профилем
+        </Text>
+      ),
+      centered: true,
+      children: (
+        <Box
+          sx={(theme) => ({
+            display: 'flex',
+            flexDirection: 'column',
+          })}
+        >
+          <Text>
+            Скопируйте ссылку на профиль
+          </Text>
+          <CopyButton value={`https://wishlist.ictis.ru/${props.user?.username}`}>
+            {({ copied, copy }) => (
+              <Button onClick={copy} variant="default" fullWidth leftIcon={<IconUserCircle size={18} />}>
+                {copied ? "Скопировано" : `https://wishlist.ictis.ru/${props.user?.username}`}
+              </Button>
+            )}
+          </CopyButton>
+          <Text mt={10}>
+            Или отсканируйте QR-код
+          </Text>
+          <QRCode
+            value={`https://wishlist.ictis.ru/${props.user?.username}`}
+            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+            size={256}
+            viewBox={`0 0 256 256`}
+          />
+          <Button mt={10} fullWidth onClick={() => closeAllModals()}>
+            Закрыть
+          </Button>
+        </Box>
+      ),
+    });
+
   let linkList = [
     <CopyButton key={1} value={props.user?.email ? props.user?.email : ''}>
       {({ copied, copy }) => (
@@ -121,33 +163,9 @@ const Profile: NextPage<IProps> = (props: IProps) => {
     )
   }
   linkList.push(
-    <Popover key={7} width={200} position="bottom" withArrow shadow="md">
-      <Popover.Target>
-        <Box sx={{ width: '100%' }}>
-          <CopyButton value={`https://wishlist.ictis.ru/${props.user?.username}`}>
-            {({ copied, copy }) => (
-              <Button onClick={copy} variant="outline" fullWidth leftIcon={<IconUserCircle size={18} />}>
-                {copied ? "Скопировано" : 'Ссылка на профиль'}
-              </Button>
-            )}
-          </CopyButton>
-        </Box>
-      </Popover.Target>
-      <Popover.Dropdown
-        sx={(theme) => ({
-          maxHeight: '300px',
-          maxWidth: '300px',
-        })}
-      >
-        <QRCode
-          value={`https://wishlist.ictis.ru/${props.user?.username}`}
-          style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-          size={256}
-          viewBox={`0 0 256 256`}
-        />
-        Отсканируйте QR-код
-      </Popover.Dropdown>
-    </Popover>
+    <Button key={7} onClick={() => showQrCodeModal()} variant="light" fullWidth leftIcon={<IconUserCircle size={18} />}>
+      Ссылка на профиль
+    </Button>
   )
   if (props.isOwner) {
     linkList.push(

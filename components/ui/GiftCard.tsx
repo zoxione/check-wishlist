@@ -75,7 +75,6 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
           width='100%'
           height='100%'
           layout='responsive'
-          priority={true}
         />
       </Card.Section>
 
