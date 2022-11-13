@@ -1,19 +1,18 @@
-import { useEffect, useState } from 'react';
+import { Anchor, Box, Title } from '@mantine/core';
+import { IconDeviceDesktopAnalytics, IconGauge, IconHome2, IconLayoutList, IconSettings, IconUser } from '@tabler/icons';
 import { GetServerSideProps, NextPage } from 'next';
-import Router, { useRouter } from 'next/router'
-import { signOut, useSession } from 'next-auth/react';
 import { unstable_getServerSession } from 'next-auth';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Title, Anchor, Box } from '@mantine/core';
-import { IconHome2, IconGauge, IconDeviceDesktopAnalytics, IconUser, IconSettings, IconLogout, IconLayoutList } from '@tabler/icons';
-import AppHead from '../../components/logics/Head';
+import { useSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import Router from 'next/router';
+import { useEffect } from 'react';
+import AppHead from '../../components/logics/Head';
 
-import { authOptions } from '../api/auth/[...nextauth]';
-import { IGift, ITransaction, IUser } from '../../types';
 import { GetUserFromId } from '../../api/User';
 import NavbarContent from '../../components/Navbar';
+import { IGift, ITransaction, IUser } from '../../types';
+import { authOptions } from '../api/auth/[...nextauth]';
 const UserAccount = dynamic(() => import('../../components/user-fragments/UserAccount'))
 const UserDashboard = dynamic(() => import('../../components/user-fragments/UserDashboard'))
 const UserAnalytics = dynamic(() => import('../../components/user-fragments/UserAnalytics'))
@@ -51,7 +50,6 @@ interface IProps {
 
 const User: NextPage<IProps> = (props: IProps) => {
   const { data: session, status } = useSession();
-  console.log(props)
 
   const NavbarLinkList = [
     { label: "Мой профиль", icon: IconHome2, href: props.user?.username },

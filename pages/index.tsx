@@ -1,13 +1,13 @@
-import type { NextPage } from 'next'
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Box, Container, Title, Text, Anchor, Accordion } from '@mantine/core';
+import { Accordion, Anchor, Box, Container, Text, Title } from '@mantine/core';
 import { IconChevronsDown } from '@tabler/icons';
+import type { NextPage } from 'next';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import Search from '../components/ui/Search'
 import AppHead from '../components/logics/Head';
 import InfoCard from '../components/ui/InfoCard';
+import Search from '../components/ui/Search';
 
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 
 const Home: NextPage<Props> = (props) => {
   const { status, data } = useSession();
-  console.log(status, data)
+  //console.log(status, data)
 
   return (
     <>

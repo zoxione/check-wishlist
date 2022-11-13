@@ -1,21 +1,11 @@
-import { FunctionComponent, useState } from 'react';
-import { Navbar, Center, Tooltip, UnstyledButton, createStyles, Stack } from '@mantine/core';
+import { createStyles, Navbar, Stack, Tooltip, UnstyledButton } from '@mantine/core';
 import {
-  TablerIcon,
-  IconHome2,
-  IconGauge,
   IconDeviceDesktopAnalytics,
-  IconFingerprint,
-  IconCalendarStats,
-  IconUser,
-  IconSettings,
-  IconLogout,
-  IconSwitchHorizontal,
-  IconLayoutList
+  IconFingerprint, IconGauge, IconHome2, IconLayoutList, IconLogout, IconSettings, IconUser, TablerIcon
 } from '@tabler/icons';
-import Link from 'next/link';
 import { signOut } from 'next-auth/react';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
+import { FunctionComponent } from 'react';
 
 const useStyles = createStyles((theme) => ({
   active: {

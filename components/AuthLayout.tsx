@@ -1,5 +1,5 @@
-import React, { FunctionComponent, ReactNode } from 'react'
 import { Box, Paper } from '@mantine/core';
+import { FunctionComponent, ReactNode } from 'react';
 
 
 interface IProps {

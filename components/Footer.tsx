@@ -1,8 +1,6 @@
+import { Box, Footer, Text } from '@mantine/core';
 import Link from 'next/link';
-import React, { FunctionComponent } from 'react'
-import { NextPage } from 'next';
-import { createStyles, Container, Group, ActionIcon, Footer, Box, Text } from '@mantine/core';
-import { IconBrandTwitter, IconCode, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons';
+import { FunctionComponent } from 'react';
 
 interface IProps {
 

@@ -1,4 +1,4 @@
-import { Image, Container, Title, Text, Button, SimpleGrid, Box } from '@mantine/core';
+import { Box, Button, Container, Image, SimpleGrid, Text, Title } from '@mantine/core';
 import { NextPage } from 'next';
 import Link from 'next/link';
 import AppHead from '../components/logics/Head';

@@ -1,14 +1,13 @@
-import { FunctionComponent, useState } from "react";
-import { Box, Button, Modal, NumberInput, Textarea, TextInput, Text, NativeSelect, Input, LoadingOverlay } from "@mantine/core";
-import { useForm, joiResolver } from "@mantine/form";
-import { IconCurrencyRubel, IconX, IconCheck, IconExclamationMark } from '@tabler/icons';
+import { Box, Button, Input, LoadingOverlay, Modal, Text, Textarea, TextInput } from "@mantine/core";
+import { joiResolver, useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import { useSession } from "next-auth/react";
+import { IconCheck, IconExclamationMark, IconX } from '@tabler/icons';
 import Joi from 'joi';
+import { useSession } from "next-auth/react";
+import { FunctionComponent, useState } from "react";
 
-import { IGift } from "../../types";
 import { AddGift, ParseGift } from "../../api/Gift";
-import { timeout } from "../../pages/dev";
+import { IGift } from "../../types";
 
 
 interface IProps {
@@ -88,8 +87,6 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
         imageUrl: parseData.imageUrl,
         userId: session?.user?.id ? session.user.id : '',
       }
-
-      console.log(gift);
 
       await AddGift(gift);
 

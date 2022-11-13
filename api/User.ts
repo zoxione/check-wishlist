@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import useSWR from 'swr';
 import { IUser } from "../types";
 
 export const fetcher = (url: RequestInfo | URL) => fetch(url, {
@@ -120,7 +120,7 @@ export const DeleteUser = async (id: string) => {
     },
   }).then((res) => {
     if (res.ok) {
-      console.log(res.json())
+      console.log("User transactions deleted");
     }
     else {
       throw new Error("Error deleting transactions");
@@ -137,7 +137,7 @@ export const DeleteUser = async (id: string) => {
     },
   }).then((res) => {
     if (res.ok) {
-      console.log(res.json())
+      console.log("Transactions deleted");
     }
     else {
       throw new Error("Error deleting transactions");

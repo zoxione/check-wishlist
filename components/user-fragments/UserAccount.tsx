@@ -1,19 +1,18 @@
-import React, { FunctionComponent } from 'react'
-import { useRouter } from 'next/router';
-import Joi from 'joi';
-import { Textarea, Container, Box, Button, PasswordInput, Avatar, TextInput, useMantineTheme, Center, Text, SimpleGrid } from '@mantine/core';
-import { IconCheck, IconX, IconTrash } from '@tabler/icons';
-import { useForm, joiResolver } from '@mantine/form';
-import { useState } from 'react';
-import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
+import { Box, Button, Center, Container, Text, Textarea, TextInput, useMantineTheme } from '@mantine/core';
+import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { joiResolver, useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
-import Image from 'next/image'
+import { IconCheck, IconTrash, IconX } from '@tabler/icons';
+import Joi from 'joi';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { FunctionComponent, useState } from 'react';
 
-import UserFragmentLayout from './UserFragmentLayout';
-import InfoCard from '../ui/InfoCard';
-import { IUser } from '../../types';
-import { UpdateUser } from '../../api/User';
 import { storageClient } from '../../api';
+import { UpdateUser } from '../../api/User';
+import { IUser } from '../../types';
+import InfoCard from '../ui/InfoCard';
+import UserFragmentLayout from './UserFragmentLayout';
 
 interface IProps {
   user: IUser;

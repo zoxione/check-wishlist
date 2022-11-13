@@ -1,23 +1,21 @@
-import { Box, Button, Divider, PasswordInput, Text } from '@mantine/core';
-import { FunctionComponent, useState } from 'react'
-
-import InfoCard from '../ui/InfoCard';
-import UserFragmentLayout from './UserFragmentLayout';
-import SettingsSection from '../ui/SettingsSection';
+import { Box, Button, Divider, Text } from '@mantine/core';
 import { openConfirmModal } from '@mantine/modals';
-import { DeleteUser, UpdateUser } from '../../api/User';
-import { signOut, useSession } from 'next-auth/react';
-import { IUser } from '../../types';
 import { showNotification } from '@mantine/notifications';
-import router from 'next/router';
-import { IconCheck, IconX, IconTrash } from '@tabler/icons';
-import { DeleteGiftedGifts, DeleteWishlistGifts } from '../../api/Gift';
+import { IconCheck, IconX } from '@tabler/icons';
+import { signOut, useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 import Router from 'next/router';
+import { FunctionComponent, useState } from 'react';
 
-import ChangePasswordModal from '../logics/ChangePasswordModal';
-import ChangePersonalDataModal from '../logics/ChangePersonalDataModal';
-import ChangeEmailModal from '../logics/ChangeEmailModal';
-
+import { DeleteGiftedGifts, DeleteWishlistGifts } from '../../api/Gift';
+import { DeleteUser } from '../../api/User';
+import { IUser } from '../../types';
+import InfoCard from '../ui/InfoCard';
+import SettingsSection from '../ui/SettingsSection';
+import UserFragmentLayout from './UserFragmentLayout';
+const ChangeEmailModal = dynamic(() => import('../logics/ChangeEmailModal'), { ssr: false });
+const ChangePasswordModal = dynamic(() => import('../logics/ChangePasswordModal'), { ssr: false });
+const ChangePersonalDataModal = dynamic(() => import('../logics/ChangePersonalDataModal'), { ssr: false });
 
 interface IProps {
   user: IUser

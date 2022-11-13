@@ -1,6 +1,4 @@
-import useSWR from 'swr'
-import { supabaseClient } from '.';
-import { ITransaction } from "../types";
+import useSWR from 'swr';
 import { fetcher } from './User';
 
 // хук для получения списка транзакций

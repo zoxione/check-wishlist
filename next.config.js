@@ -7,7 +7,13 @@ const nextConfig = {
   // reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['i.imgur.com', 'cserfwfqoxxsyqezqezy.supabase.co'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+    //domains: ['i.imgur.com', 'cserfwfqoxxsyqezqezy.supabase.co', 'ae04.alicdn.com', 'basket-02.wb.ru'],
   },
   env: {
     // NEXTAUTH_URL: process.env.NEXTAUTH_URL,

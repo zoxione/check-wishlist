@@ -1,5 +1,5 @@
-import { GetStaticProps, NextApiHandler } from 'next';
-import NextAuth, { DefaultUser, NextAuthOptions, User } from "next-auth"
+import { NextApiHandler } from 'next';
+import NextAuth, { DefaultUser, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, authOptions);

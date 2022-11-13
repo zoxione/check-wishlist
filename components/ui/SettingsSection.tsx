@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@mantine/core"
+import { Box, Text } from "@mantine/core"
 import { FunctionComponent } from "react"
 
 interface IProps {

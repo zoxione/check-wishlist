@@ -1,12 +1,12 @@
-import Joi from 'joi';
-import { useForm, joiResolver } from '@mantine/form';
-import { FunctionComponent, useState } from 'react';
 import { Box, Button, Modal, PasswordInput, Text } from '@mantine/core';
-import { IconX, IconCheck } from '@tabler/icons';
-import { IUser } from '../../types';
-import { UpdateUser } from '../../api/User';
+import { joiResolver, useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons';
+import Joi from 'joi';
+import { FunctionComponent, useState } from 'react';
 
+import { UpdateUser } from '../../api/User';
+import { IUser } from '../../types';
 
 interface IProps {
   opened: boolean;

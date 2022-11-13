@@ -1,5 +1,5 @@
-import { Switch, Group, useMantineTheme, useMantineColorScheme } from '@mantine/core';
-import { IconSun, IconMoonStars } from '@tabler/icons';
+import { Group, Switch, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { IconMoonStars, IconSun } from '@tabler/icons';
 import { FunctionComponent } from 'react';
 
 interface IProps {

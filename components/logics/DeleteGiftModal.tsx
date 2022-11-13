@@ -1,14 +1,11 @@
-import { FunctionComponent, useState } from "react";
-import InputMask from "react-input-mask";
-import { Box, Button, Modal, Textarea, Text, Image, Input, NumberInput, TextInput, NativeSelect } from "@mantine/core";
-import { useForm, joiResolver } from "@mantine/form";
-import { IconX, IconCheck, IconCurrencyRubel } from '@tabler/icons';
+import { Box, Button, Modal, Text } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
+import { IconCheck, IconX } from '@tabler/icons';
 import { useSession } from "next-auth/react";
-import Joi from 'joi';
+import { FunctionComponent, useState } from "react";
 
-import { IGift, ITransaction } from "../../types";
-import { DeleteGift, GiveGift, UpdateGift } from "../../api/Gift";
+import { DeleteGift } from "../../api/Gift";
+import { IGift } from "../../types";
 
 
 interface IProps {

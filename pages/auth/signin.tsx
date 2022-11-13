@@ -1,15 +1,14 @@
-import { NextPage } from 'next';
-import Link from 'next/link';
-import { signIn } from 'next-auth/react';
-import Router from 'next/router';
-import { useForm, joiResolver } from '@mantine/form';
-import { IconX, IconCheck } from '@tabler/icons';
-import { Paper, TextInput, PasswordInput, Button, Title, Text, Anchor, Box, } from '@mantine/core';
+import { Anchor, Button, PasswordInput, Text, TextInput, Title } from '@mantine/core';
+import { joiResolver, useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons';
 import Joi from 'joi';
-import AppHead from '../../components/logics/Head';
-import AuthLayout from '../../components/AuthLayout';
+import { NextPage } from 'next';
+import { signIn } from 'next-auth/react';
+import Link from 'next/link';
 import { useState } from 'react';
+import AuthLayout from '../../components/AuthLayout';
+import AppHead from '../../components/logics/Head';
 
 
 interface IProps {
@@ -52,7 +51,6 @@ const SignIn: NextPage<IProps> = (props) => {
       redirect: true,
       callbackUrl: "/"
     });
-    console.log(res);
 
     if (res?.ok == false) {
       showNotification({

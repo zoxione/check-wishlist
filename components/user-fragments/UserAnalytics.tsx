@@ -1,5 +1,4 @@
-import { Title } from '@mantine/core';
-import { FunctionComponent } from 'react'
+import { FunctionComponent } from 'react';
 
 import InfoCard from '../ui/InfoCard';
 import UserFragmentLayout from './UserFragmentLayout';

@@ -1,11 +1,9 @@
-// components/RouterTransition.tsx
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import {
-  startNavigationProgress,
   completeNavigationProgress,
-  NavigationProgress,
+  NavigationProgress, startNavigationProgress
 } from '@mantine/nprogress';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export function RouterTransition() {
   const router = useRouter();

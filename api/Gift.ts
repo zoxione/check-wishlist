@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import useSWR from 'swr';
 import { IGift, ITransaction } from "../types";
 import { fetcher } from './User';
 
@@ -175,7 +175,7 @@ export const DeleteWishlistGifts = async (userId: string) => {
     },
   }).then((res) => {
     if (res.ok) {
-      console.log(res.json())
+      console.log("Deleted wishlist gifts");
     }
     else {
       throw new Error("Error deleting gifts");
@@ -196,7 +196,7 @@ export const DeleteGiftedGifts = async (userId: string) => {
     },
   }).then((res) => {
     if (res.ok) {
-      console.log(res.json())
+      console.log("Gifts deleted")
     }
     else {
       throw new Error("Error deleting transactions");
@@ -213,7 +213,7 @@ export const DeleteGiftedGifts = async (userId: string) => {
     },
   }).then((res) => {
     if (res.ok) {
-      console.log(res.json())
+      console.log("Gifts deleted")
     }
     else {
       throw new Error("Error deleting gift");

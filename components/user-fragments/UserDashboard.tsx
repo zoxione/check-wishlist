@@ -1,16 +1,14 @@
-import { FunctionComponent, useEffect } from 'react'
-import Router from "next/router";
-import { Anchor, Box, Checkbox, Skeleton } from '@mantine/core';
-import { Text } from '@mantine/core';
+import { Anchor, Box, Checkbox, Skeleton, Text } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { IconGripVertical, IconArrowNarrowRight } from '@tabler/icons';
+import { IconArrowNarrowRight, IconGripVertical } from '@tabler/icons';
+import Router from "next/router";
+import { FunctionComponent, useEffect } from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
-import UserFragmentLayout from './UserFragmentLayout';
-import InfoCard from '../ui/InfoCard';
-import { useTransactions } from '../../api/Transaction';
-import { CompleteTransaction } from '../../api/Transaction';
 import Link from 'next/link';
+import { CompleteTransaction, useTransactions } from '../../api/Transaction';
+import InfoCard from '../ui/InfoCard';
+import UserFragmentLayout from './UserFragmentLayout';
 
 
 interface IProps {
@@ -19,7 +17,6 @@ interface IProps {
 
 const UserDashboard: FunctionComponent<IProps> = (props) => {
   const { transactions, isLoading } = useTransactions();
-  console.log(transactions);
 
   const [state, handlers] = useListState(transactions);
 

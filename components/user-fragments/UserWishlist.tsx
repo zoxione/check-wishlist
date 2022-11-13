@@ -1,20 +1,16 @@
 import { Box, Button, Center, Grid, Loader, useMantineTheme } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
+import { IconCheck, IconTextPlus, IconX } from '@tabler/icons';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, useState } from 'react';
+
 import { AddGift, DeleteGift, useGifts } from '../../api/Gift';
 import { IGift, IUser } from '../../types';
 import GiftCard from '../ui/GiftCard';
-import { IconCheck, IconX, IconTextPlus } from '@tabler/icons';
-
 import InfoCard from '../ui/InfoCard';
 import UserFragmentLayout from './UserFragmentLayout';
-import { timeout } from '../../pages/dev';
-
-const AddGiftModal = dynamic(() => import('../logics/AddGiftModal'), {
-  ssr: false,
-});
+const AddGiftModal = dynamic(() => import('../logics/AddGiftModal'), { ssr: false });
 
 interface IProps {
   user: IUser;

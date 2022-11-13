@@ -1,17 +1,17 @@
-import { Avatar, Paper, Button, Title, Text, Anchor, Container, Grid, Tabs, Group, Badge, useMantineTheme, Indicator, CopyButton, Loader, Center, Popover, Box, } from '@mantine/core';
+import { Anchor, Badge, Box, Button, Center, Container, CopyButton, Grid, Group, Indicator, Loader, Paper, Popover, Tabs, Text, Title, useMantineTheme } from '@mantine/core';
+import { IconBrandInstagram, IconBrandTelegram, IconBrandTiktok, IconBrandTwitter, IconBrandVk, IconCheck, IconMail, IconPencil, IconPlus, IconUserCircle } from '@tabler/icons';
 import { GetServerSideProps, NextPage } from 'next';
+import { unstable_getServerSession } from 'next-auth';
 import Image from 'next/image';
 import Link from 'next/link';
-import { IconX, IconUserCircle, IconPlus, IconCheck, IconMail, IconPencil, IconBrandTiktok, IconBrandTwitter, IconBrandVk, IconBrandTelegram, IconBrandInstagram } from '@tabler/icons';
-import { unstable_getServerSession } from 'next-auth';
 import QRCode from "react-qr-code";
 
-import { authOptions } from './api/auth/[...nextauth]';
-import GiftCard from '../components/ui/GiftCard';
-import { IGift, IUser } from '../types';
 import { useGifts } from '../api/Gift';
 import { GetUserFromUsername } from '../api/User';
 import AppHead from '../components/logics/Head';
+import GiftCard from '../components/ui/GiftCard';
+import { IGift, IUser } from '../types';
+import { authOptions } from './api/auth/[...nextauth]';
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
@@ -75,9 +75,6 @@ const Profile: NextPage<IProps> = (props: IProps) => {
   const wishlist: IGift[] = gifts?.filter((gift) => !gift.isGifted)
   const gifted: IGift[] = gifts?.filter((gift) => gift.isGifted)
 
-  console.log(props)
-  console.log(gifts)
-
   let linkList = [
     <CopyButton key={1} value={props.user?.email ? props.user?.email : ''}>
       {({ copied, copy }) => (
@@ -124,10 +121,10 @@ const Profile: NextPage<IProps> = (props: IProps) => {
     )
   }
   linkList.push(
-    <Popover width={200} position="bottom" withArrow shadow="md">
+    <Popover key={7} width={200} position="bottom" withArrow shadow="md">
       <Popover.Target>
         <Box sx={{ width: '100%' }}>
-          <CopyButton key={1} value={`https://wishlist.ictis.ru/${props.user?.username}`}>
+          <CopyButton value={`https://wishlist.ictis.ru/${props.user?.username}`}>
             {({ copied, copy }) => (
               <Button onClick={copy} variant="outline" fullWidth leftIcon={<IconUserCircle size={18} />}>
                 {copied ? "Скопировано" : 'Ссылка на профиль'}
@@ -154,7 +151,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
   )
   if (props.isOwner) {
     linkList.push(
-      <Link key={7} href={`/user`} passHref>
+      <Link key={8} href={`/user`} passHref>
         <Button variant="outline" component='a' fullWidth leftIcon={<IconPencil size={18} />}>
           Изменить профиль
         </Button>

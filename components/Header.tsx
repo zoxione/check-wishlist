@@ -1,13 +1,13 @@
-import { FunctionComponent, useEffect } from 'react';
-import Link from 'next/link';
-import { Header, Group, Button, UnstyledButton, Divider, Box, Burger, Drawer, ScrollArea, Title, Skeleton } from '@mantine/core';
+import { Box, Burger, Button, Divider, Drawer, Group, Header, ScrollArea, Skeleton, Title, UnstyledButton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconGauge, IconDeviceDesktopAnalytics, IconSettings, IconLogout, IconUser, IconLayoutList, IconPlus } from '@tabler/icons';
+import { IconDeviceDesktopAnalytics, IconGauge, IconLayoutList, IconLogout, IconPlus, IconSettings, IconUser } from '@tabler/icons';
 import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { FunctionComponent } from 'react';
 
 import SwitchTheme from '../components/ui/SwitchTheme';
-import { HeaderLink } from './ui/HeaderLink';
 import Logo from '../public/favicon.svg';
+import { HeaderLink } from './ui/HeaderLink';
 
 interface IProps {
 

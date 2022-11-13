@@ -1,5 +1,5 @@
-import { FunctionComponent } from 'react'
 import { Container } from '@mantine/core';
+import { FunctionComponent } from 'react';
 
 
 interface IProps {

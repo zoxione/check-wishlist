@@ -1,11 +1,11 @@
-import '../styles/globals.css'
-import { AppProps } from 'next/app';
-import { Session } from "next-auth";
-import { SessionProvider } from 'next-auth/react'
-import { MantineProvider, ColorSchemeProvider, ColorScheme, MantineThemeOverride, ButtonStylesParams } from '@mantine/core';
+import { ButtonStylesParams, ColorScheme, ColorSchemeProvider, MantineProvider, MantineThemeOverride } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
-import { NotificationsProvider } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
+import { NotificationsProvider } from '@mantine/notifications';
+import { Session } from "next-auth";
+import { SessionProvider } from 'next-auth/react';
+import { AppProps } from 'next/app';
+import '../styles/globals.css';
 
 import Layout from '../components/Layout';
 import { RouterTransition } from '../components/logics/RouterTransition';

@@ -1,14 +1,14 @@
+import { Box, Button, Image, Input, Modal, Text, Textarea, Tooltip } from "@mantine/core";
+import { joiResolver, useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+import { IconCheck, IconX } from '@tabler/icons';
+import Joi from 'joi';
+import { useSession } from "next-auth/react";
 import { FunctionComponent, useState } from "react";
 import InputMask from "react-input-mask";
-import { Box, Button, Modal, Textarea, Text, Image, Input, Tooltip } from "@mantine/core";
-import { useForm, joiResolver } from "@mantine/form";
-import { IconX, IconCheck } from '@tabler/icons';
-import { showNotification } from "@mantine/notifications";
-import { useSession } from "next-auth/react";
-import Joi from 'joi';
 
-import { IGift, ITransaction } from "../../types";
 import { GiveGift } from "../../api/Gift";
+import { IGift, ITransaction } from "../../types";
 
 
 interface IProps {
@@ -64,7 +64,6 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
         userId: props.gift?.userId ? props.gift.userId : '',
         gifterId: session?.user?.id ? session.user.id : '',
       }
-      console.log(JSON.stringify(transaction));
 
       try {
         await GiveGift(transaction);

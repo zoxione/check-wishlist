@@ -1,6 +1,6 @@
-import { TextInput, TextInputProps, ActionIcon, useMantineTheme } from '@mantine/core';
-import { IconSearch, IconArrowRight } from '@tabler/icons';
-import Router from 'next/router'
+import { ActionIcon, TextInput, TextInputProps, useMantineTheme } from '@mantine/core';
+import { IconArrowRight, IconSearch } from '@tabler/icons';
+import Router from 'next/router';
 import { FunctionComponent, useState } from 'react';
 
 

@@ -1,20 +1,20 @@
+import { Anchor, Box, Button, Input, PasswordInput, Text, TextInput, Title } from '@mantine/core';
+import { joiResolver, useForm } from '@mantine/form';
+import { showNotification } from '@mantine/notifications';
+import { IconCheck, IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons';
+import Joi from 'joi';
 import { NextPage } from 'next';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import Router from 'next/router';
 import { useState } from 'react';
-import { Paper, TextInput, PasswordInput, Button, Title, Text, Anchor, Box, Input } from '@mantine/core';
-import { useForm, joiResolver } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { IconChevronRight, IconChevronLeft, IconCheck, IconX } from '@tabler/icons';
-import Joi from 'joi';
 
-import { IUser } from '../../types'
-import { AddUser } from '../../api/User';
-import AppHead from '../../components/logics/Head';
-import AuthLayout from '../../components/AuthLayout';
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { storageClient } from '../../api';
+import { AddUser } from '../../api/User';
+import AuthLayout from '../../components/AuthLayout';
+import AppHead from '../../components/logics/Head';
+import { IUser } from '../../types';
 
 
 interface IProps {
@@ -152,8 +152,6 @@ const SignUp: NextPage<IProps> = ({ }) => {
         instagramName: form3.values.instagramName,
       }
 
-      console.log(user);
-
       try {
         if (avatars[0]) {
           user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/${user.username}`;
@@ -202,7 +200,6 @@ const SignUp: NextPage<IProps> = ({ }) => {
 
   const [step, setStep] = useState(0);
   const handleStep = (direction: string) => {
-    console.log(step)
     if (direction === "next") {
       if (step < 2) {
         setStep(step + 1);

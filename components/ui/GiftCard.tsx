@@ -1,19 +1,14 @@
-import { IconEye, IconTrash, IconX, IconCheck } from '@tabler/icons';
-import { Card, Text, Button, Box, Skeleton, Image, Tooltip } from '@mantine/core';
-import { FunctionComponent, useState } from 'react';
+import { Box, Button, Card, Skeleton, Text, Tooltip } from '@mantine/core';
+import { IconTrash } from '@tabler/icons';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import { FunctionComponent, useState } from 'react';
 
-import { IGift } from '../../types';
-import UpdateGiftModal from '../logics/UpdateGiftModal';
-import { openConfirmModal } from '@mantine/modals';
-import { DeleteGift } from '../../api/Gift';
-import { showNotification } from '@mantine/notifications';
-import DeleteGiftModal from '../logics/DeleteGiftModal';
 import Link from 'next/link';
-
-const GiveGiftModal = dynamic(() => import('../logics/GiveGiftModal'), {
-  ssr: false,
-});
+import { IGift } from '../../types';
+const DeleteGiftModal = dynamic(() => import('../logics/DeleteGiftModal'), { ssr: false });
+const UpdateGiftModal = dynamic(() => import('../logics/UpdateGiftModal'), { ssr: false });
+const GiveGiftModal = dynamic(() => import('../logics/GiveGiftModal'), { ssr: false });
 
 
 interface IProps {
@@ -69,14 +64,18 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
         },
       })}
     >
-      <Card.Section mb={30}>
+      <Card.Section mb={30}
+        sx={(theme) => ({
+          minHeight: '260px',
+        })}
+      >
         <Image
-          src={props.gift?.imageUrl}
-          alt={props.gift?.title}
-          height={260}
-          fit="contain"
-          p={10}
-          withPlaceholder
+          src={props.gift?.imageUrl ? props.gift.imageUrl : ''}
+          alt={props.gift?.title ? props.gift.title : ''}
+          width='100%'
+          height='100%'
+          layout='responsive'
+          priority={true}
         />
       </Card.Section>
 
