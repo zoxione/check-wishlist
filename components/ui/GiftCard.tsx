@@ -50,7 +50,7 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
 
 
   return (
-    <Card p="lg" withBorder radius="md"
+    <Card withBorder
       sx={(theme) => ({
         backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
         cursor: 'pointer',
@@ -59,23 +59,31 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
         margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',
+        gap: '10px',
         '&:hover': {
           boxShadow: 'rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px',
         },
       })}
     >
-      <Card.Section mb={30}
+      <Card.Section
         sx={(theme) => ({
           minHeight: '260px',
         })}
       >
-        <Image
-          src={props.gift?.imageUrl ? props.gift.imageUrl : ''}
-          alt={props.gift?.title ? props.gift.title : ''}
-          width='100%'
-          height='100%'
-          layout='responsive'
-        />
+        <Box
+          sx={(theme) => ({
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+          })}
+        >
+          <Image
+            src={props.gift?.imageUrl ? props.gift.imageUrl : ''}
+            alt={props.gift?.title ? props.gift.title : ''}
+            layout="fill"
+            objectFit='cover'
+          />
+        </Box>
       </Card.Section>
 
       <Box
