@@ -6,6 +6,7 @@ import Joi from 'joi';
 import { NextPage } from 'next';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import Router from 'next/router';
 import { useState } from 'react';
 import AuthLayout from '../../components/AuthLayout';
 import AppHead from '../../components/logics/Head';
@@ -48,24 +49,27 @@ const SignIn: NextPage<IProps> = (props) => {
     const res = await signIn('credentials', {
       email: form.values.email,
       password: form.values.password,
-      redirect: true,
+      redirect: false,
       callbackUrl: "/"
     });
 
-    if (res?.ok == false) {
-      showNotification({
-        title: 'Ошибка',
-        message: 'Неверный логин или пароль',
-        color: 'red',
-        icon: <IconX stroke={1.5} size={24} />,
-      });
-    }
-    else {
+
+    if (res?.ok === true) {
       showNotification({
         title: 'Успешно',
         message: 'Вы успешно вошли в аккаунт',
         color: 'teal',
         icon: <IconCheck stroke={1.5} size={24} />,
+      });
+
+      Router.push('/');
+    }
+    else {
+      showNotification({
+        title: 'Ошибка',
+        message: 'Неверный логин или пароль',
+        color: 'red',
+        icon: <IconX stroke={1.5} size={24} />,
       });
     }
 
