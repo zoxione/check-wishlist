@@ -11,7 +11,10 @@ export const fetcher = (url: RequestInfo | URL) => fetch(url, {
   },
 }).then((res) => res.json());
 
-// хук для получения пользователя
+
+// Получение данных пользователя по id
+// C помощью useSWR мы получаем данные пользователя и кэшируем их
+// Возвращает IUser
 export function useUser(id: string) {
   const { data, error } = useSWR(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?id=eq.${id}&select=*`, fetcher)
   let user: IUser | null = null;
@@ -27,27 +30,8 @@ export function useUser(id: string) {
   }
 }
 
-
-export const AddUser = async (user: IUser) => {
-  await fetch('https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User', {
-    method: 'POST',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify(user),
-  }).then((res) => {
-    if (res.ok) {
-
-    }
-    else {
-      throw new Error("Error adding user");
-    }
-  });
-}
-
+// Получение данных пользователя по id
+// Возвращает IUser
 export const GetUserFromId = async (id: string) => {
   let user: IUser | null = null;
 
@@ -68,6 +52,8 @@ export const GetUserFromId = async (id: string) => {
   return user;
 }
 
+// Получение данных пользователя по username
+// Возвращает IUser
 export const GetUserFromUsername = async (username: string) => {
   let user: IUser | null = null;
 
@@ -88,7 +74,28 @@ export const GetUserFromUsername = async (username: string) => {
   return user;
 }
 
+// Добавление нового пользователя
+export const AddUser = async (user: IUser) => {
+  await fetch('https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User', {
+    method: 'POST',
+    headers: {
+      'apikey': process.env.SUPABASE_API_KEY || '',
+      'Authorization': process.env.SUPABASE_API_KEY || '',
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify(user),
+  }).then((res) => {
+    if (res.ok) {
 
+    }
+    else {
+      throw new Error("Error adding user");
+    }
+  });
+}
+
+// Обновление данных пользователя
 export const UpdateUser = async (user: IUser) => {
   await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?username=eq.${user.username}`, {
     method: 'PATCH',
@@ -109,6 +116,7 @@ export const UpdateUser = async (user: IUser) => {
   });
 }
 
+// Удаление пользователя
 export const DeleteUser = async (id: string) => {
   await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?userId=eq.${id}`, {
     method: 'DELETE',

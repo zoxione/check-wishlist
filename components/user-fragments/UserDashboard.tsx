@@ -4,19 +4,20 @@ import { IconArrowNarrowRight, IconGripVertical } from '@tabler/icons';
 import Router from "next/router";
 import { FunctionComponent, useEffect } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-
 import Link from 'next/link';
-import { CompleteTransaction, useTransactions } from '../../api/Transaction';
+
+import { CompleteTransaction, useTransactionsFromUserId } from '../../api/Transaction';
 import InfoCard from '../ui/InfoCard';
 import UserFragmentLayout from './UserFragmentLayout';
+import { IUser } from '../../types';
 
 
 interface IProps {
-
+  user: IUser;
 };
 
 const UserDashboard: FunctionComponent<IProps> = (props) => {
-  const { transactions, isLoading } = useTransactions();
+  const { transactions, isLoading } = useTransactionsFromUserId(props.user?.id ? props.user.id : '');
 
   const [state, handlers] = useListState(transactions);
 

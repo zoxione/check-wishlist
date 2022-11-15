@@ -2,7 +2,10 @@ import useSWR from 'swr';
 import { IGift, ITransaction } from "../types";
 import { fetcher } from './User';
 
-// хук для получения подарка
+
+// Получение данных подарка по userId
+// C помощью useSWR мы получаем данные подарка и кэшируем их
+// Возвращает IGift
 export function useGift(userId: string) {
   const { data, error, mutate } = useSWR(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?userId=eq.${userId}&select=*`, fetcher)
 
@@ -19,7 +22,9 @@ export function useGift(userId: string) {
   }
 }
 
-// хук для получения списка подарков
+// Получение данных списка подарков по userId
+// C помощью useSWR мы получаем данные подарка и кэшируем их
+// Возвращает IGift[]
 export function useGifts(userId: string) {
   const { data, error, mutate } = useSWR(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?userId=eq.${userId}&select=*`, fetcher, { refreshInterval: 1000 })
 
@@ -33,6 +38,8 @@ export function useGifts(userId: string) {
   }
 }
 
+// Получение данных подарка по userId
+// Возвращает IGift[]
 export const GetGifts = async (userId: string) => {
   let gifts: IGift[] | null = null;
 
@@ -54,6 +61,8 @@ export const GetGifts = async (userId: string) => {
   });
 }
 
+// Парсинг данных подарка с сервера
+// Возвращает IGift
 export const ParseGift = async (shopName: string, shopUrl: string) => {
   const parseResponse = await fetch(`https://fastapi-parser.herokuapp.com/${shopName}`, {
     method: 'POST',
@@ -66,6 +75,7 @@ export const ParseGift = async (shopName: string, shopUrl: string) => {
   return parseResponse;
 }
 
+// Добавление нового подарка
 export const AddGift = async (gift: IGift) => {
   await fetch('https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift', {
     method: 'POST',
@@ -86,7 +96,7 @@ export const AddGift = async (gift: IGift) => {
   });
 }
 
-
+// Дарение подарка
 export const GiveGift = async (transaction: ITransaction) => {
   await fetch('https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction', {
     method: 'POST',
@@ -125,6 +135,7 @@ export const GiveGift = async (transaction: ITransaction) => {
   });
 }
 
+// Обновление данных подарка
 export const UpdateGift = async (gift: IGift) => {
   await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?id=eq.${gift.id}`, {
     method: 'PATCH',
@@ -145,7 +156,7 @@ export const UpdateGift = async (gift: IGift) => {
   });
 }
 
-
+// Удаление подарка
 export const DeleteGift = async (id: string) => {
   await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?id=eq.${id}`, {
     method: 'DELETE',
@@ -164,6 +175,7 @@ export const DeleteGift = async (id: string) => {
   });
 }
 
+// Очистка списка желаний
 export const DeleteWishlistGifts = async (userId: string) => {
   await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?userId=eq.${userId}&isGifted=eq.false`, {
     method: 'DELETE',
@@ -183,8 +195,7 @@ export const DeleteWishlistGifts = async (userId: string) => {
   });
 }
 
-// АБУЗ ЕСТЬ 
-// НЕ ИСПОЛЬЗОВАТЬ
+// Очистка списка подаренных подарков
 export const DeleteGiftedGifts = async (userId: string) => {
   await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?userId=eq.${userId}`, {
     method: 'DELETE',

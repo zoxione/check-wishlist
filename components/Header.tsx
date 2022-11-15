@@ -220,8 +220,8 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
                 <HeaderLink icon={IconUser} label='Аккаунт' href={'/user'} activeFragment={0} onClick={() => closeDrawer()} />
                 <HeaderLink icon={IconLayoutList} label='Список желаний' href={'/user'} activeFragment={1} onClick={() => closeDrawer()} />
                 <HeaderLink icon={IconGauge} label='Приборная панель' href={'/user'} activeFragment={2} onClick={() => closeDrawer()} />
-                <HeaderLink icon={IconDeviceDesktopAnalytics} label='Аналитика' href={'/user'} activeFragment={3} onClick={() => closeDrawer()} />
-                <HeaderLink icon={IconSettings} label='Настройки' href={'/user'} activeFragment={4} onClick={() => closeDrawer()} />
+                {/* <HeaderLink icon={IconDeviceDesktopAnalytics} label='Аналитика' href={'/user'} activeFragment={3} onClick={() => closeDrawer()} /> */}
+                <HeaderLink icon={IconSettings} label='Настройки' href={'/user'} activeFragment={3} onClick={() => closeDrawer()} />
                 <HeaderLink icon={IconLogout} label='Выйти' onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
               </Box>
             </>

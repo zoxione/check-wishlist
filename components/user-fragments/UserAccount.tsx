@@ -254,7 +254,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                 {...form.getInputProps('username')}
               />
               <Textarea
-                label="Описание"
+                label="О себе"
                 mt={10}
                 size="md"
                 {...form.getInputProps('about')}

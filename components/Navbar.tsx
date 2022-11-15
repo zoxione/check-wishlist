@@ -108,8 +108,8 @@ const NavbarContent: FunctionComponent<IProps> = (props: IProps) => {
           <NavbarLink icon={IconUser} label="Аккаунт" activeFragment={0} active={props.activeFragment == 0} />
           <NavbarLink icon={IconLayoutList} label="Список желаний" activeFragment={1} active={props.activeFragment == 1} />
           <NavbarLink icon={IconGauge} label="Приборная панель" activeFragment={2} active={props.activeFragment == 2} />
-          <NavbarLink icon={IconDeviceDesktopAnalytics} label="Аналитика" activeFragment={3} active={props.activeFragment == 3} />
-          <NavbarLink icon={IconSettings} label="Настройки" activeFragment={4} active={props.activeFragment == 4} />
+          {/* <NavbarLink icon={IconDeviceDesktopAnalytics} label="Аналитика" activeFragment={3} active={props.activeFragment == 3} /> */}
+          <NavbarLink icon={IconSettings} label="Настройки" activeFragment={3} active={props.activeFragment == 3} />
         </Stack>
       </Navbar.Section>
       <Navbar.Section>

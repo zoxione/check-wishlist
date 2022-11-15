@@ -64,9 +64,9 @@ const User: NextPage<IProps> = (props: IProps) => {
   const fragmentsList = [
     <UserAccount key={1} user={props.user} />,
     <UserWishlist key={2} user={props.user} />,
-    <UserDashboard key={3} />,
-    <UserAnalytics key={4} />,
-    <UserSettings key={5} user={props.user} />,
+    <UserDashboard key={3} user={props.user} />,
+    // <UserAnalytics key={4} />,
+    <UserSettings key={4} user={props.user} />,
   ];
   // useEffect(() => {
   //   setActiveFragment(props.activeFragment)
