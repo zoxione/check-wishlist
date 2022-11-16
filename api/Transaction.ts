@@ -46,37 +46,6 @@ export function useTransactionsFromUserId(userId: string) {
   }
 }
 
-// export const GetTransactionsData = async () => {
-//   const { data, error, status } = await supabaseClient
-//     .from('Transaction')
-//     .select(`
-//       id,
-//       createdAt,
-//       Gift (
-//         title,
-//         shopUrl,
-//         price
-//       ),
-//       Gifter:gifterId(
-//         username
-//       ),
-//       User:userId(
-//         username
-//       )
-//     `)
-
-//   if (error && status !== 406) {
-//     throw new Error("Error fetching data in transactions")
-//   }
-
-//   let transactionsData = []
-
-
-//   if (data) {
-//     return data
-//   }
-// }
-
 // Выполнение транзакции
 export const CompleteTransaction = async (id: string) => {
   await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?id=eq.${id}`, {

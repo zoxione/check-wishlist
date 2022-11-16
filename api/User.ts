@@ -97,7 +97,7 @@ export const AddUser = async (user: IUser) => {
 
 // Обновление данных пользователя
 export const UpdateUser = async (user: IUser) => {
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?username=eq.${user.username}`, {
+  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?id=eq.${user.id}`, {
     method: 'PATCH',
     headers: {
       'apikey': process.env.SUPABASE_API_KEY || '',

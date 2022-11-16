@@ -3,25 +3,6 @@ import { IGift, ITransaction } from "../types";
 import { fetcher } from './User';
 
 
-// Получение данных подарка по userId
-// C помощью useSWR мы получаем данные подарка и кэшируем их
-// Возвращает IGift
-export function useGift(userId: string) {
-  const { data, error, mutate } = useSWR(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?userId=eq.${userId}&select=*`, fetcher)
-
-  let gift: IGift | null = null;
-  if (data && data.length > 0) {
-    gift = data[0]
-  }
-
-  return {
-    gift: gift,
-    mutate: mutate,
-    isLoading: !error && !data,
-    isError: error
-  }
-}
-
 // Получение данных списка подарков по userId
 // C помощью useSWR мы получаем данные подарка и кэшируем их
 // Возвращает IGift[]
