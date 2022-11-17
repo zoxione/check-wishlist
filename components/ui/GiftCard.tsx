@@ -1,5 +1,5 @@
 import { Box, Button, Card, Skeleton, Text, Tooltip } from '@mantine/core';
-import { IconTrash } from '@tabler/icons';
+import { IconTrash, IconExternalLink } from '@tabler/icons';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { FunctionComponent, useState } from 'react';
@@ -122,9 +122,21 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
           </Box>
         </Tooltip>
 
-        <Text weight={600}>
-          {props.gift?.price} ₽
-        </Text>
+        <Box
+          sx={(theme) => ({
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          })}
+        >
+          <Text weight={600}>
+            {props.gift?.price} ₽
+          </Text>
+          <a href={props.gift?.shopUrl} target="_blank" rel="noreferrer">
+            <IconExternalLink size={20} />
+          </a>
+        </Box>
 
         {
           !props.canEdit && props.isOwner && !props.gift?.isGifted &&

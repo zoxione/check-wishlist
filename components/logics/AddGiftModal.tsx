@@ -8,6 +8,8 @@ import { FunctionComponent, useState } from "react";
 
 import { AddGift, ParseGift } from "../../api/Gift";
 import { IGift } from "../../types";
+import IconWildberries from '../../public/wildberries.svg';
+import IconAliexpress from '../../public/aliexpress.svg';
 
 
 interface IProps {
@@ -63,6 +65,33 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
+
+    //form.values.shopUrl.
+    if (shopNameSelect === 'aliexpress') {
+      if (form.values.shopUrl.includes('aliexpress.ru') === false) {
+        showNotification({
+          title: 'Ошибка',
+          message: 'Ссылка должна быть на aliexpress.ru',
+          color: 'red',
+          icon: <IconExclamationMark stroke={1.5} size="1.5rem" />,
+        });
+        setIsLoading(false);
+        return;
+      }
+    }
+    else if (shopNameSelect === 'wildberries') {
+      if (form.values.shopUrl.includes('wildberries.ru') === false) {
+        showNotification({
+          title: 'Ошибка',
+          message: 'Ссылка должна быть на wildberries.ru',
+          color: 'red',
+          icon: <IconExclamationMark stroke={1.5} size="1.5rem" />,
+        });
+        setIsLoading(false);
+        return;
+      }
+    }
+
 
     showNotification({
       title: 'Подождите',
@@ -126,8 +155,8 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
       overlayOpacity={0.55}
       overlayBlur={3}
       overflow="inside"
-      closeOnClickOutside={false}
-      closeOnEscape={false}
+      closeOnClickOutside={isLoading ? false : true}
+      closeOnEscape={isLoading ? false : true}
       withCloseButton={isLoading ? false : true}
     >
       <Box
@@ -136,7 +165,7 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
           margin: '0 auto',
         })}
       >
-        <LoadingOverlay visible={isLoading} overlayBlur={2} />
+        <LoadingOverlay visible={isLoading} overlayBlur={2} radius="md" />
         <form onSubmit={form.onSubmit(() => handleSubmit())}>
           {/* <TextInput
             label="Название"
@@ -163,16 +192,20 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
           <Button.Group orientation="vertical">
             <Button
               variant="default"
+              sx={{ '.mantine-Button-label': { alignItems: 'center', gap: 10 } }}
               onClick={() => { setShopNameSelect("aliexpress"); form.setValues({ shopUrl: '' }) }}
               disabled={shopNameSelect === "aliexpress"}
             >
+              <IconAliexpress />
               aliexpress.ru
             </Button>
             <Button
               variant="default"
+              sx={{ '.mantine-Button-label': { alignItems: 'center', gap: 10 } }}
               onClick={() => { setShopNameSelect("wildberries"); form.setValues({ shopUrl: '' }) }}
               disabled={shopNameSelect === "wildberries"}
             >
+              <IconWildberries />
               wildberries.ru
             </Button>
           </Button.Group>

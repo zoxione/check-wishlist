@@ -21,7 +21,7 @@ const Home: NextPage<Props> = (props) => {
 
   return (
     <>
-      <AppHead />
+      <AppHead title="Wishlist" />
 
       <Container
         sx={(theme) => ({

@@ -100,7 +100,7 @@ const User: NextPage<IProps> = (props: IProps) => {
 
   return (
     <>
-      <AppHead />
+      <AppHead title="Настройки" />
 
       <NavbarContent
         activeFragment={props.activeFragment}
