@@ -24,41 +24,22 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
 
   const form = useForm({
     initialValues: {
-      //title: '',
       description: '',
-      //shopName: 'dns',
       shopUrl: '',
-      //price: 0,
-      //imageUrl: '',
     },
 
     validate: joiResolver(
       Joi.object({
-        // title: Joi.string().min(3).max(29).messages({
-        //   'string.base': 'Название должно быть строкой',
-        //   'string.empty': 'Название не может быть пустым',
-        //   'string.min': 'Название должно быть больше 2 символов',
-        //   'string.max': 'Название должно быть меньше 30 символов',
-        // }),
-        description: Joi.string().max(79).allow('').messages({
+        description: Joi.string().max(255).regex(/^[A-Za-zА-Яа-я0-9]+$/).allow('').messages({
+          'string.pattern.base': 'Описание должно состоять только из букв и цифр',
           'string.base': 'Описание должно быть строкой',
-          'string.max': 'Описание должно быть меньше 80 символов',
+          'string.max': 'Описание должно быть меньше 256 символов',
         }),
-        // shopName: Joi.allow(''),
         shopUrl: Joi.string().uri().messages({
           'string.base': 'Ссылка должна быть строкой',
           'string.empty': 'Ссылка не может быть пустой',
           'string.uri': 'Ссылка должна быть валидной',
         }),
-        // price: Joi.number().positive().messages({
-        //   'number.base': 'Цена должна быть числом',
-        //   'number.empty': 'Цена не может быть пустой',
-        //   'number.positive': 'Цена должна быть больше 0',
-        // }),
-        // imageUrl: Joi.string().uri().allow('').messages({
-        //   'string.base': 'Ссылка должна быть строкой',
-        //   'string.uri': 'Ссылка должна быть валидной',
-        // }),
       })
     ),
   });

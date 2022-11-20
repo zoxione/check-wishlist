@@ -185,7 +185,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
       <Container
         sx={(theme) => ({
           position: 'relative',
-          height: '210px',
+          height: '300px',
           maxWidth: '100vw',
           padding: '0',
           margin: '0',

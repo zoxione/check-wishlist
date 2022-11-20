@@ -26,11 +26,13 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
   const wishlist: IGift[] = gifts?.filter((gift) => !gift.isGifted)
   const gifted: IGift[] = gifts?.filter((gift) => gift.isGifted)
   let gifters: any[] = [];
-  transactions?.forEach((tran) => {
+  transactionsUser?.forEach((tran) => {
     if (!gifters.find((g) => g.id === tran.Gifter.id)) {
       gifters.push(tran.Gifter);
     }
   })
+
+  console.log(props.user)
 
   return (
     <>
@@ -52,7 +54,9 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                   <Carousel
                     slideSize="50%"
                     height={220}
-                    slideGap="md" loop dragFree withControls={false}
+                    slideGap="md"
+                    loop
+                    withControls={false}
                     sx={(theme) => ({
                       '.mantine-Carousel-container': {
                         alignItems: 'center',
@@ -94,7 +98,7 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                       </Text>
                     }
                     sections={[
-                      { value: gifted?.length / (wishlist?.length + gifted?.length) * 100, color: 'grape', tooltip: 'Подаренных' },
+                      { value: gifted?.length / (wishlist?.length + gifted?.length === 0 ? 1 : wishlist?.length + gifted?.length) * 100, color: 'grape', tooltip: 'Подаренных' },
                     ]}
                   />
                 </Box>
@@ -110,9 +114,11 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
               </>
             ) : (
               <>
-                <Text size="lg" weight={700} mt={20} mb={10}>
-                  Последние подарки
-                </Text>
+                {transactionsUser?.length > 0 && (
+                  <Text size="lg" weight={700} mt={20} mb={10}>
+                    Последние подарки
+                  </Text>
+                )}
                 {transactionsUser?.map((tran, index) => (
                   <Box
                     sx={(theme) => ({

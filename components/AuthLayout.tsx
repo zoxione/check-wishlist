@@ -46,7 +46,7 @@ const AuthLayout: FunctionComponent<IProps> = (props: IProps) => {
 
       <Box
         sx={(theme) => ({
-          backgroundColor: theme.fn.primaryColor(),
+          background: 'linear-gradient(to top, #7048e8, #8c4ce8, #a451e8, #b956e8)',
           width: '100px',
           [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
             width: '0px',
