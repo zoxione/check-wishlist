@@ -51,16 +51,6 @@ interface IProps {
 const User: NextPage<IProps> = (props: IProps) => {
   const { data: session, status } = useSession();
 
-  const NavbarLinkList = [
-    { label: "Мой профиль", icon: IconHome2, href: props.user?.username },
-    { label: "Аккаунт", icon: IconUser, href: "/user", activeFragment: 0 },
-    { label: "Список желаний", icon: IconLayoutList, href: "/user", activeFragment: 1 },
-    { label: "Приборная панель", icon: IconGauge, href: "/user", activeFragment: 2 },
-    { label: "Аналитика", icon: IconDeviceDesktopAnalytics, href: "/user", activeFragment: 3 },
-    { label: "Настройки", icon: IconSettings, href: "/user", activeFragment: 4 },
-  ];
-
-  // const [activeFragment, setActiveFragment] = useState(props.activeFragment);
   const fragmentsList = [
     <UserAccount key={1} user={props.user} />,
     <UserWishlist key={2} user={props.user} />,
@@ -68,9 +58,6 @@ const User: NextPage<IProps> = (props: IProps) => {
     // <UserAnalytics key={4} />,
     <UserSettings key={4} user={props.user} />,
   ];
-  // useEffect(() => {
-  //   setActiveFragment(props.activeFragment)
-  // }, [props.activeFragment]);
 
   useEffect(() => {
     if (status === 'unauthenticated') {

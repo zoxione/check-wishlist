@@ -33,7 +33,8 @@ const SignIn: NextPage<IProps> = (props) => {
           'string.empty': 'Email не может быть пустым',
           'string.email': 'Email должен быть валидным',
         }),
-        password: Joi.string().min(6).max(19).messages({
+        password: Joi.string().regex(/^[A-Za-z0-9]+$/).min(6).max(19).messages({
+          'string.pattern.base': 'Пароль должен состоять только из латинских букв и цифр',
           'string.base': 'Пароль должен быть строкой',
           'string.empty': 'Пароль не может быть пустым',
           'string.min': 'Пароль должен быть больше 5 символов',

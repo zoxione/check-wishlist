@@ -46,13 +46,15 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
 
     validate: joiResolver(
       Joi.object({
-        username: Joi.string().min(3).max(13).messages({
+        username: Joi.string().regex(/^[A-Za-z0-9]+$/).min(3).max(13).messages({
+          'string.pattern.base': 'Имя пользователя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.empty': 'Имя не может быть пустым',
           'string.min': 'Имя должно быть больше 2 символов',
           'string.max': 'Имя должно быть меньше 14 символов',
         }),
-        fullname: Joi.string().max(29).allow('').messages({
+        fullname: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(29).allow('').messages({
+          'string.pattern.base': 'ФИО должно состоять только из букв',
           'string.base': 'ФИО должно быть строкой',
           'string.max': 'ФИО должно быть меньше 30 символов',
         }),
@@ -61,13 +63,15 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
           'string.empty': 'Email не может быть пустым',
           'string.email': 'Email должен быть валидным',
         }),
-        password: Joi.string().min(6).max(19).messages({
+        password: Joi.string().regex(/^[A-Za-z0-9]+$/).min(6).max(19).messages({
+          'string.pattern.base': 'Пароль должен состоять только из латинских букв и цифр',
           'string.base': 'Пароль должен быть строкой',
           'string.empty': 'Пароль не может быть пустым',
           'string.min': 'Пароль должен быть больше 5 символов',
           'string.max': 'Пароль должен быть меньше 20 символов',
         }),
-        about: Joi.string().max(79).allow('').messages({
+        about: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(79).allow('').messages({
+          'string.pattern.base': 'Описание должно состоять только из букв',
           'string.base': 'Описание должно быть строкой',
           'string.max': 'Описание должно быть меньше 80 символов',
         }),
@@ -79,27 +83,33 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
           'string.base': 'Ссылка должна быть строкой',
           'string.uri': 'Ссылка должна быть валидной',
         }),
-        address: Joi.string().max(29).allow('').messages({
+        address: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(29).allow('').messages({
+          'string.pattern.base': 'Адрес должен состоять только из букв',
           'string.base': 'Адрес должен быть строкой',
           'string.max': 'Адрес должен быть меньше 30 символов',
         }),
-        tiktokName: Joi.string().max(19).allow('').messages({
+        tiktokName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.max': 'Имя должно быть меньше 20 символов',
         }),
-        twitterName: Joi.string().max(19).allow('').messages({
+        twitterName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.max': 'Имя должно быть меньше 20 символов',
         }),
-        vkName: Joi.string().max(19).allow('').messages({
+        vkName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.max': 'Имя должно быть меньше 20 символов',
         }),
-        telegramName: Joi.string().max(19).allow('').messages({
+        telegramName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.max': 'Имя должно быть меньше 20 символов',
         }),
-        instagramName: Joi.string().max(19).allow('').messages({
+        instagramName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.max': 'Имя должно быть меньше 20 символов',
         }),
@@ -111,14 +121,16 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
     setIsLoading(true);
 
     const user: IUser = {
+      id: props.user.id,
       username: form.values.username,
-      fullname: form.values.fullname,
-      email: form.values.email,
-      password: form.values.password,
+      fullname: props.user.fullname,
+      email: props.user.email,
+      password: props.user.password,
       about: form.values.about,
-      imageUrl: form.values.imageUrl,
-      backgroundUrl: form.values.backgroundUrl,
-      address: form.values.address,
+      imageUrl: props.user.imageUrl,
+      backgroundUrl: props.user.backgroundUrl,
+      address: props.user.address,
+      isVerified: props.user.isVerified,
       tiktokName: form.values.tiktokName,
       twitterName: form.values.twitterName,
       vkName: form.values.vkName,
@@ -136,7 +148,6 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
           throw new Error('Ошибка загрузки аватара');
         }
 
-        //storageClient.from('check').remove([user.imageUrl.slice(71)]);
         user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/${user.username}_${timestamp}`;
       }
 
@@ -147,7 +158,6 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
           throw new Error('Ошибка загрузки обложки');
         }
 
-        //storageClient.from('check').remove([user.backgroundUrl.slice(71)]);
         user.backgroundUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/${user.username}_${timestamp}`;
       }
 
@@ -194,7 +204,7 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
         <Container
           sx={(theme) => ({
             position: 'relative',
-            height: '210px',
+            height: '300px',
             maxWidth: '100vw',
             padding: '0',
             margin: '0',
@@ -259,18 +269,6 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
                 size="md"
                 {...form.getInputProps('about')}
               />
-              {/* <TextInput
-                label="Ссылка на аватарку"
-                mt={10}
-                size="md"
-                {...form.getInputProps('imageUrl')}
-              />
-              <TextInput
-                label="Ссылка на обложку"
-                mt={10}
-                size="md"
-                {...form.getInputProps('backgroundUrl')}
-              /> */}
               <TextInput
                 label="ТикТок"
                 mt={20}

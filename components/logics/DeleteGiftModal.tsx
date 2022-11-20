@@ -1,7 +1,6 @@
 import { Box, Button, Modal, Text } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from '@tabler/icons';
-import { useSession } from "next-auth/react";
 import { FunctionComponent, useState } from "react";
 
 import { DeleteGift } from "../../api/Gift";
@@ -16,7 +15,6 @@ interface IProps {
 
 
 const DeleteGiftModal: FunctionComponent<IProps> = (props) => {
-  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {

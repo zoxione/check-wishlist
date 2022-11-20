@@ -23,40 +23,15 @@ const UpdateGiftModal: FunctionComponent<IProps> = (props) => {
 
   const form = useForm({
     initialValues: {
-      title: '',
       description: props.gift?.description,
-      shopName: '',
-      shopUrl: '',
-      price: 0,
-      imageUrl: '',
     },
 
     validate: joiResolver(
       Joi.object({
-        title: Joi.string().min(3).max(29).allow('').messages({
-          'string.base': 'Название должно быть строкой',
-          'string.empty': 'Название не может быть пустым',
-          'string.min': 'Название должно быть больше 2 символов',
-          'string.max': 'Название должно быть меньше 30 символов',
-        }),
-        description: Joi.string().max(79).allow('').messages({
+        description: Joi.string().max(255).regex(/^[A-Za-zА-Яа-я0-9]+$/).allow('').messages({
+          'string.pattern.base': 'Описание должно состоять только из букв и цифр',
           'string.base': 'Описание должно быть строкой',
-          'string.max': 'Описание должно быть меньше 80 символов',
-        }),
-        shopName: Joi.allow(''),
-        shopUrl: Joi.string().uri().allow('').messages({
-          'string.base': 'Ссылка должна быть строкой',
-          'string.empty': 'Ссылка не может быть пустой',
-          'string.uri': 'Ссылка должна быть валидной',
-        }),
-        price: Joi.number().positive().allow('').messages({
-          'number.base': 'Цена должна быть числом',
-          'number.empty': 'Цена не может быть пустой',
-          'number.positive': 'Цена должна быть больше 0',
-        }),
-        imageUrl: Joi.string().uri().allow('').messages({
-          'string.base': 'Ссылка должна быть строкой',
-          'string.uri': 'Ссылка должна быть валидной',
+          'string.max': 'Описание должно быть меньше 256 символов',
         }),
       })
     ),
@@ -67,12 +42,7 @@ const UpdateGiftModal: FunctionComponent<IProps> = (props) => {
 
     try {
       let gift: IGift = props.gift;
-      gift.title = form.values.title;
       gift.description = form.values.description;
-      gift.shopName = form.values.shopName;
-      gift.shopUrl = form.values.shopUrl;
-      gift.price = form.values.price;
-      gift.imageUrl = form.values.imageUrl;
 
       await UpdateGift(gift);
 
@@ -157,13 +127,6 @@ const UpdateGiftModal: FunctionComponent<IProps> = (props) => {
         </Box>
 
         <form onSubmit={form.onSubmit(() => handleSubmit())}>
-          {/* <TextInput
-            label="Название"
-            size="md"
-            required
-            placeholder="Наушники"
-            {...form.getInputProps('title')}
-          /> */}
           <Textarea
             label="Описание"
             size="md"
@@ -171,52 +134,6 @@ const UpdateGiftModal: FunctionComponent<IProps> = (props) => {
             placeholder="Мне это очень нужно, спасибо за подарок"
             {...form.getInputProps('description')}
           />
-
-          {/* <TextInput
-            label="Ссылка"
-            size="md"
-            mt={10}
-            required
-            placeholder="https://www.dns-shop.ru/product/96be2d41015ac823/radiocastotnaa-garnitura-razer-barracuda-x-cernyj/"
-            {...form.getInputProps('shopUrl')}
-            rightSection={
-              <NativeSelect
-                styles={{
-                  input: {
-                    fontWeight: 500,
-                    borderTopLeftRadius: 0,
-                    borderBottomLeftRadius: 0,
-                  },
-                }}
-                size="md"
-                required
-                data={[
-                  { value: 'dns', label: 'ДНС' },
-                  { value: 'regard', label: 'Регард' },
-                ]}
-                {...form.getInputProps('shopName')}
-              />
-            }
-            rightSectionWidth={92}
-          />
-
-          <TextInput
-            label="Ссылка на изображение"
-            size="md"
-            mt={10}
-            placeholder="https://c.dns-shop.ru/thumb/st1/fit/500/500/5effd2afc06f810b4424b43eb595da53/dc5dd08ef0adb5bef02bd822042966ceab39738b2abd77eda73ec029cec8be44.jpg"
-            {...form.getInputProps('imageUrl')}
-          />
-
-          <NumberInput
-            label="Цена, ₽"
-            hideControls
-            rightSection={<IconCurrencyRubel size={18} />}
-            mt={10}
-            required
-            {...form.getInputProps('price')}
-          /> */}
-
           <Button type="submit" loading={isLoading} mt={20} fullWidth variant="outline">
             Изменить
           </Button>

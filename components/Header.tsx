@@ -205,27 +205,43 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
           <Group position="center" grow>
             {rightMenuMobile}
           </Group>
-          {session &&
-            <>
-              <Box
-                sx={(theme) => ({
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '16px',
-                  marginTop: '40px',
-                })}
-              >
-                <HeaderLink icon={IconUser} label='Аккаунт' href={'/user'} activeFragment={0} onClick={() => closeDrawer()} />
-                <HeaderLink icon={IconLayoutList} label='Список желаний' href={'/user'} activeFragment={1} onClick={() => closeDrawer()} />
-                <HeaderLink icon={IconGauge} label='Приборная панель' href={'/user'} activeFragment={2} onClick={() => closeDrawer()} />
-                {/* <HeaderLink icon={IconDeviceDesktopAnalytics} label='Аналитика' href={'/user'} activeFragment={3} onClick={() => closeDrawer()} /> */}
-                <HeaderLink icon={IconSettings} label='Настройки' href={'/user'} activeFragment={3} onClick={() => closeDrawer()} />
-                <HeaderLink icon={IconLogout} label='Выйти' onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
-              </Box>
-            </>
-          }
+          {status === "unauthenticated" && (
+            <Box
+              sx={(theme) => ({
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '16px',
+                marginTop: '40px',
+              })}
+            >
+              <HeaderLink icon={IconUser} label='Аккаунт' href={'/user'} activeFragment={0} onClick={() => closeDrawer()} />
+              <HeaderLink icon={IconLayoutList} label='Список желаний' href={'/user'} activeFragment={1} onClick={() => closeDrawer()} />
+              <HeaderLink icon={IconGauge} label='Приборная панель' href={'/user'} activeFragment={2} onClick={() => closeDrawer()} />
+              {/* <HeaderLink icon={IconDeviceDesktopAnalytics} label='Аналитика' href={'/user'} activeFragment={3} onClick={() => closeDrawer()} /> */}
+              <HeaderLink icon={IconSettings} label='Настройки' href={'/user'} activeFragment={3} onClick={() => closeDrawer()} />
+              <HeaderLink icon={IconLogout} label='Выйти' onClick={() => signOut({ redirect: true, callbackUrl: "/" })} />
+            </Box>
+          )}
+          {status === "loading" && (
+            <Box
+              sx={(theme) => ({
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '16px',
+                marginTop: '40px',
+              })}
+            >
+              <Skeleton width="100%" height={35} />
+              <Skeleton width="100%" height={35} />
+              <Skeleton width="100%" height={35} />
+              <Skeleton width="100%" height={35} />
+              <Skeleton width="100%" height={35} />
+            </Box>
+          )}
         </ScrollArea>
       </Drawer>
     </Box>

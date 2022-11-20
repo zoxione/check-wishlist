@@ -1,4 +1,4 @@
-import { Box, Button, Center, Grid, Loader, useMantineTheme } from '@mantine/core';
+import { Box, Button, Center, Grid, Loader, useMantineTheme, Text } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { IconCheck, IconTextPlus, IconX } from '@tabler/icons';
 import dynamic from 'next/dynamic';
@@ -89,28 +89,30 @@ const UserWishlist: FunctionComponent<IProps> = ((props: IProps) => {
             Добавить
           </Button>
 
-          {
-            isLoading ?
-              (
-                <Center>
-                  <Loader variant="dots" />
-                </Center>
-              )
-              : (
-                <Grid mt={10}>
-                  {giftsList?.map((gift, index) => (
-                    <Grid.Col xs={6} sm={6} md={4} key={index}>
-                      <GiftCard
-                        gift={gift}
-                        isLoaded={true}
-                        isOwner={true}
-                        canEdit={true}
-                      />
-                    </Grid.Col>
-                  ))}
-                </Grid>
-              )
-          }
+          {isLoading && (
+            <Center>
+              <Loader variant="dots" />
+            </Center>
+          )}
+          {!isLoading && !isError && (
+            <Grid mt={10}>
+              {giftsList?.map((gift, index) => (
+                <Grid.Col xs={6} sm={6} md={4} key={index}>
+                  <GiftCard
+                    gift={gift}
+                    isLoaded={true}
+                    isOwner={true}
+                    canEdit={true}
+                  />
+                </Grid.Col>
+              ))}
+            </Grid>
+          )}
+          {!isLoading && !isError && giftsList?.length === 0 && (
+            <Text align="center" size="md" my={10}>
+              Список желаний пуст
+            </Text>
+          )}
         </Box>
       </InfoCard>
     </UserFragmentLayout>

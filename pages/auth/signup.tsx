@@ -8,8 +8,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Router from 'next/router';
 import { useState } from 'react';
-
 import { Dropzone, FileWithPath, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+
 import { storageClient } from '../../api';
 import { AddUser } from '../../api/User';
 import AuthLayout from '../../components/AuthLayout';
@@ -35,7 +35,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
     },
     validate: joiResolver(
       Joi.object({
-        username: Joi.string().regex(/^[a-z0-9]+$/).min(3).max(13).messages({
+        username: Joi.string().regex(/^[A-Za-z0-9]+$/).min(3).max(13).messages({
           'string.pattern.base': 'Имя пользователя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.empty': 'Имя не может быть пустым',
@@ -47,7 +47,8 @@ const SignUp: NextPage<IProps> = ({ }) => {
           'string.empty': 'Email не может быть пустым',
           'string.email': 'Email должен быть валидным',
         }),
-        password: Joi.string().min(6).max(19).messages({
+        password: Joi.string().regex(/^[A-Za-z0-9]+$/).min(6).max(19).messages({
+          'string.pattern.base': 'Пароль должен состоять только из латинских букв и цифр',
           'string.base': 'Пароль должен быть строкой',
           'string.empty': 'Пароль не может быть пустым',
           'string.min': 'Пароль должен быть больше 5 символов',
@@ -72,13 +73,15 @@ const SignUp: NextPage<IProps> = ({ }) => {
     },
     validate: joiResolver(
       Joi.object({
-        fullname: Joi.string().max(29).allow('').messages({
+        fullname: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(29).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из букв',
           'string.base': 'ФИО должно быть строкой',
           'string.max': 'ФИО должно быть меньше 30 символов',
         }),
-        about: Joi.string().max(79).allow('').messages({
-          'string.base': 'Описание должно быть строкой',
-          'string.max': 'Описание должно быть меньше 80 символов',
+        about: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(79).allow('').messages({
+          'string.pattern.base': 'О себе должно состоять только из букв',
+          'string.base': 'О себе должно быть строкой',
+          'string.max': 'О себе должно быть меньше 80 символов',
         }),
         imageUrl: Joi.string().uri().allow('').messages({
           'string.base': 'Ссылка должна быть строкой',
@@ -88,7 +91,8 @@ const SignUp: NextPage<IProps> = ({ }) => {
           'string.base': 'Ссылка должна быть строкой',
           'string.uri': 'Ссылка должна быть валидной',
         }),
-        address: Joi.string().max(29).allow('').messages({
+        address: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(29).allow('').messages({
+          'string.pattern.base': 'Адрес должен состоять только из букв',
           'string.base': 'Адрес должен быть строкой',
           'string.max': 'Адрес должен быть меньше 30 символов',
         }),
@@ -106,23 +110,28 @@ const SignUp: NextPage<IProps> = ({ }) => {
     },
     validate: joiResolver(
       Joi.object({
-        tiktokName: Joi.string().max(19).allow('').messages({
+        tiktokName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.max': 'Имя должно быть меньше 20 символов',
         }),
-        twitterName: Joi.string().max(19).allow('').messages({
+        twitterName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.max': 'Имя должно быть меньше 20 символов',
         }),
-        vkName: Joi.string().max(19).allow('').messages({
+        vkName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.max': 'Имя должно быть меньше 20 символов',
         }),
-        telegramName: Joi.string().max(19).allow('').messages({
+        telegramName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.max': 'Имя должно быть меньше 20 символов',
         }),
-        instagramName: Joi.string().max(19).allow('').messages({
+        instagramName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
+          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
           'string.base': 'Имя должно быть строкой',
           'string.max': 'Имя должно быть меньше 20 символов',
         }),
@@ -153,10 +162,12 @@ const SignUp: NextPage<IProps> = ({ }) => {
       }
 
       try {
-        if (avatars[0]) {
-          user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/${user.username}`;
+        let timestamp = new Date().getTime()
 
-          const { data, error } = await storageClient.from('check').upload(`/users/avatars/${user.username}`, avatars[0], { cacheControl: '3600', upsert: true });
+        if (avatars[0]) {
+          const { data, error } = await storageClient.from('check').upload(`/users/avatars/${user.username}_${timestamp}`, avatars[0], { cacheControl: '3600', upsert: true });
+
+          user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/${user.username}_${timestamp}`;
 
           if (error) {
             showNotification({
@@ -304,16 +315,12 @@ const SignUp: NextPage<IProps> = ({ }) => {
       </Box>
     </form>,
     <form key={2} onSubmit={form2.onSubmit(() => handleStep("next"))}>
-      <Text
-        sx={(theme) => ({
-          fontSize: "16px",
-          fontWeight: 500,
-          color: theme.colorScheme === "dark" ? "#C1C2C5" : "#212529",
-          marginBottom: "6px"
-        })}
+      <Input.Wrapper
+        label="Ваша аватарка"
+        required
+        size="md"
       >
-        Ваша аватарка
-      </Text>
+      </Input.Wrapper>
       <Dropzone
         accept={IMAGE_MIME_TYPE}
         onDrop={(files) => { setAvatars(files); }}
@@ -354,21 +361,6 @@ const SignUp: NextPage<IProps> = ({ }) => {
         size="md"
         {...form2.getInputProps('about')}
       />
-
-      {/* <TextInput
-        label="Ссылка на аватарку"
-        placeholder="https://example.com/photo.jpg"
-        mt={10}
-        size="md"
-        {...form2.getInputProps('imageUrl')}
-      />
-      <TextInput
-        label="Ссылка на обложку"
-        placeholder="https://example.com/cover.jpg"
-        mt={10}
-        size="md"
-        {...form2.getInputProps('backgroundUrl')}
-      /> */}
       <TextInput
         label="Адрес доставки"
         placeholder="Москва, ул. Ленина, д. 1"

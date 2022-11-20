@@ -76,7 +76,6 @@ const GiveGiftModal: FunctionComponent<IProps> = (props) => {
         });
 
         props.setOpened(false);
-        // Router.reload();
       }
       catch (error) {
         console.error(error);
