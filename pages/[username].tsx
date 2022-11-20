@@ -237,10 +237,8 @@ const Profile: NextPage<IProps> = (props: IProps) => {
               })}
             >
               <Group position="center">
-                {
-                  props.user?.isVerified === true &&
+                {props.user?.isVerified === true && (
                   <Indicator position="bottom-end" withBorder offset={25} size={30} zIndex={10} label={<IconCheck size={16} />}>
-                    {/* <Avatar src={props.user?.imageUrl} size={120} radius={120} mx="auto" color={theme.fn.primaryColor()} /> */}
                     <Image
                       src={props.user?.imageUrl}
                       alt="Avatar image"
@@ -251,9 +249,8 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                       style={{ borderRadius: '50%' }}
                     />
                   </Indicator>
-                }
-                {
-                  props.user?.isVerified === false &&
+                )}
+                {props.user?.isVerified === false && (
                   <Image
                     src={props.user?.imageUrl}
                     alt="Avatar image"
@@ -263,8 +260,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                     objectFit="cover"
                     style={{ borderRadius: '50%' }}
                   />
-                  // <Avatar src={props.user?.imageUrl} size={120} radius={120} mx="auto" color={theme.fn.primaryColor()} />
-                }
+                )}
               </Group>
               <Title align="center" size={20} weight={500} mt={15}>
                 {props.user?.username}

@@ -37,8 +37,6 @@ export function HeaderLink(props: NavbarLinkProps) {
           '&:hover': {
             backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0],
           },
-          // backgroundColor: active ? theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background : 'transparent',
-          // color: active ? theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color : theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.colors.gray[7],
         })}
       >
         {props.label}

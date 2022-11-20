@@ -10,8 +10,6 @@ interface IProps {
 
 
 const UserAnalytics: FunctionComponent<IProps> = ({ }) => {
-
-
   return (
     <UserFragmentLayout>
       <InfoCard title="Аналитика">

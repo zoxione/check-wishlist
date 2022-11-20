@@ -57,7 +57,6 @@ const ChangePersonalDataModal: FunctionComponent<IProps> = (props) => {
       });
 
       props.setOpened(false);
-      // router.replace(router.asPath);
     }
     catch (error) {
       console.error(error);

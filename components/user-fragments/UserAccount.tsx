@@ -148,7 +148,6 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
           throw new Error('Ошибка загрузки аватара');
         }
 
-        //storageClient.from('check').remove([user.imageUrl.slice(71)]);
         user.imageUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/${user.username}_${timestamp}`;
       }
 
@@ -159,7 +158,6 @@ const UserAccount: FunctionComponent<IProps> = (props: IProps) => {
           throw new Error('Ошибка загрузки обложки');
         }
 
-        //storageClient.from('check').remove([user.backgroundUrl.slice(71)]);
         user.backgroundUrl = `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/${user.username}_${timestamp}`;
       }
 

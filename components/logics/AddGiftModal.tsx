@@ -47,7 +47,6 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
   const handleSubmit = async () => {
     setIsLoading(true);
 
-    //form.values.shopUrl.
     if (shopNameSelect === 'aliexpress') {
       if (form.values.shopUrl.includes('aliexpress.ru') === false) {
         showNotification({
@@ -148,13 +147,6 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
       >
         <LoadingOverlay visible={isLoading} overlayBlur={2} radius="md" />
         <form onSubmit={form.onSubmit(() => handleSubmit())}>
-          {/* <TextInput
-            label="Название"
-            size="md"
-            required
-            placeholder="Наушники"
-            {...form.getInputProps('title')}
-          /> */}
           <Textarea
             label="Описание"
             size="md"
@@ -200,51 +192,6 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
             disabled={shopNameSelect !== "wildberries" && shopNameSelect !== "aliexpress"}
             {...form.getInputProps("shopUrl")}
           />
-
-          {/* <TextInput
-            label="Ссылка"
-            size="md"
-            mt={10}
-            required
-            placeholder="https://www.dns-shop.ru/product/96be2d41015ac823/radiocastotnaa-garnitura-razer-barracuda-x-cernyj/"
-            {...form.getInputProps('shopUrl')}
-            rightSection={
-              <NativeSelect
-                styles={{
-                  input: {
-                    fontWeight: 500,
-                    borderTopLeftRadius: 0,
-                    borderBottomLeftRadius: 0,
-                  },
-                }}
-                size="md"
-                required
-                data={[
-                  { value: 'dns', label: 'ДНС' },
-                  { value: 'regard', label: 'Регард' },
-                ]}
-                {...form.getInputProps('shopName')}
-              />
-            }
-            rightSectionWidth={92}
-          />
-
-          <TextInput
-            label="Ссылка на изображение"
-            size="md"
-            mt={10}
-            placeholder="https://c.dns-shop.ru/thumb/st1/fit/500/500/5effd2afc06f810b4424b43eb595da53/dc5dd08ef0adb5bef02bd822042966ceab39738b2abd77eda73ec029cec8be44.jpg"
-            {...form.getInputProps('imageUrl')}
-          />
-
-          <NumberInput
-            label="Цена, ₽"
-            hideControls
-            rightSection={<IconCurrencyRubel size={18} />}
-            mt={10}
-            required
-            {...form.getInputProps('price')}
-          /> */}
 
           <Button type="submit" loading={isLoading} mt={20} fullWidth variant="outline">
             Добавить
