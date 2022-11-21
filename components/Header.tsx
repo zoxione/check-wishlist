@@ -205,7 +205,7 @@ const HeaderContent: FunctionComponent<IProps> = (props: IProps) => {
           <Group position="center" grow>
             {rightMenuMobile}
           </Group>
-          {status === "unauthenticated" && (
+          {status === "authenticated" && (
             <Box
               sx={(theme) => ({
                 display: 'flex',
