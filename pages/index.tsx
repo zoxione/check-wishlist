@@ -130,7 +130,7 @@ const Home: NextPage<Props> = (props) => {
                   Добавьте подарки в свой список желаний
                 </Title>
                 <Text>
-                  Создайте список желаемых подарков с избранных магазинов. Поделитесь своим списком с друзьями или подписчиками, добавив его в свой профиль и рассказав своим поклонникам о своем списке желаний.
+                  Создайте список желаемых подарков с избранных магазинов. Поделитесь своим списком с друзьями или подписчиками, добавив его в свой профиль.
                 </Text>
               </Box>
               <Box
@@ -149,6 +149,7 @@ const Home: NextPage<Props> = (props) => {
                   width={280}
                   height={290}
                   quality={100}
+                  priority={true}
                 />
               </Box>
             </Box>
@@ -184,6 +185,7 @@ const Home: NextPage<Props> = (props) => {
                   width={280}
                   height={290}
                   quality={100}
+                  priority={true}
                 />
               </Box>
               <Box
@@ -207,7 +209,7 @@ const Home: NextPage<Props> = (props) => {
                   Ваши поклонники покупают подарки
                 </Title>
                 <Text>
-                  Поделитесь своей ссылкой на check-wishlist.ru со своими друзьями или подписчиками, и они смогут посетить ваш список желаний и купить вам подарки. Поклонники могут оставить сообщение и свое имя во время оформления заказа
+                  Поделитесь своей ссылкой со своими друзьями или подписчиками, и они смогут посетить ваш список желаний и купить вам подарки. Поклонники могут оставить сообщение и свое имя во время оформления заказа.
                 </Text>
               </Box>
             </Box>
@@ -266,6 +268,7 @@ const Home: NextPage<Props> = (props) => {
                   width={280}
                   height={290}
                   quality={100}
+                  priority={true}
                 />
               </Box>
             </Box>
@@ -290,28 +293,30 @@ const Home: NextPage<Props> = (props) => {
               },
             })}
           >
-            <Accordion.Item value="customization">
-              <Accordion.Control>Сколько это стоит?</Accordion.Control>
+            <Accordion.Item value="value1">
+              <Accordion.Control>
+                Сколько это стоит?
+              </Accordion.Control>
               <Accordion.Panel>
                 На данный момент сервис бесплатный. Мы не взимаем комиссию за покупку подарков. Все, что мы хотим, это помочь вам собрать подарки на свой день рождения или праздник.
               </Accordion.Panel>
             </Accordion.Item>
 
-            <Accordion.Item value="flexibility">
-              <Accordion.Control>
-                Как я могу оплатить подарки?
-              </Accordion.Control>
-              <Accordion.Panel>
-                Вы можете оплатить подарки, купленные вашими друзьями или подписчиками, любым удобным способом. Мы не взимаем комиссию за покупку подарков.
-              </Accordion.Panel>
-            </Accordion.Item>
-
-            <Accordion.Item value="focus-ring">
+            <Accordion.Item value="value2">
               <Accordion.Control>
                 Как я могу получить подарки?
               </Accordion.Control>
               <Accordion.Panel>
                 Мы отправляем подарки, купленные вашими друзьями или подписчиками, прямо на ваш адрес. Процесс заказа полностью отделен от покупки подарка вашим поклонником, чтобы обеспечить 100% конфиденциальность.
+              </Accordion.Panel>
+            </Accordion.Item>
+
+            <Accordion.Item value="value3">
+              <Accordion.Control>
+                Как я могу узнать, что мне подарили?
+              </Accordion.Control>
+              <Accordion.Panel>
+                В приборной панели аккаунта отображается полная статистика по подаркам, которые вы получили. Там же вы можете увидеть, кто подарил вам подарок и что подарили.
               </Accordion.Panel>
             </Accordion.Item>
           </Accordion>

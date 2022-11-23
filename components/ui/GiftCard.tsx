@@ -82,6 +82,8 @@ const GiftCard: FunctionComponent<IProps> = (props) => {
             alt={props.gift?.title ? props.gift.title : ''}
             layout="fill"
             objectFit='cover'
+            objectPosition='center'
+            priority={true}
           />
         </Box>
       </Card.Section>

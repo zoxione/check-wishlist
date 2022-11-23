@@ -7,6 +7,7 @@ import { FunctionComponent, useState } from 'react';
 
 import { UpdateUser } from '../../api/User';
 import { IUser } from '../../types';
+import { userSchema } from '../logics/ValidationForm';
 
 interface IProps {
   opened: boolean;
@@ -25,13 +26,7 @@ const ChangePasswordModal: FunctionComponent<IProps> = (props) => {
 
     validate: joiResolver(
       Joi.object({
-        password: Joi.string().regex(/^[A-Za-z0-9]+$/).min(6).max(19).messages({
-          'string.pattern.base': 'Пароль должен состоять только из латинских букв и цифр',
-          'string.base': 'Пароль должен быть строкой',
-          'string.empty': 'Пароль не может быть пустым',
-          'string.min': 'Пароль должен быть больше 5 символов',
-          'string.max': 'Пароль должен быть меньше 20 символов',
-        }),
+        password: userSchema.password,
         passwordConfirm: Joi.string().valid(Joi.ref('password')).messages({
           'string.base': 'Пароль должен быть строкой',
           'string.empty': 'Пароль не может быть пустым',

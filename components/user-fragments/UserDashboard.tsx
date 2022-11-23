@@ -32,8 +32,6 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
     }
   })
 
-  console.log(props.user)
-
   return (
     <>
       <UserFragmentLayout>

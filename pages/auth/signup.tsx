@@ -1,4 +1,4 @@
-import { Anchor, Box, Button, Input, PasswordInput, Text, TextInput, Title } from '@mantine/core';
+import { Anchor, Box, Button, Input, PasswordInput, Text, Textarea, TextInput, Title } from '@mantine/core';
 import { joiResolver, useForm } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { IconCheck, IconChevronLeft, IconChevronRight, IconX } from '@tabler/icons';
@@ -15,6 +15,7 @@ import { AddUser } from '../../api/User';
 import AuthLayout from '../../components/AuthLayout';
 import AppHead from '../../components/logics/Head';
 import { IUser } from '../../types';
+import { userSchema } from '../../components/logics/ValidationForm';
 
 
 interface IProps {
@@ -35,25 +36,9 @@ const SignUp: NextPage<IProps> = ({ }) => {
     },
     validate: joiResolver(
       Joi.object({
-        username: Joi.string().regex(/^[A-Za-z0-9]+$/).min(3).max(13).messages({
-          'string.pattern.base': 'Имя пользователя должно состоять только из латинских букв и цифр',
-          'string.base': 'Имя должно быть строкой',
-          'string.empty': 'Имя не может быть пустым',
-          'string.min': 'Имя должно быть больше 2 символов',
-          'string.max': 'Имя должно быть меньше 14 символов',
-        }),
-        email: Joi.string().email({ tlds: { allow: false } }).messages({
-          'string.base': 'Email должен быть строкой',
-          'string.empty': 'Email не может быть пустым',
-          'string.email': 'Email должен быть валидным',
-        }),
-        password: Joi.string().regex(/^[A-Za-z0-9]+$/).min(6).max(19).messages({
-          'string.pattern.base': 'Пароль должен состоять только из латинских букв и цифр',
-          'string.base': 'Пароль должен быть строкой',
-          'string.empty': 'Пароль не может быть пустым',
-          'string.min': 'Пароль должен быть больше 5 символов',
-          'string.max': 'Пароль должен быть меньше 20 символов',
-        }),
+        username: userSchema.username,
+        email: userSchema.email,
+        password: userSchema.password,
         passwordConfirm: Joi.string().valid(Joi.ref('password')).messages({
           'string.base': 'Пароль должен быть строкой',
           'string.empty': 'Пароль не может быть пустым',
@@ -67,35 +52,13 @@ const SignUp: NextPage<IProps> = ({ }) => {
     initialValues: {
       fullname: '',
       about: '',
-      imageUrl: '',
-      backgroundUrl: '',
       address: '',
     },
     validate: joiResolver(
       Joi.object({
-        fullname: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(29).allow('').messages({
-          'string.pattern.base': 'Имя должно состоять только из букв',
-          'string.base': 'ФИО должно быть строкой',
-          'string.max': 'ФИО должно быть меньше 30 символов',
-        }),
-        about: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(79).allow('').messages({
-          'string.pattern.base': 'О себе должно состоять только из букв',
-          'string.base': 'О себе должно быть строкой',
-          'string.max': 'О себе должно быть меньше 80 символов',
-        }),
-        imageUrl: Joi.string().uri().allow('').messages({
-          'string.base': 'Ссылка должна быть строкой',
-          'string.uri': 'Ссылка должна быть валидной',
-        }),
-        backgroundUrl: Joi.string().uri().allow('').messages({
-          'string.base': 'Ссылка должна быть строкой',
-          'string.uri': 'Ссылка должна быть валидной',
-        }),
-        address: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(29).allow('').messages({
-          'string.pattern.base': 'Адрес должен состоять только из букв',
-          'string.base': 'Адрес должен быть строкой',
-          'string.max': 'Адрес должен быть меньше 30 символов',
-        }),
+        fullname: userSchema.fullname,
+        about: userSchema.about,
+        address: userSchema.address,
       })
     ),
   });
@@ -110,31 +73,11 @@ const SignUp: NextPage<IProps> = ({ }) => {
     },
     validate: joiResolver(
       Joi.object({
-        tiktokName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
-          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
-          'string.base': 'Имя должно быть строкой',
-          'string.max': 'Имя должно быть меньше 20 символов',
-        }),
-        twitterName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
-          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
-          'string.base': 'Имя должно быть строкой',
-          'string.max': 'Имя должно быть меньше 20 символов',
-        }),
-        vkName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
-          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
-          'string.base': 'Имя должно быть строкой',
-          'string.max': 'Имя должно быть меньше 20 символов',
-        }),
-        telegramName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
-          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
-          'string.base': 'Имя должно быть строкой',
-          'string.max': 'Имя должно быть меньше 20 символов',
-        }),
-        instagramName: Joi.string().regex(/^[A-Za-z0-9]+$/).max(19).allow('').messages({
-          'string.pattern.base': 'Имя должно состоять только из латинских букв и цифр',
-          'string.base': 'Имя должно быть строкой',
-          'string.max': 'Имя должно быть меньше 20 символов',
-        }),
+        tiktokName: userSchema.tiktokName,
+        twitterName: userSchema.twitterName,
+        vkName: userSchema.vkName,
+        telegramName: userSchema.telegramName,
+        instagramName: userSchema.instagramName,
       })
     ),
   });
@@ -354,7 +297,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
         required
         {...form2.getInputProps('fullname')}
       />
-      <TextInput
+      <Textarea
         label="Напишите пару слов о себе"
         placeholder="Я - человек, который любит писать стихи"
         mt={10}

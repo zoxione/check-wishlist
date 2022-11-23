@@ -7,6 +7,7 @@ import { FunctionComponent, useState } from 'react';
 
 import { UpdateUser } from '../../api/User';
 import { IUser } from '../../types';
+import { userSchema } from '../logics/ValidationForm';
 
 interface IProps {
   opened: boolean;
@@ -25,16 +26,8 @@ const ChangePersonalDataModal: FunctionComponent<IProps> = (props) => {
 
     validate: joiResolver(
       Joi.object({
-        fullname: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(29).allow('').messages({
-          'string.pattern.base': 'Имя должно состоять только из букв',
-          'string.base': 'ФИО должно быть строкой',
-          'string.max': 'ФИО должно быть меньше 30 символов',
-        }),
-        address: Joi.string().regex(/^[A-Za-zА-Яа-я]+$/).max(29).allow('').messages({
-          'string.pattern.base': 'Адрес должен состоять только из букв',
-          'string.base': 'Адрес должен быть строкой',
-          'string.max': 'Адрес должен быть меньше 30 символов',
-        }),
+        fullname: userSchema.fullname,
+        address: userSchema.address,
       })
     ),
   });

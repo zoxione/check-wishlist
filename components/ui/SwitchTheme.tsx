@@ -24,6 +24,7 @@ const SwitchTheme: FunctionComponent<IProps> = ({ }) => {
         offLabel={<IconMoonStars size={16} stroke={2.5} color={theme.colors.blue[6]} />}
         onClick={() => toggleColorScheme()}
         onChange={(event) => toggleColorScheme()}
+        checked={colorScheme === 'dark'}
       />
     </Group>
   );

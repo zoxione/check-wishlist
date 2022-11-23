@@ -7,6 +7,7 @@ import { FunctionComponent, useState } from 'react';
 
 import { UpdateUser } from '../../api/User';
 import { IUser } from '../../types';
+import { userSchema } from '../logics/ValidationForm';
 
 interface IProps {
   opened: boolean;
@@ -24,11 +25,7 @@ const ChangeEmailModal: FunctionComponent<IProps> = (props) => {
 
     validate: joiResolver(
       Joi.object({
-        email: Joi.string().email({ tlds: { allow: false } }).messages({
-          'string.base': 'Email должен быть строкой',
-          'string.empty': 'Email не может быть пустым',
-          'string.email': 'Email должен быть валидным',
-        }),
+        email: userSchema.email,
       })
     ),
   });

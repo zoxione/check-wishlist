@@ -3,11 +3,11 @@ import { joiResolver, useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from '@tabler/icons';
 import Joi from 'joi';
-import { useSession } from "next-auth/react";
 import { FunctionComponent, useState } from "react";
 
 import { UpdateGift } from "../../api/Gift";
 import { IGift } from "../../types";
+import { giftSchema } from "../logics/ValidationForm";
 
 
 interface IProps {
@@ -18,7 +18,6 @@ interface IProps {
 
 
 const UpdateGiftModal: FunctionComponent<IProps> = (props) => {
-  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm({
@@ -28,11 +27,7 @@ const UpdateGiftModal: FunctionComponent<IProps> = (props) => {
 
     validate: joiResolver(
       Joi.object({
-        description: Joi.string().max(255).regex(/^[A-Za-zА-Яа-я0-9]+$/).allow('').messages({
-          'string.pattern.base': 'Описание должно состоять только из букв и цифр',
-          'string.base': 'Описание должно быть строкой',
-          'string.max': 'Описание должно быть меньше 256 символов',
-        }),
+        description: giftSchema.description,
       })
     ),
   });

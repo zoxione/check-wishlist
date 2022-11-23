@@ -10,6 +10,7 @@ import { AddGift, ParseGift } from "../../api/Gift";
 import { IGift } from "../../types";
 import IconWildberries from '../../public/wildberries.svg';
 import IconAliexpress from '../../public/aliexpress.svg';
+import { giftSchema } from "../logics/ValidationForm";
 
 
 interface IProps {
@@ -30,16 +31,8 @@ const AddGiftModal: FunctionComponent<IProps> = (props) => {
 
     validate: joiResolver(
       Joi.object({
-        description: Joi.string().max(255).regex(/^[A-Za-zА-Яа-я0-9]+$/).allow('').messages({
-          'string.pattern.base': 'Описание должно состоять только из букв и цифр',
-          'string.base': 'Описание должно быть строкой',
-          'string.max': 'Описание должно быть меньше 256 символов',
-        }),
-        shopUrl: Joi.string().uri().messages({
-          'string.base': 'Ссылка должна быть строкой',
-          'string.empty': 'Ссылка не может быть пустой',
-          'string.uri': 'Ссылка должна быть валидной',
-        }),
+        description: giftSchema.description,
+        shopUrl: giftSchema.shopUrl,
       })
     ),
   });
