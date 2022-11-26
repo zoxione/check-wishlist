@@ -7,8 +7,6 @@ import { SERVER_URL } from '../data/constants';
 export const fetcher = (url: RequestInfo | URL) => fetch(url, {
   method: 'GET',
   headers: {
-    'apikey': process.env.SUPABASE_API_KEY || '',
-    'Authorization': process.env.SUPABASE_API_KEY || '',
     'Content-Type': 'application/json',
     'Prefer': 'return=representation'
   },
