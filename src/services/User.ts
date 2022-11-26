@@ -1,5 +1,6 @@
 import useSWR from 'swr';
-import { IUser } from "../types";
+import { IUser } from "../../types";
+import { SERVER_URL } from '../data/constants';
 
 export const fetcher = (url: RequestInfo | URL) => fetch(url, {
   method: 'GET',
@@ -16,6 +17,7 @@ export const fetcher = (url: RequestInfo | URL) => fetch(url, {
 // C помощью useSWR мы получаем данные пользователя и кэшируем их
 // Возвращает IUser
 export function useUser(id: string) {
+  //const { data, error, mutate } = useSWR(`${SERVER_URL}/User/${id}`, fetcher, { refreshInterval: 1000 })
   const { data, error } = useSWR(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?id=eq.${id}&select=*`, fetcher)
   let user: IUser | null = null;
 

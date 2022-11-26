@@ -1,6 +1,7 @@
 import useSWR from 'swr';
-import { IGift, ITransaction } from "../types";
+import { IGift, ITransaction } from "../../types";
 import { fetcher } from './User';
+import { SERVER_URL } from '../data/constants';
 
 
 // Получение данных списка подарков по userId

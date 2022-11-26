@@ -7,8 +7,8 @@ import { useSession } from "next-auth/react";
 import { FunctionComponent, useState } from "react";
 import InputMask from "react-input-mask";
 
-import { GiveGift } from "../../api/Gift";
-import { IGift, ITransaction } from "../../types";
+import { GiveGift } from "../../services/Gift";
+import { IGift, ITransaction } from "../../../types";
 
 
 interface IProps {

@@ -5,8 +5,8 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { FunctionComponent, useState } from 'react';
 
-import { AddGift, DeleteGift, useGifts } from '../../api/Gift';
-import { IGift, IUser } from '../../types';
+import { AddGift, DeleteGift, useGifts } from '../../services/Gift';
+import { IGift, IUser } from '../../../types';
 import GiftCard from '../ui/GiftCard';
 import InfoCard from '../ui/InfoCard';
 import UserFragmentLayout from './UserFragmentLayout';

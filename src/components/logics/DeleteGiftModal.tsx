@@ -3,8 +3,8 @@ import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from '@tabler/icons';
 import { FunctionComponent, useState } from "react";
 
-import { DeleteGift } from "../../api/Gift";
-import { IGift } from "../../types";
+import { DeleteGift } from "../../services/Gift";
+import { IGift } from "../../../types";
 
 
 interface IProps {

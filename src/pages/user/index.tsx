@@ -7,20 +7,17 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Router from 'next/router';
 import { useEffect } from 'react';
-import AppHead from '../../components/logics/Head';
 
-import { GetUserFromId } from '../../api/User';
+import AppHead from '../../components/logics/Head';
+import { GetUserFromId } from '../../services/User';
 import NavbarContent from '../../components/Navbar';
-import { IGift, ITransaction, IUser } from '../../types';
+import { IGift, ITransaction, IUser } from '../../../types';
 import { authOptions } from '../api/auth/[...nextauth]';
 const UserAccount = dynamic(() => import('../../components/user-fragments/UserAccount'))
 const UserDashboard = dynamic(() => import('../../components/user-fragments/UserDashboard'))
 const UserAnalytics = dynamic(() => import('../../components/user-fragments/UserAnalytics'))
 const UserSettings = dynamic(() => import('../../components/user-fragments/UserSettings'))
 const UserWishlist = dynamic(() => import('../../components/user-fragments/UserWishlist'))
-
-
-
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params, query }) => {

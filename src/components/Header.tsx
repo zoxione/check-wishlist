@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { FunctionComponent } from 'react';
 
 import SwitchTheme from '../components/ui/SwitchTheme';
-import Logo from '../public/favicon.svg';
-import { HeaderLink } from './ui/HeaderLink';
+import Logo from '../../public/favicon.svg';
+import { HeaderLink } from '../components/ui/HeaderLink';
 
 interface IProps {
 

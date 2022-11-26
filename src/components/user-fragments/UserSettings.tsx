@@ -7,9 +7,9 @@ import dynamic from 'next/dynamic';
 import Router from 'next/router';
 import { FunctionComponent, useState } from 'react';
 
-import { DeleteGiftedGifts, DeleteWishlistGifts } from '../../api/Gift';
-import { DeleteUser } from '../../api/User';
-import { IUser } from '../../types';
+import { DeleteGiftedGifts, DeleteWishlistGifts } from '../../services/Gift';
+import { DeleteUser } from '../../services/User';
+import { IUser } from '../../../types';
 import InfoCard from '../ui/InfoCard';
 import SettingsSection from '../ui/SettingsSection';
 import UserFragmentLayout from './UserFragmentLayout';

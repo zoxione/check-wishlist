@@ -7,11 +7,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import QRCode from "react-qr-code";
 
-import { useGifts } from '../api/Gift';
-import { GetUserFromUsername } from '../api/User';
+import { useGifts } from '../services/Gift';
+import { GetUserFromUsername } from '../services/User';
 import AppHead from '../components/logics/Head';
 import GiftCard from '../components/ui/GiftCard';
-import { IGift, IUser } from '../types';
+import { IGift, IUser } from '../../types';
 import { authOptions } from './api/auth/[...nextauth]';
 
 
@@ -91,26 +91,21 @@ const Profile: NextPage<IProps> = (props: IProps) => {
             flexDirection: 'column',
           })}
         >
-          <Text>
-            Скопируйте ссылку на профиль
-          </Text>
-          <CopyButton value={`https://wishlist.ictis.ru/${props.user?.username}`}>
-            {({ copied, copy }) => (
-              <Button onClick={copy} variant="default" fullWidth leftIcon={<IconUserCircle size={18} />}>
-                {copied ? "Скопировано" : `https://wishlist.ictis.ru/${props.user?.username}`}
-              </Button>
-            )}
-          </CopyButton>
-          <Text mt={10}>
-            Или отсканируйте QR-код
-          </Text>
           <QRCode
             value={`https://wishlist.ictis.ru/${props.user?.username}`}
             style={{ height: "auto", maxWidth: "100%", width: "100%" }}
             size={256}
+            level="M"
             viewBox={`0 0 256 256`}
           />
-          <Button mt={10} fullWidth onClick={() => closeAllModals()}>
+          <CopyButton value={`https://wishlist.ictis.ru/${props.user?.username}`}>
+            {({ copied, copy }) => (
+              <Button onClick={copy} variant="default" mt={15} fullWidth>
+                {copied ? "Скопировано" : `https://wishlist.ictis.ru/${props.user?.username}`}
+              </Button>
+            )}
+          </CopyButton>
+          <Button mt={30} fullWidth onClick={() => closeAllModals()}>
             Закрыть
           </Button>
         </Box>
@@ -213,6 +208,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
           layout="fill"
           priority={true}
           objectFit="cover"
+          objectPosition="center"
           style={{ zIndex: -100 }}
         />
       </Container>
@@ -246,6 +242,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                       width={160}
                       priority={true}
                       objectFit="cover"
+                      objectPosition="center"
                       style={{ borderRadius: '50%' }}
                     />
                   </Indicator>
@@ -258,6 +255,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
                     width={160}
                     priority={true}
                     objectFit="cover"
+                    objectPosition="center"
                     style={{ borderRadius: '50%' }}
                   />
                 )}
