@@ -1,6 +1,9 @@
+import axios from 'axios';
 import { NextApiHandler } from 'next';
 import NextAuth, { DefaultUser, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { SERVER_URL } from '../../../data/constants';
+
 
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, authOptions);
 export default authHandler;
@@ -31,39 +34,31 @@ export const authOptions: NextAuthOptions = {
           password: string,
         };
 
-        // логика входа юзера из бд
         let result: DefaultUser | null = null;
 
-        await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?email=eq.${email}&select=*`, {
-          method: 'GET',
-          headers: {
-            'apikey': process.env.SUPABASE_API_KEY || '',
-            'Authorization': process.env.SUPABASE_API_KEY || '',
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
-          },
-        }).then(async (res) => {
-          if (res.ok) {
-            const data = await res.json();
-            if (data.length > 0) {
-              if (password === data[0].password) {
-                result = {
-                  id: data[0].id,
-                  name: data[0].username,
-                  email: data[0].email,
-                  image: data[0].imageUrl,
-                };
-              }
-            }
+        await axios.post(`${SERVER_URL}/users_login`,
+          {
+            email: email,
+            password: password,
           }
-        })
+        )
+          .then(function (response) {
+            if (response.data) {
+              result = {
+                id: response.data.id,
+                name: response.data.username,
+                email: response.data.email,
+                image: response.data.imageUrl,
+              };
+            }
+          })
+          .catch(function (error) {
+            console.log("Error login user");
+          })
+
         return result;
       }
     }),
-    // GitHubProvider({
-    //   clientId: process.env.GITHUB_ID || "",
-    //   clientSecret: process.env.GITHUB_SECRET || "",
-    // }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
 };

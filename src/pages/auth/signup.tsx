@@ -16,6 +16,7 @@ import AuthLayout from '../../components/AuthLayout';
 import AppHead from '../../components/logics/Head';
 import { IUser } from '../../../types';
 import { userSchema } from '../../lib/joi';
+import { AVATAR_PLACEHOLDER_URL, BACKGROUND_PLACEHOLDER_URL } from '../../data/constants';
 
 
 interface IProps {
@@ -93,8 +94,8 @@ const SignUp: NextPage<IProps> = ({ }) => {
         email: form1.values.email,
         password: form1.values.password,
         about: form2.values.about,
-        imageUrl: `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/placeholder`,
-        backgroundUrl: `https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder`,
+        imageUrl: AVATAR_PLACEHOLDER_URL,
+        backgroundUrl: BACKGROUND_PLACEHOLDER_URL,
         address: form2.values.address,
         isVerified: false,
         tiktokName: form3.values.tiktokName,
@@ -281,7 +282,7 @@ const SignUp: NextPage<IProps> = ({ }) => {
         })}
       >
         <Image
-          src={avatars[0] ? URL.createObjectURL(avatars[0]) : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/placeholder'}
+          src={avatars[0] ? URL.createObjectURL(avatars[0]) : AVATAR_PLACEHOLDER_URL}
           alt="Avatar image"
           layout="fill"
           objectFit="cover"

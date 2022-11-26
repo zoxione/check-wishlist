@@ -1,5 +1,7 @@
+import axios from 'axios';
 import useSWR from 'swr';
-import { fetcher } from './User';
+import { SERVER_URL } from '../data/constants';
+import { fetcher } from './Gift';
 
 
 // Получение всех транзакций
@@ -48,21 +50,12 @@ export function useTransactionsFromUserId(userId: string) {
 
 // Выполнение транзакции
 export const CompleteTransaction = async (id: string) => {
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?id=eq.${id}`, {
-    method: 'PATCH',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify({ isCompleted: true }),
-  }).then((res) => {
-    if (res.ok) {
-
-    }
-    else {
+  await axios.patch(`${SERVER_URL}/transactions_complete/${id}`)
+    .then(function (response) {
+      console.log("[CompleteTransaction]: " + response);
+    })
+    .catch(function (error) {
+      console.log("[CompleteTransaction]: " + error);
       throw new Error("Error completing transaction");
-    }
-  });
+    })
 }

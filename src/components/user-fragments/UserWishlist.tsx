@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { FunctionComponent, useState } from 'react';
 
-import { AddGift, DeleteGift, useGifts } from '../../services/Gift';
+import { AddGift, DeleteGift, GetGiftsUser } from '../../services/Gift';
 import { IGift, IUser } from '../../../types';
 import GiftCard from '../ui/GiftCard';
 import InfoCard from '../ui/InfoCard';
@@ -23,7 +23,7 @@ const UserWishlist: FunctionComponent<IProps> = ((props: IProps) => {
 
   const [openedAddGiftModal, setOpenedAddGiftModal] = useState(false);
 
-  const { gifts, isLoading, mutate, isError } = useGifts(props.user?.id || '');
+  const { gifts, isLoading, mutate, isError } = GetGiftsUser(props.user?.id || '');
   const giftsList: IGift[] = gifts?.filter((gift) => !gift.isGifted)
 
   const addGiftClient = async (gift: IGift) => {

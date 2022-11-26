@@ -7,12 +7,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import QRCode from "react-qr-code";
 
-import { useGifts } from '../services/Gift';
-import { GetUserFromUsername } from '../services/User';
+import { GetGiftsUser } from '../services/Gift';
+import { GetUserByUsername } from '../services/User';
 import AppHead from '../components/logics/Head';
 import GiftCard from '../components/ui/GiftCard';
 import { IGift, IUser } from '../../types';
 import { authOptions } from './api/auth/[...nextauth]';
+import { BACKGROUND_PLACEHOLDER_URL } from '../data/constants';
 
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
@@ -21,13 +22,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
   let user: IUser | null = null;
 
   try {
-    user = await GetUserFromUsername(username);
+    user = await GetUserByUsername(username);
   }
   catch (e) {
     console.log(e)
   }
 
   var isOwner = false;
+  {/* @ts-ignore */ }
   if (user?.username === session?.user?.name) {
     isOwner = true;
   }
@@ -47,7 +49,7 @@ interface IProps {
 const Profile: NextPage<IProps> = (props: IProps) => {
   const theme = useMantineTheme();
 
-  const { gifts, isLoading, mutate } = useGifts(props.user?.id || '');
+  const { gifts, isLoading, mutate } = GetGiftsUser(props.user?.id || '');
 
   if (props.user === null) {
     return (
@@ -203,7 +205,7 @@ const Profile: NextPage<IProps> = (props: IProps) => {
           </Group>
         }
         <Image
-          src={props.user?.backgroundUrl ? props.user.backgroundUrl : 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder.png'}
+          src={props.user?.backgroundUrl ? props.user.backgroundUrl : BACKGROUND_PLACEHOLDER_URL}
           alt="Background image"
           layout="fill"
           priority={true}

@@ -9,7 +9,7 @@ import Router from 'next/router';
 import { useEffect } from 'react';
 
 import AppHead from '../../components/logics/Head';
-import { GetUserFromId } from '../../services/User';
+import { GetUserById } from '../../services/User';
 import NavbarContent from '../../components/Navbar';
 import { IGift, ITransaction, IUser } from '../../../types';
 import { authOptions } from '../api/auth/[...nextauth]';
@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params,
   let user: IUser | null = null;
 
   try {
-    user = await GetUserFromId(session?.user?.id || '');
+    user = await GetUserById(session?.user?.id || '');
   }
   catch (e) {
     console.log(e)

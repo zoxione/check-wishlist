@@ -1,14 +1,22 @@
+import axios from 'axios';
 import useSWR from 'swr';
 import { IGift, ITransaction } from "../../types";
-import { fetcher } from './User';
 import { SERVER_URL } from '../data/constants';
+
+
+export const fetcher = (url: RequestInfo | URL) => fetch(url, {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+}).then((res) => res.json());
 
 
 // Получение данных списка подарков по userId
 // C помощью useSWR мы получаем данные подарка и кэшируем их
 // Возвращает IGift[]
-export function useGifts(userId: string) {
-  const { data, error, mutate } = useSWR(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?userId=eq.${userId}&select=*`, fetcher, { refreshInterval: 1000 })
+export function GetGiftsUser(userId: string) {
+  const { data, error, mutate } = useSWR(`${SERVER_URL}/gifts?userId=${userId}`, fetcher, { refreshInterval: 1000 })
 
   const gifts: IGift[] = data
 
@@ -18,29 +26,6 @@ export function useGifts(userId: string) {
     isLoading: !error && !data,
     isError: error
   }
-}
-
-// Получение данных подарка по userId
-// Возвращает IGift[]
-export const GetGifts = async (userId: string) => {
-  let gifts: IGift[] | null = null;
-
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?userId=eq.${userId}&select=*`, {
-    method: 'GET',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    else {
-      throw new Error("Error getting gifts");
-    }
-  });
 }
 
 // Парсинг данных подарка с сервера
@@ -59,157 +44,88 @@ export const ParseGift = async (shopName: string, shopUrl: string) => {
 
 // Добавление нового подарка
 export const AddGift = async (gift: IGift) => {
-  await fetch('https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift', {
-    method: 'POST',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify(gift),
-  }).then((res) => {
-    if (res.ok) {
-
-    }
-    else {
+  await axios.post(`${SERVER_URL}/gifts`,
+    gift
+  )
+    .then(function (response) {
+      console.log("[AddGift]: " + response);
+    })
+    .catch(function (error) {
+      console.log("[AddGift]: " + error);
       throw new Error("Error adding gift");
-    }
-  });
+    })
 }
 
 // Дарение подарка
 export const GiveGift = async (transaction: ITransaction) => {
-  await fetch('https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction', {
-    method: 'POST',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify(transaction),
-  }).then((res) => {
-    if (res.ok) {
-
-    }
-    else {
+  await axios.put(`${SERVER_URL}/gifts_give`,
+    transaction
+  )
+    .then(function (response) {
+      console.log("[GiveGift]: " + response);
+    })
+    .catch(function (error) {
+      console.log("[GiveGift]: " + error);
       throw new Error("Error giving gift");
-    }
-  });
-
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?id=eq.${transaction.giftId}`, {
-    method: 'PATCH',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify({ isGifted: true }),
-  }).then((res) => {
-    if (res.ok) {
-
-    }
-    else {
-      throw new Error("Error giving gift");
-    }
-  });
+    })
 }
 
 // Обновление данных подарка
 export const UpdateGift = async (gift: IGift) => {
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?id=eq.${gift.id}`, {
-    method: 'PATCH',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify(gift),
-  }).then((res) => {
-    if (res.ok) {
-
-    }
-    else {
+  await axios.put(`${SERVER_URL}/gifts/${gift.id}`,
+    gift
+  )
+    .then(function (response) {
+      console.log("[UpdateGift]: " + response);
+    })
+    .catch(function (error) {
+      console.log("[UpdateGift]: " + error);
       throw new Error("Error updating gift");
-    }
-  });
+    })
 }
 
 // Удаление подарка
 export const DeleteGift = async (id: string) => {
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?id=eq.${id}`, {
-    method: 'DELETE',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-  }).then((res) => {
-    if (res.ok) {
-    }
-    else {
+  await axios.delete(`${SERVER_URL}/gifts/${id}`)
+    .then(function (response) {
+      console.log("[DeleteGift]: " + response);
+    })
+    .catch(function (error) {
+      console.log("[DeleteGift]: " + error);
       throw new Error("Error deleting gift");
-    }
-  });
+    })
 }
 
 // Очистка списка желаний
 export const DeleteWishlistGifts = async (userId: string) => {
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?userId=eq.${userId}&isGifted=eq.false`, {
-    method: 'DELETE',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-  }).then((res) => {
-    if (res.ok) {
-      console.log("Deleted wishlist gifts");
+  await axios.delete(`${SERVER_URL}/gifts`, {
+    params: {
+      userId: userId,
+      isGifted: false
     }
-    else {
-      throw new Error("Error deleting gifts");
-    }
-  });
+  })
+    .then(function (response) {
+      console.log("[DeleteWishlistGifts]: " + response);
+    })
+    .catch(function (error) {
+      console.log("[DeleteWishlistGifts]: " + error);
+      throw new Error("Error deleting gift");
+    })
 }
 
 // Очистка списка подаренных подарков
 export const DeleteGiftedGifts = async (userId: string) => {
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?userId=eq.${userId}`, {
-    method: 'DELETE',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-  }).then((res) => {
-    if (res.ok) {
-      console.log("Gifts deleted")
+  await axios.delete(`${SERVER_URL}/gifts`, {
+    params: {
+      userId: userId,
+      isGifted: true
     }
-    else {
-      throw new Error("Error deleting transactions");
-    }
-  });
-
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Gift?userId=eq.${userId}&isGifted=eq.true`, {
-    method: 'DELETE',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-  }).then((res) => {
-    if (res.ok) {
-      console.log("Gifts deleted")
-    }
-    else {
+  })
+    .then(function (response) {
+      console.log("[DeleteGiftedGifts]: " + response);
+    })
+    .catch(function (error) {
+      console.log("[DeleteGiftedGifts]: " + error);
       throw new Error("Error deleting gift");
-    }
-  });
+    })
 }

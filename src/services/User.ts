@@ -1,172 +1,84 @@
-import useSWR from 'swr';
+import axios from 'axios';
 import { IUser } from "../../types";
 import { SERVER_URL } from '../data/constants';
 
-export const fetcher = (url: RequestInfo | URL) => fetch(url, {
-  method: 'GET',
-  headers: {
-    'apikey': process.env.SUPABASE_API_KEY || '',
-    'Authorization': process.env.SUPABASE_API_KEY || '',
-    'Content-Type': 'application/json',
-    'Prefer': 'return=representation'
-  },
-}).then((res) => res.json());
-
-
-// Получение данных пользователя по id
-// C помощью useSWR мы получаем данные пользователя и кэшируем их
-// Возвращает IUser
-export function useUser(id: string) {
-  //const { data, error, mutate } = useSWR(`${SERVER_URL}/User/${id}`, fetcher, { refreshInterval: 1000 })
-  const { data, error } = useSWR(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?id=eq.${id}&select=*`, fetcher)
-  let user: IUser | null = null;
-
-  if (data && data.length > 0) {
-    user = data[0]
-  }
-
-  return {
-    user: user,
-    isLoading: !error && !data,
-    isError: error
-  }
-}
 
 // Получение данных пользователя по id
 // Возвращает IUser
-export const GetUserFromId = async (id: string) => {
+export const GetUserById = async (id: string) => {
   let user: IUser | null = null;
 
-  const userResponse = await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?id=eq.${id}&select=*`, {
-    method: 'GET',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-  }).then(res => res.json());
-
-  if (userResponse.length > 0) {
-    user = userResponse[0];
-  }
+  await axios.get(`${SERVER_URL}/users`, {
+    params: {
+      id: id
+    }
+  })
+    .then(function (response) {
+      user = response.data as IUser;
+    })
+    .catch(function (error) {
+      console.log("[GetUserById]: " + error);
+    })
 
   return user;
 }
 
 // Получение данных пользователя по username
 // Возвращает IUser
-export const GetUserFromUsername = async (username: string) => {
+export const GetUserByUsername = async (username: string) => {
   let user: IUser | null = null;
 
-  const userResponse = await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?username=eq.${username}&select=*`, {
-    method: 'GET',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-  }).then(res => res.json());
-
-  if (userResponse.length > 0) {
-    user = userResponse[0];
-  }
+  await axios.get(`${SERVER_URL}/users`, {
+    params: {
+      username: username
+    }
+  })
+    .then(function (response) {
+      user = response.data as IUser;
+    })
+    .catch(function (error) {
+      console.log("[GetUserFromUsername]: " + error);
+    })
 
   return user;
 }
 
 // Добавление нового пользователя
 export const AddUser = async (user: IUser) => {
-  await fetch('https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User', {
-    method: 'POST',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify(user),
-  }).then((res) => {
-    if (res.ok) {
-
-    }
-    else {
+  await axios.post(`${SERVER_URL}/users`,
+    user
+  )
+    .then(function (response) {
+      console.log("[AddUser]: " + response);
+    })
+    .catch(function (error) {
+      console.log("[AddUser]: " + error);
       throw new Error("Error adding user");
-    }
-  });
+    })
 }
 
 // Обновление данных пользователя
 export const UpdateUser = async (user: IUser) => {
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?id=eq.${user.id}`, {
-    method: 'PATCH',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-    body: JSON.stringify(user),
-  }).then((res) => {
-    if (res.ok) {
-      console.log("User updated");
-    }
-    else {
+  await axios.put(`${SERVER_URL}/users/${user.id}`,
+    user
+  )
+    .then(function (response) {
+      console.log("[UpdateUser]: " + response);
+    })
+    .catch(function (error) {
+      console.log("[UpdateUser]: " + error);
       throw new Error("Error updating user");
-    }
-  });
+    })
 }
 
 // Удаление пользователя
 export const DeleteUser = async (id: string) => {
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?userId=eq.${id}`, {
-    method: 'DELETE',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-  }).then((res) => {
-    if (res.ok) {
-      console.log("User transactions deleted");
-    }
-    else {
-      throw new Error("Error deleting transactions");
-    }
-  });
-
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?gifterId=eq.${id}`, {
-    method: 'DELETE',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-  }).then((res) => {
-    if (res.ok) {
-      console.log("Transactions deleted");
-    }
-    else {
-      throw new Error("Error deleting transactions");
-    }
-  });
-
-  await fetch(`https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/User?id=eq.${id}`, {
-    method: 'DELETE',
-    headers: {
-      'apikey': process.env.SUPABASE_API_KEY || '',
-      'Authorization': process.env.SUPABASE_API_KEY || '',
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation'
-    },
-  }).then((res) => {
-    if (res.ok) {
-    }
-    else {
+  await axios.delete(`${SERVER_URL}/users/${id}`)
+    .then(function (response) {
+      console.log("[DeleteUser]: " + response);
+    })
+    .catch(function (error) {
+      console.log("[DeleteUser]: " + error);
       throw new Error("Error deleting user");
-    }
-  });
+    })
 }

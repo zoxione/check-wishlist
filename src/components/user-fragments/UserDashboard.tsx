@@ -5,7 +5,7 @@ import Router from "next/router";
 import { FunctionComponent } from 'react';
 import { Carousel } from '@mantine/carousel';
 
-import { useGifts } from '../../services/Gift';
+import { GetGiftsUser } from '../../services/Gift';
 import { CompleteTransaction, useTransactions, useTransactionsFromUserId } from '../../services/Transaction';
 import { IGift, IUser } from '../../../types';
 import InfoCard from '../ui/InfoCard';
@@ -22,15 +22,15 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
   const { transactions: transactionsUser, isLoading: isLoadingTransactionsUser } = useTransactionsFromUserId(props.user?.id ? props.user.id : '');
   const { transactions, isLoading: isLoadingTransactions } = useTransactions();
 
-  const { gifts, isLoading: isLoadingGifts, mutate } = useGifts(props.user?.id || '');
+  const { gifts, isLoading: isLoadingGifts, mutate } = GetGiftsUser(props.user?.id || '');
   const wishlist: IGift[] = gifts?.filter((gift) => !gift.isGifted)
   const gifted: IGift[] = gifts?.filter((gift) => gift.isGifted)
   let gifters: any[] = [];
-  transactionsUser?.forEach((tran) => {
-    if (!gifters.find((g) => g.id === tran.Gifter.id)) {
-      gifters.push(tran.Gifter);
-    }
-  })
+  // transactionsUser?.forEach((tran) => {
+  //   if (!gifters.find((g) => g.id === tran.Gifter.id)) {
+  //     gifters.push(tran.Gifter);
+  //   }
+  // })
 
   return (
     <>
@@ -104,7 +104,7 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
             )
           }
 
-          {
+          {/* {
             isLoadingTransactionsUser ? (
               <>
                 <Skeleton height={120} mt={40} radius="md" />
@@ -197,11 +197,11 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                 ))}
               </>
             )
-          }
+          } */}
         </InfoCard>
 
 
-        {
+        {/* {
           props.user?.role === "admin" && (
             <InfoCard title="Админ панель">
               {
@@ -323,7 +323,7 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
               }
             </InfoCard>
           )
-        }
+        } */}
       </UserFragmentLayout>
     </>
   )
