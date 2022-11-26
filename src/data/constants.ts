@@ -4,8 +4,8 @@ export const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3
 export const SUPABASE_DATABASE_URL = 'https://cserfwfqoxxsyqezqezy.supabase.co'
 export const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzZXJmd2Zxb3h4c3lxZXpxZXp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjcwNjkwNzEsImV4cCI6MTk4MjY0NTA3MX0.xjpsIOyZx5FtFLxZheXdSX3_AbEM0t5orMlAT1I_nk0'
 
-export const SERVER_URL = 'http://localhost:8080'
-// export const SERVER_URL = 'https://check-wishlist-server.vercel.app'
+// export const SERVER_URL = 'http://localhost:8080'
+export const SERVER_URL = 'https://check-wishlist-server.vercel.app'
 
 export const BACKGROUND_PLACEHOLDER_URL = 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/backgrounds/placeholder'
 export const AVATAR_PLACEHOLDER_URL = 'https://cserfwfqoxxsyqezqezy.supabase.co/storage/v1/object/public/check/users/avatars/placeholder'

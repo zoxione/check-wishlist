@@ -8,19 +8,10 @@ import { fetcher } from './Gift';
 // C помощью useSWR мы получаем транзакции и кэшируем их
 // Возвращает ITransaction[]
 export function useTransactions() {
-  const { data, error } = useSWR(
-    `https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?select=
-    *,
-    Gift(*),
-    Gifter:gifterId(*),
-    User:userId(*)`,
-    fetcher
-  )
-
-  const transactions: any[] = data
+  const { data, error } = useSWR(`${SERVER_URL}/transactions`, fetcher, { refreshInterval: 5000 })
 
   return {
-    transactions: transactions,
+    transactions: data as any[],
     isLoading: !error && !data,
     isError: error
   }
@@ -30,19 +21,10 @@ export function useTransactions() {
 // C помощью useSWR мы получаем транзакции и кэшируем их
 // Возвращает ITransaction[]
 export function useTransactionsFromUserId(userId: string) {
-  const { data, error } = useSWR(
-    `https://cserfwfqoxxsyqezqezy.supabase.co/rest/v1/Transaction?userId=eq.${userId}&select=
-    *,
-    Gift(*),
-    Gifter:gifterId(*),
-    User:userId(*)`,
-    fetcher
-  )
-
-  const transactions: any[] = data
+  const { data, error } = useSWR(`${SERVER_URL}/transactions?userId=${userId}`, fetcher, { refreshInterval: 5000 })
 
   return {
-    transactions: transactions,
+    transactions: data as any[],
     isLoading: !error && !data,
     isError: error
   }

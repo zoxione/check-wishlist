@@ -11,6 +11,7 @@ import { IGift, IUser } from '../../../types';
 import InfoCard from '../ui/InfoCard';
 import MinimalCard from '../ui/MinimalCard';
 import UserFragmentLayout from './UserFragmentLayout';
+import TransactionCard from '../ui/TransactionCard';
 
 
 interface IProps {
@@ -26,11 +27,11 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
   const wishlist: IGift[] = gifts?.filter((gift) => !gift.isGifted)
   const gifted: IGift[] = gifts?.filter((gift) => gift.isGifted)
   let gifters: any[] = [];
-  // transactionsUser?.forEach((tran) => {
-  //   if (!gifters.find((g) => g.id === tran.Gifter.id)) {
-  //     gifters.push(tran.Gifter);
-  //   }
-  // })
+  transactionsUser?.forEach((tran) => {
+    if (!gifters.find((g) => g.id === tran.Gifter.id)) {
+      gifters.push(tran.Gifter);
+    }
+  })
 
   return (
     <>
@@ -104,7 +105,7 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
             )
           }
 
-          {/* {
+          {
             isLoadingTransactionsUser ? (
               <>
                 <Skeleton height={120} mt={40} radius="md" />
@@ -118,90 +119,20 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                   </Text>
                 )}
                 {transactionsUser?.map((tran, index) => (
-                  <Box
-                    sx={(theme) => ({
-                      display: 'flex',
-                      flexDirection: 'row',
-                      [theme.fn.smallerThan('sm')]: {
-                        flexDirection: 'column',
-                      },
-                      justifyContent: 'flex-start',
-                      alignItems: 'center',
-                      borderRadius: theme.radius.md,
-                      border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]}`,
-                      padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
-                      paddingLeft: theme.spacing.xl - theme.spacing.md,
-                      backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
-                      marginBottom: theme.spacing.sm,
-                    })}
+                  <TransactionCard
                     key={index}
-                  >
-                    <Box
-                      sx={(theme) => ({
-                        ...theme.fn.focusStyles(),
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        textAlign: 'center',
-                        height: '100%',
-                        color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[6],
-                        paddingLeft: theme.spacing.md,
-                        paddingRight: theme.spacing.md,
-                      })}
-                    >
-                      <Text
-                        sx={(theme) => ({
-                          fontSize: 30,
-                          fontWeight: 700,
-                          width: 60,
-                          color: theme.colorScheme === 'dark' ? 'white' : 'black',
-                        })}
-                      >
-                        {index + 1}
-                      </Text>
-                    </Box>
-                    <Box
-                      sx={(theme) => ({
-                        [theme.fn.smallerThan('sm')]: {
-                          textAlign: 'center',
-                        },
-                      })}
-                    >
-                      <Text weight={500}>{tran.Gift.title}</Text>
-                      <Box
-                        sx={(theme) => ({
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '10px',
-                          marginTop: 5,
-                          [theme.fn.smallerThan('sm')]: {
-                            flexDirection: 'column',
-                            gap: '0px',
-                          },
-                        })}
-                      >
-                        <Text size="sm">
-                          Подарил: {' '}
-                          <Link href={`/${tran.Gifter.username}`} passHref>
-                            <Anchor>
-                              {tran.Gifter.username}
-                            </Anchor>
-                          </Link>
-                        </Text>
-                      </Box>
-                      <Text color="dimmed" size="sm">
-                        Дата и время: {new Date(tran.createdAt).toLocaleDateString() + ' ' + new Date(tran.createdAt).toLocaleTimeString()}
-                      </Text>
-                    </Box>
-                  </Box>
+                    index={index}
+                    tran={tran}
+                    isAdmin={false}
+                  />
                 ))}
               </>
             )
-          } */}
+          }
         </InfoCard>
 
 
-        {/* {
+        {
           props.user?.role === "admin" && (
             <InfoCard title="Админ панель">
               {
@@ -213,117 +144,19 @@ const UserDashboard: FunctionComponent<IProps> = (props) => {
                 ) : (
                   <>
                     {transactions?.map((tran, index) => (
-                      <Box
-                        sx={(theme) => ({
-                          display: 'flex',
-                          flexDirection: 'row',
-                          [theme.fn.smallerThan('sm')]: {
-                            flexDirection: 'column',
-                          },
-                          justifyContent: 'flex-start',
-                          alignItems: 'center',
-                          borderRadius: theme.radius.md,
-                          border: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]}`,
-                          padding: `${theme.spacing.sm}px ${theme.spacing.xl}px`,
-                          paddingLeft: theme.spacing.xl - theme.spacing.md,
-                          backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
-                          marginBottom: theme.spacing.sm,
-                        })}
+                      <TransactionCard
                         key={index}
-                      >
-                        <Box
-                          sx={(theme) => ({
-                            ...theme.fn.focusStyles(),
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            textAlign: 'center',
-                            height: '100%',
-                            color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[6],
-                            paddingLeft: theme.spacing.md,
-                            paddingRight: theme.spacing.md,
-                          })}
-                        >
-                          <Text
-                            sx={(theme) => ({
-                              fontSize: 30,
-                              fontWeight: 700,
-                              width: 60,
-                              color: theme.colorScheme === 'dark' ? 'white' : 'black',
-                            })}
-                          >
-                            {index + 1}
-                          </Text>
-                        </Box>
-                        <Box
-                          sx={(theme) => ({
-                            [theme.fn.smallerThan('sm')]: {
-                              textAlign: 'center',
-                            },
-                          })}
-                        >
-                          <Text weight={500}>{tran.Gift.title}</Text>
-                          <Box
-                            sx={(theme) => ({
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '10px',
-                              marginTop: 5,
-                              [theme.fn.smallerThan('sm')]: {
-                                flexDirection: 'column',
-                                gap: '0px',
-                              },
-                            })}
-                          >
-                            <Link href={`/${tran.Gifter.username}`} passHref>
-                              <Anchor size="sm">
-                                {tran.Gifter.username}
-                              </Anchor>
-                            </Link>
-                            <IconArrowNarrowRight size={20} />
-                            <Link href={`/${tran.User.username}`} passHref>
-                              <Anchor size="sm">
-                                {tran.User.username}
-                              </Anchor>
-                            </Link>
-                          </Box>
-                          <Text color="dimmed" size="sm">
-                            Дата и время: {new Date(tran.createdAt).toLocaleDateString() + ' ' + new Date(tran.createdAt).toLocaleTimeString()}
-                          </Text>
-                        </Box>
-                        {
-                          tran.isCompleted ? (
-                            <Checkbox
-                              defaultChecked={tran.isCompleted}
-                              disabled
-                              label="Выполнен"
-                              ml="auto"
-                            />
-                          ) : (
-                            <Checkbox
-                              defaultChecked={tran.isCompleted}
-                              label="Выполнен"
-                              ml="auto"
-                              sx={(theme) => ({
-                                '.mantine-Checkbox-input': {
-                                  cursor: 'pointer',
-                                }
-                              })}
-                              onChange={(event) => {
-                                CompleteTransaction(tran.id);
-                                Router.reload()
-                              }}
-                            />
-                          )
-                        }
-                      </Box>
+                        index={index}
+                        tran={tran}
+                        isAdmin={true}
+                      />
                     ))}
                   </>
                 )
               }
             </InfoCard>
           )
-        } */}
+        }
       </UserFragmentLayout>
     </>
   )
