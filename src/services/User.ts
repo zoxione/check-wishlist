@@ -14,7 +14,9 @@ export const GetUserById = async (id: string) => {
     }
   })
     .then(function (response) {
-      user = response.data as IUser;
+      if (response.data != '' && response.data != null) {
+        user = response.data as IUser;
+      }
     })
     .catch(function (error) {
       console.log("[GetUserById]: " + error);
@@ -34,7 +36,9 @@ export const GetUserByUsername = async (username: string) => {
     }
   })
     .then(function (response) {
-      user = response.data as IUser;
+      if (response.data != '' && response.data != null) {
+        user = response.data as IUser;
+      }
     })
     .catch(function (error) {
       console.log("[GetUserFromUsername]: " + error);

@@ -78,4 +78,8 @@ export const giftSchema = {
     'string.empty': 'Ссылка не может быть пустой',
     'string.uri': 'Ссылка должна быть валидной',
   }),
+  price: Joi.number().min(0).messages({
+    'number.base': 'Цена должна быть числом',
+    'number.min': 'Цена должна быть больше 0',
+  }),
 } 
