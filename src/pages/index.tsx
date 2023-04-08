@@ -1,19 +1,15 @@
-import { Accordion, Anchor, Box, Container, Text, Title } from '@mantine/core';
-import { IconChevronsDown } from '@tabler/icons';
-import type { NextPage } from 'next';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Accordion, Anchor, Box, Container, Text, Title } from "@mantine/core";
+import { IconChevronsDown } from "@tabler/icons";
+import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 
-import AppHead from '../components/logics/Head';
-import InfoCard from '../components/ui/InfoCard';
-import Search from '../components/ui/Search';
+import AppHead from "../components/logics/Head";
+import InfoCard from "../components/ui/InfoCard";
+import Search from "../components/ui/Search";
 
-
-interface Props {
-
-}
-
+interface Props {}
 
 const Home: NextPage<Props> = (props) => {
   const { status, data } = useSession();
@@ -25,16 +21,16 @@ const Home: NextPage<Props> = (props) => {
 
       <Container
         sx={(theme) => ({
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: 'calc(100vh - 60px)',
-          marginTop: '-80px',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "calc(100vh - 60px)",
+          marginTop: "-80px",
         })}
       >
         <Title mb={50} order={1} align="center">
-          Найди {' '}
+          Найди{" "}
           <Box
             component="span"
             sx={(theme) => ({
@@ -42,38 +38,37 @@ const Home: NextPage<Props> = (props) => {
             })}
           >
             список желаний
-          </Box>
-          {' '} друга
+          </Box>{" "}
+          друга
         </Title>
         <Search />
       </Container>
 
-
       <Box>
         <Link href="#how-it-works" scroll={false}>
           <Anchor
-            variant='text'
+            variant="text"
             sx={(theme) => ({
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '20px',
-              '&:hover': {
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "20px",
+              "&:hover": {
                 color: theme.fn.primaryColor(),
               },
-              animation: 'bounce 2s ease infinite',
-              '@keyframes bounce': {
-                '0%, 20%, 50%, 80%, 100%': {
-                  transform: 'translateY(0)'
+              animation: "bounce 2s ease infinite",
+              "@keyframes bounce": {
+                "0%, 20%, 50%, 80%, 100%": {
+                  transform: "translateY(0)",
                 },
-                '40%': {
-                  transform: 'translateY(-10px)'
+                "40%": {
+                  transform: "translateY(-10px)",
                 },
-                '60%': {
-                  transform: 'translateY(-5px)'
-                }
-              }
+                "60%": {
+                  transform: "translateY(-5px)",
+                },
+              },
             })}
           >
             Подробнее
@@ -85,35 +80,37 @@ const Home: NextPage<Props> = (props) => {
 
         <Container
           sx={(theme) => ({
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '60px',
-            marginTop: '80px',
-            marginBottom: '80px',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "60px",
+            marginTop: "80px",
+            marginBottom: "80px",
           })}
         >
-          <Title order={1} align="center">Как это работает?</Title>
+          <Title order={1} align="center">
+            Как это работает?
+          </Title>
 
           <InfoCard>
             <Box
               sx={(theme) => ({
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '40px',
-                [theme.fn.smallerThan('sm')]: {
-                  flexDirection: 'column',
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "40px",
+                [theme.fn.smallerThan("sm")]: {
+                  flexDirection: "column",
                 },
               })}
             >
               <Box
                 sx={(theme) => ({
-                  width: '50%',
-                  [theme.fn.smallerThan('sm')]: {
-                    width: '100%',
+                  width: "50%",
+                  [theme.fn.smallerThan("sm")]: {
+                    width: "100%",
                   },
                 })}
               >
@@ -130,16 +127,18 @@ const Home: NextPage<Props> = (props) => {
                   Добавьте подарки в свой список желаний
                 </Title>
                 <Text>
-                  Создайте список желаемых подарков с избранных магазинов. Поделитесь своим списком с друзьями или подписчиками, добавив его в свой профиль.
+                  Создайте список желаемых подарков с избранных магазинов.
+                  Поделитесь своим списком с друзьями или подписчиками, добавив
+                  его в свой профиль.
                 </Text>
               </Box>
               <Box
                 sx={(theme) => ({
-                  width: '50%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  [theme.fn.smallerThan('sm')]: {
-                    width: '100%',
+                  width: "50%",
+                  display: "flex",
+                  justifyContent: "center",
+                  [theme.fn.smallerThan("sm")]: {
+                    width: "100%",
                   },
                 })}
               >
@@ -158,24 +157,24 @@ const Home: NextPage<Props> = (props) => {
           <InfoCard>
             <Box
               sx={(theme) => ({
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '40px',
-                [theme.fn.smallerThan('sm')]: {
-                  flexDirection: 'column',
-                  flexFlow: 'column-reverse',
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "40px",
+                [theme.fn.smallerThan("sm")]: {
+                  flexDirection: "column",
+                  flexFlow: "column-reverse",
                 },
               })}
             >
               <Box
                 sx={(theme) => ({
-                  width: '50%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  [theme.fn.smallerThan('sm')]: {
-                    width: '100%',
+                  width: "50%",
+                  display: "flex",
+                  justifyContent: "center",
+                  [theme.fn.smallerThan("sm")]: {
+                    width: "100%",
                   },
                 })}
               >
@@ -190,9 +189,9 @@ const Home: NextPage<Props> = (props) => {
               </Box>
               <Box
                 sx={(theme) => ({
-                  width: '50%',
-                  [theme.fn.smallerThan('sm')]: {
-                    width: '100%',
+                  width: "50%",
+                  [theme.fn.smallerThan("sm")]: {
+                    width: "100%",
                   },
                 })}
               >
@@ -209,7 +208,10 @@ const Home: NextPage<Props> = (props) => {
                   Ваши поклонники покупают подарки
                 </Title>
                 <Text>
-                  Поделитесь своей ссылкой со своими друзьями или подписчиками, и они смогут посетить ваш список желаний и купить вам подарки. Поклонники могут оставить сообщение и свое имя во время оформления заказа.
+                  Поделитесь своей ссылкой со своими друзьями или подписчиками,
+                  и они смогут посетить ваш список желаний и купить вам подарки.
+                  Поклонники могут оставить сообщение и свое имя во время
+                  оформления заказа.
                 </Text>
               </Box>
             </Box>
@@ -218,21 +220,21 @@ const Home: NextPage<Props> = (props) => {
           <InfoCard>
             <Box
               sx={(theme) => ({
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '40px',
-                [theme.fn.smallerThan('sm')]: {
-                  flexDirection: 'column',
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "40px",
+                [theme.fn.smallerThan("sm")]: {
+                  flexDirection: "column",
                 },
               })}
             >
               <Box
                 sx={(theme) => ({
-                  width: '50%',
-                  [theme.fn.smallerThan('sm')]: {
-                    width: '100%',
+                  width: "50%",
+                  [theme.fn.smallerThan("sm")]: {
+                    width: "100%",
                   },
                 })}
               >
@@ -249,16 +251,19 @@ const Home: NextPage<Props> = (props) => {
                   Мы покупаем подарки и доставляем их
                 </Title>
                 <Text>
-                  Затем мы отправляем подарки, купленные вашими друзьями или подписчиками, прямо на ваш адрес. Процесс заказа полностью отделен от покупки подарка вашим поклонником, чтобы обеспечить 100% конфиденциальность.
+                  Затем мы отправляем подарки, купленные вашими друзьями или
+                  подписчиками, прямо на ваш адрес. Процесс заказа полностью
+                  отделен от покупки подарка вашим поклонником, чтобы обеспечить
+                  100% конфиденциальность.
                 </Text>
               </Box>
               <Box
                 sx={(theme) => ({
-                  width: '50%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  [theme.fn.smallerThan('sm')]: {
-                    width: '100%',
+                  width: "50%",
+                  display: "flex",
+                  justifyContent: "center",
+                  [theme.fn.smallerThan("sm")]: {
+                    width: "100%",
                   },
                 })}
               >
@@ -274,31 +279,39 @@ const Home: NextPage<Props> = (props) => {
             </Box>
           </InfoCard>
 
+          <Title mt={40} order={1} align="center">
+            Часто задаваемые вопросы
+          </Title>
 
-          <Title mt={40} order={1} align="center">Часто задаваемые вопросы</Title>
-
-          <Accordion variant="separated"
+          <Accordion
+            variant="separated"
             sx={(theme) => ({
-              width: '100%',
-              '.mantine-Accordion-item': {
-                width: '100%',
-                backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
-                '&:hover': {
-                  border: theme.colorScheme === 'dark' ? '1px solid #373A40' : '1px solid #DEE2E6',
-                }
+              width: "100%",
+              ".mantine-Accordion-item": {
+                width: "100%",
+                backgroundColor:
+                  theme.colorScheme === "dark"
+                    ? theme.colors.dark[8]
+                    : theme.white,
+                "&:hover": {
+                  border:
+                    theme.colorScheme === "dark"
+                      ? "1px solid #373A40"
+                      : "1px solid #DEE2E6",
+                },
               },
-              '.mantine-Accordion-label': {
+              ".mantine-Accordion-label": {
                 fontSize: 18,
                 fontWeight: 500,
               },
             })}
           >
             <Accordion.Item value="value1">
-              <Accordion.Control>
-                Сколько это стоит?
-              </Accordion.Control>
+              <Accordion.Control>Сколько это стоит?</Accordion.Control>
               <Accordion.Panel>
-                На данный момент сервис бесплатный. Мы не взимаем комиссию за покупку подарков. Все, что мы хотим, это помочь вам собрать подарки на свой день рождения или праздник.
+                На данный момент сервис бесплатный. Мы не взимаем комиссию за
+                покупку подарков. Все, что мы хотим, это помочь вам собрать
+                подарки на свой день рождения или праздник.
               </Accordion.Panel>
             </Accordion.Item>
 
@@ -307,7 +320,10 @@ const Home: NextPage<Props> = (props) => {
                 Как я могу получить подарки?
               </Accordion.Control>
               <Accordion.Panel>
-                Мы отправляем подарки, купленные вашими друзьями или подписчиками, прямо на ваш адрес. Процесс заказа полностью отделен от покупки подарка вашим поклонником, чтобы обеспечить 100% конфиденциальность.
+                Мы отправляем подарки, купленные вашими друзьями или
+                подписчиками, прямо на ваш адрес. Процесс заказа полностью
+                отделен от покупки подарка вашим поклонником, чтобы обеспечить
+                100% конфиденциальность.
               </Accordion.Panel>
             </Accordion.Item>
 
@@ -316,13 +332,15 @@ const Home: NextPage<Props> = (props) => {
                 Как я могу узнать, что мне подарили?
               </Accordion.Control>
               <Accordion.Panel>
-                В приборной панели аккаунта отображается полная статистика по подаркам, которые вы получили. Там же вы можете увидеть, кто подарил вам подарок и что подарили.
+                В приборной панели аккаунта отображается полная статистика по
+                подаркам, которые вы получили. Там же вы можете увидеть, кто
+                подарил вам подарок и что подарили.
               </Accordion.Panel>
             </Accordion.Item>
           </Accordion>
 
           <Text align="center" mt={60}>
-            Создано {' '}
+            Создано{" "}
             <Anchor
               href="https://github.com/zoxione"
               target="_blank"
@@ -333,25 +351,13 @@ const Home: NextPage<Props> = (props) => {
               })}
             >
               @zoxione
-            </Anchor>
-            {' '} и {' '}
-            <Anchor
-              href="https://github.com/GromSergey"
-              target="_blank"
-              sx={(theme) => ({
-                color: theme.fn.primaryColor(),
-                fontWeight: 500,
-                fontSize: 18,
-              })}
-            >
-              @GromSergey
-            </Anchor>
-            {' '} в рамках проекта, 2022
+            </Anchor>{" "}
+            в рамках проекта, 2022
           </Text>
         </Container>
       </Box>
     </>
-  )
-}
+  );
+};
 
 export default Home;
