@@ -1,13 +1,13 @@
-## Проект 3 курс
+## Third-Year Creative Project
 
-Веб-сервис для списка желаний
+Web-service for Wishlist
 
-Выполнил: Отхонов Баир КТбо3-8
+Done by: Otkhonov Bair KTbo3-8
 
-Стек: next-js, next-auth, mantine, swr, joi.
+Stack: next-js, next-auth, mantine, swr, joi.
 
 ![image](https://user-images.githubusercontent.com/73276298/200184488-1a5307a3-5b14-4fab-a78c-fe7aedd41ebb.png)
 
-### Превью:
+### Preview:
 
 https://wishlist.ictis.ru
